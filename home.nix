@@ -1,6 +1,10 @@
 { config, pkgs, ... }:
 
 {
+  imports = [
+    ./hyprland.nix
+  ];
+
   # 注意：这是必须要有的基本信息
   home.username = "maorila";
   home.homeDirectory = "/home/maorila";
