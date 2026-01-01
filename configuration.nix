@@ -31,10 +31,11 @@
   # Set your time zone.
   time.timeZone = "Asia/Shanghai";
 
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
+  # 设置系统默认语言为中文 (UTF-8)
+  i18n.defaultLocale = "zh_CN.UTF-8";
 
   i18n.extraLocaleSettings = {
+    # 把各种格式（时间、货币、度量衡等）都设为中文
     LC_ADDRESS = "zh_CN.UTF-8";
     LC_IDENTIFICATION = "zh_CN.UTF-8";
     LC_MEASUREMENT = "zh_CN.UTF-8";
@@ -44,6 +45,10 @@
     LC_PAPER = "zh_CN.UTF-8";
     LC_TELEPHONE = "zh_CN.UTF-8";
     LC_TIME = "zh_CN.UTF-8";
+    
+    # 【推荐保留】让终端报错保持英文，防止 TTY 乱码
+    # 如果你不在乎 TTY 乱码，想让系统完全变中文，可以把下面这行删掉
+    LC_MESSAGES = "en_US.UTF-8"; 
   };
 
   i18n.inputMethod = {
