@@ -49,6 +49,11 @@
     };
   };
 
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+  };
+
   # 让 Home Manager 管理自己
   programs.home-manager.enable = true;
 }
