@@ -123,7 +123,6 @@
     pkgs.google-chrome
     hyprpaper
     qt6Packages.fcitx5-configtool
-    git
     nerd-fonts.jetbrains-mono
     nerd-fonts.fira-code
     sarasa-gothic
