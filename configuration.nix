@@ -217,7 +217,7 @@
           "type" = "http";
           "url" = "https://sub-1.smjcdh.top/smjc/api/v1/client/subscribe?token=c7622162d2d8cbddca1c490493cbf7cb";
           "interval" = 3600;
-          "path" = "/var/lib/mihomo/airport.yaml";
+          "path" = "/var/lib/private/mihomo/airport.yaml";
           "health-check" = {
             "enable" = true;
             "interval" = 600;
