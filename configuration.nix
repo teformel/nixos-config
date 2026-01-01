@@ -131,26 +131,31 @@
 
   # === 字体配置 ===
   fonts = {
-    # 安装字体包
     packages = with pkgs; [
       noto-fonts
-      noto-fonts-cjk-sans   # 关键：思源黑体 (用于屏幕显示)
-      noto-fonts-cjk-serif  # 关键：思源宋体 (用于排版)
-      noto-fonts-color-emoji      # 彩色 Emoji
-      sarasa-gothic         # 更纱黑体 (你之前装的)
-      source-han-sans
-      source-han-serif
+      noto-fonts-cjk-sans
+      noto-fonts-emoji
+      sarasa-gothic
+      nerd-fonts.jetbrains-mono # 确保装了这个，它是目前最好的编程字体之一
     ];
 
-    # 关键：配置默认字体 (防止 Chrome 抽风去用日文字体)
     fontconfig = {
       defaultFonts = {
-        serif = [ "Noto Serif CJK SC" "Source Han Serif SC" ];
+        # 你的系统界面字体 (无衬线)
         sansSerif = [ "Noto Sans CJK SC" "Source Han Sans SC" ];
-        monospace = [ "Sarasa Mono SC" ];
+        
+        # 你的文档字体 (衬线)
+        serif = [ "Noto Serif CJK SC" "Source Han Serif SC" ];
+
+        # === 重点修改这里：默认等宽字体 ===
+        # 1. JetBrainsMono Nerd Font: 英文优先用这个，带图标，写代码极其舒服
+        # 2. Sarasa Mono SC: 中文用这个，它能和英文严格 2:1 对齐
+        # 3. Noto Sans Mono CJK SC: 最后的保底
+        monospace = [ "JetBrainsMono Nerd Font" "Sarasa Mono SC" "Noto Sans Mono CJK SC" ];
       };
     };
   };
+
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
