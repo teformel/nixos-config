@@ -16,27 +16,8 @@
   home.packages = with pkgs; [
     fastfetch
     btop
-    pkgs.google-chrome
     # 以后你想装 QQ、网易云、Spotify 都在这里加
   ];
-
-  # === Google Chrome 插件配置 ===
-  # 原理：在 ~/.config/google-chrome/policies/managed/ 下写入策略文件
-  xdg.configFile."google-chrome/policies/managed/extension_policy.json".text = builtins.toJSON {
-    ExtensionSettings = {
-      # 1. Bitwarden
-      "nngceckbapebfimnlniiiahkandclblb" = {
-        installation_mode = "force_installed";
-        update_url = "https://clients2.google.com/service/update2/crx";
-      };
-      
-      # 2. Raindrop.io
-      "kdfieneakcjfaiglcfcgkidlkmljjgpl" = {
-        installation_mode = "force_installed";
-        update_url = "https://clients2.google.com/service/update2/crx";
-      };
-    };
-  };
 
   # === 你的 Git 配置 ===
   programs.git = {

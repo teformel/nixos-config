@@ -125,7 +125,24 @@
     nerd-fonts.jetbrains-mono
     nerd-fonts.fira-code
     sarasa-gothic
+    pkgs.google-chrome
   ];
+
+  # === Google Chrome 强制插件策略 (系统级) ===
+  environment.etc."opt/chrome/policies/managed/extensions.json".text = builtins.toJSON {
+    ExtensionSettings = {
+      # 1. Bitwarden
+      "nngceckbapebfimnlniiiahkandclblb" = {
+        installation_mode = "force_installed";
+        update_url = "https://clients2.google.com/service/update2/crx";
+      };
+      # 2. Raindrop.io
+      "kdfieneakcjfaiglcfcgkidlkmljjgpl" = {
+        installation_mode = "force_installed";
+        update_url = "https://clients2.google.com/service/update2/crx";
+      };
+    };
+  };
 
   # === 字体配置 ===
   fonts = {
