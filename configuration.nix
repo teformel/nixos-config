@@ -187,7 +187,7 @@
       "external-controller" = "0.0.0.0:9090";
       
       # 这里配置 Web 面板路径，让 Mihomo 去找 Nix Store 里的文件
-      "external-ui" = "${pkgs.metacubexd}/share/metacubexd";
+      # "external-ui" = "${pkgs.metacubexd}/share/metacubexd";
 
       # === Tun 模式 ===
       "tun" = {
