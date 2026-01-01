@@ -63,43 +63,5 @@
 
   # 让 Home Manager 管理自己
   programs.home-manager.enable = true;
-
-  services.mihomo = {
-    enable = true;
-    
-    # 自动下载并配置 Web 控制面板
-    webui = pkgs.metacubexd; 
-
-    # 这里就是你的核心配置，完全声明式！
-    config = {
-      mode = "rule";
-      log-level = "info";
-      allow-lan = true;
-      external-controller = "127.0.0.1:9090";
-      
-      # 开启 Tun 模式 (自动接管系统流量)
-      tun = {
-        enable = true;
-        stack = "system";
-        auto-route = true;
-        auto-detect-interface = true;
-      };
-
-      # 订阅管理 (这里用 providers 的方式)
-      proxy-providers = {
-        "MyAirport" = {
-          type = "http";
-          url = "https://sub-1.smjcdh.top/smjc/api/v1/client/subscribe?token=c7622162d2d8cbddca1c490493cbf7cb";
-          interval = 3600;
-          path = "./proxy-providers/airport.yaml";
-          health-check = {
-            enable = true;
-            interval = 600;
-            url = "http://www.gstatic.com/generate_204";
-          };
-        };
-      };
-    };
-  };
 }
 
