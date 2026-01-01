@@ -134,7 +134,7 @@
     packages = with pkgs; [
       noto-fonts
       noto-fonts-cjk-sans
-      noto-fonts-emoji
+      noto-fonts-color-emoji
       sarasa-gothic
       nerd-fonts.jetbrains-mono # 确保装了这个，它是目前最好的编程字体之一
     ];
