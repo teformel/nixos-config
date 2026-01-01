@@ -17,6 +17,9 @@
     fastfetch
     btop
     # 以后你想装 QQ、网易云、Spotify 都在这里加
+    # === 代理工具 ===
+    clash-verge-rev  # 现代化的 Clash GUI 客户端
+    mihomo           # 强大的代理内核 (原 Clash Meta)
   ];
 
   # === 你的 Git 配置 ===
