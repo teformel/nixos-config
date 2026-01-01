@@ -62,6 +62,28 @@
     variant = "";
   };
 
+  # === 启用 KMSCON (支持中文的高清 TTY) ===
+  services.kmscon = {
+    enable = true;
+    hwRender = true; # 尝试使用显卡加速 (如果花屏就改成 false)
+    
+    # 配置字体：使用我们之前装好的更纱黑体
+    fonts = [
+      {
+        name = "Sarasa Mono SC";
+        package = pkgs.sarasa-gothic;
+      }
+    ];
+
+    # 额外配置：设置字号 (根据你的屏幕分辨率调整，2K/4K屏建议设大点)
+    extraConfig = ''
+      font-size=24
+    '';
+    
+    # 自动登录 (可选：如果你不想每次在 TTY 输密码，仅限调试用)
+    # autologinUser = "maorila";
+  };
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.maorila = {
     isNormalUser = true;
