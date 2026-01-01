@@ -171,77 +171,77 @@
     };
   };
 
-  # === Mihomo (Clash) 纯 Nix 化配置 ===
+  # === Mihomo (Clash) 修正版配置 ===
   services.mihomo = {
     enable = true;
     
-    # 自动安装并配置 Web 控制面板 (Mihomo Dashboard)
-    # 访问地址: http://127.0.0.1:9090/ui
-    webui = pkgs.metacubexd; 
+    # ❌ 删掉 webui = ... (官方模块不支持这个选项)
+    # ❌ 删掉 config = { ... } (官方模块不支持这个选项)
 
-    # 核心配置文件 (生成为只读的 /etc/mihomo/config.yaml)
-    config = {
-      # 基础设置
-      mode = "rule";
-      log-level = "info";
-      allow-lan = true;
-      external-controller = "0.0.0.0:9090";
-      secret = ""; # 可以在这里设置 Web 面板密码
+    # ✅ 正确做法：直接生成配置文件
+    configFile = pkgs.writeText "mihomo.json" (builtins.toJSON {
+      # === 基础设置 ===
+      "allow-lan" = true;
+      "log-level" = "info";
+      "mode" = "rule";
+      "external-controller" = "0.0.0.0:9090";
+      
+      # 这里配置 Web 面板路径，让 Mihomo 去找 Nix Store 里的文件
+      "external-ui" = "${pkgs.metacubexd}/share/metacubexd";
 
-      # === 关键：Tun 模式 (接管系统流量) ===
-      tun = {
-        enable = true;
-        stack = "system";
-        device = "mihomo";
-        auto-route = true;
-        auto-detect-interface = true;
-        dns-hijack = [ "any:53" ];
+      # === Tun 模式 ===
+      "tun" = {
+        "enable" = true;
+        "stack" = "system";
+        "device" = "mihomo";
+        "auto-route" = true;
+        "auto-detect-interface" = true;
+        "dns-hijack" = [ "any:53" ];
       };
 
-      # === DNS 设置 (Tun 模式必须配置 DNS) ===
-      dns = {
-        enable = true;
-        listen = "0.0.0.0:1053";
-        enhanced-mode = "fake-ip";
-        fake-ip-range = "198.18.0.1/16";
-        default-nameserver = [ "223.5.5.5" "114.114.114.114" ];
-        nameserver = [ "https://dns.alidns.com/dns-query" "https://doh.pub/dns-query" ];
-        fallback = [ "https://1.1.1.1/dns-query" "https://8.8.8.8/dns-query" ];
-        fallback-filter = { geoip = true; ipcidr = [ "240.0.0.0/4" ]; };
+      # === DNS 设置 (必须有) ===
+      "dns" = {
+        "enable" = true;
+        "listen" = "0.0.0.0:1053";
+        "enhanced-mode" = "fake-ip";
+        "fake-ip-range" = "198.18.0.1/16";
+        "default-nameserver" = [ "223.5.5.5" "114.114.114.114" ];
+        "nameserver" = [ "https://dns.alidns.com/dns-query" "https://doh.pub/dns-query" ];
+        "fallback" = [ "https://1.1.1.1/dns-query" "https://8.8.8.8/dns-query" ];
+        "fallback-filter" = { "geoip" = true; "ipcidr" = [ "240.0.0.0/4" ]; };
       };
 
-      # === 订阅管理 (声明式订阅) ===
-      # 注意：你需要把你的机场订阅链接填到下面的 url 里
-      proxy-providers = {
+      # === 订阅提供商 ===
+      "proxy-providers" = {
         "MyAirport" = {
-          type = "http";
-          url = "https://sub-1.smjcdh.top/smjc/api/v1/client/subscribe?token=c7622162d2d8cbddca1c490493cbf7cb";
-          interval = 3600;
-          path = "/var/lib/mihomo/airport.yaml"; # 下载缓存位置
-          health-check = {
-            enable = true;
-            interval = 600;
-            url = "http://www.gstatic.com/generate_204";
+          "type" = "http";
+          "url" = "https://sub-1.smjcdh.top/smjc/api/v1/client/subscribe?token=c7622162d2d8cbddca1c490493cbf7cb";
+          "interval" = 3600;
+          "path" = "/var/lib/mihomo/airport.yaml";
+          "health-check" = {
+            "enable" = true;
+            "interval" = 600;
+            "url" = "http://www.gstatic.com/generate_204";
           };
         };
       };
 
-      # === 规则 (简单示例) ===
-      # 这里使用了 provider 中的节点
-      proxy-groups = [
+      # === 规则组 ===
+      "proxy-groups" = [
         {
-          name = "Proxy";
-          type = "select";
-          use = [ "MyAirport" ]; # 使用上面定义的 Provider
+          "name" = "Proxy";
+          "type" = "select";
+          "use" = [ "MyAirport" ];
         }
       ];
 
-      rules = [
+      # === 规则 ===
+      "rules" = [
         "GEOSITE,CN,DIRECT"
         "GEOIP,CN,DIRECT"
         "MATCH,Proxy"
       ];
-    };
+    });
   };
 
 
