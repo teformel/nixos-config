@@ -119,6 +119,29 @@
     sarasa-gothic
   ];
 
+  # === 字体配置 ===
+  fonts = {
+    # 安装字体包
+    packages = with pkgs; [
+      noto-fonts
+      noto-fonts-cjk-sans   # 关键：思源黑体 (用于屏幕显示)
+      noto-fonts-cjk-serif  # 关键：思源宋体 (用于排版)
+      noto-fonts-color-emoji      # 彩色 Emoji
+      sarasa-gothic         # 更纱黑体 (你之前装的)
+      source-han-sans
+      source-han-serif
+    ];
+
+    # 关键：配置默认字体 (防止 Chrome 抽风去用日文字体)
+    fontconfig = {
+      defaultFonts = {
+        serif = [ "Noto Serif CJK SC" "Source Han Serif SC" ];
+        sansSerif = [ "Noto Sans CJK SC" "Source Han Sans SC" ];
+        monospace = [ "Sarasa Mono SC" ];
+      };
+    };
+  };
+
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
