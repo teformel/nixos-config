@@ -120,7 +120,6 @@
     waybar
     dunst
     kdePackages.dolphin
-    pkgs.google-chrome
     hyprpaper
     qt6Packages.fcitx5-configtool
     nerd-fonts.jetbrains-mono

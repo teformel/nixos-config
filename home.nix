@@ -16,6 +16,7 @@
   home.packages = with pkgs; [
     fastfetch
     btop
+    pkgs.google-chrome
     # 以后你想装 QQ、网易云、Spotify 都在这里加
   ];
 
