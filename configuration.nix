@@ -186,6 +186,12 @@
       "mode" = "rule";
       "external-controller" = "0.0.0.0:9090";
       
+      # ✨✨✨ 新增下面这一行！关键！ ✨✨✨
+      # 这句话的意思是：允许任何网页来控制我，不要拦截
+      "external-controller-cors-allow-origin" = "*";
+      
+      # 如果你的版本支持，也可以加上这一行（如果构建报错说不认识这行，就删掉它）
+      "external-controller-cors-allow-private-network-ip" = true;
       # 这里配置 Web 面板路径，让 Mihomo 去找 Nix Store 里的文件
       # "external-ui" = "${pkgs.metacubexd}/share/metacubexd";
 
