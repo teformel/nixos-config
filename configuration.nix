@@ -27,6 +27,13 @@
   # Enable networking
   networking.networkmanager.enable = true;
 
+  # === 关键：配置全局代理 ===
+  # 这样可以让 Nix 命令、终端、浏览器都走 Clash 的代理
+  networking.proxy.default = "http://127.0.0.1:7897";
+  
+  # 设置不走代理的地址 (避免本地回环也走代理导致连不上)
+  networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
+
   # Set your time zone.
   time.timeZone = "Asia/Shanghai";
 
