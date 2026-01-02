@@ -103,8 +103,13 @@
   # === 你的 Git 配置 ===
   programs.git = {
     enable = true;
-    userName = "maorila";
-    userEmail = "maorila@qq.com";
+    # ✨ 改成这种层级结构
+    extraConfig = {
+      user = {
+        name = "maorila";
+        email = "maorila@qq.com";
+      };
+    };
   };
 
   # === 你的 Bash 配置 ===
@@ -127,17 +132,20 @@
     enable = true;
     package = pkgs.vscode;
 
-    extensions = with pkgs.vscode-extensions; [
-      jnoortheen.nix-ide
-      ms-python.python
-      ms-vscode-remote.remote-ssh
-    ];
+    # ✨ 新增这层 profiles.default
+    profiles.default = {
+      extensions = with pkgs.vscode-extensions; [
+        jnoortheen.nix-ide
+        ms-python.python
+        ms-vscode-remote.remote-ssh
+      ];
 
-    userSettings = {
-      "editor.fontSize" = 16;
-      "editor.fontFamily" = "'Fira Code','Droid Sans Mono','monospace'";
-      "nix.enableLanguageServer" = true;
-      "files.autoSave" = "onFocusChange";
+      userSettings = {
+        "editor.fontSize" = 16;
+        "editor.fontFamily" = "'Fira Code','Droid Sans Mono','monospace'";
+        "nix.enableLanguageServer" = true;
+        "files.autoSave" = "onFocusChange";
+      };
     };
   };
 
