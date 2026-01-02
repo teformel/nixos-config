@@ -25,6 +25,17 @@
     nerd-fonts.jetbrains-mono # 你的主力字体
     # 如果想显示更多怪奇图标，可以加上 material-design-icons
     material-design-icons
+    # 定义一个叫 start-waybar 的小脚本
+  (pkgs.writeShellScriptBin "start-waybar" ''
+    # 先杀掉所有可能存在的 waybar 进程
+    killall .waybar-wrapped waybar 2>/dev/null
+
+    # 等待 1 秒，确保 Hyprland 图形界面已就绪
+    sleep 1
+
+    # 启动 waybar，并把日志输出丢掉，防止填满缓冲区
+    waybar > /dev/null 2>&1 &
+  '')
   ];
 
   # === 你的 Git 配置 ===
