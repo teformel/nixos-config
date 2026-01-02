@@ -72,8 +72,8 @@ animations {
 
 # === ✨ 特效规则 (已修复空格问题) ===
 # 之前的报错 invalid field blur 就是因为这里
-layerrule = blur, waybar
-layerrule = ignorezero, waybar
+# layerrule = blur, waybar
+# layerrule = ignorezero, waybar
 
 # 4. 环境变量与杂项
 env = XCURSOR_SIZE,32
