@@ -43,7 +43,7 @@ decoration {
         ignore_opacity = true
     }
 
-    # 🌑 阴影 (新版语法)
+    # 🌑 阴影 (新版语法：必须嵌套在 shadow {} 里)
     shadow {
         enabled = true
         range = 30
@@ -52,7 +52,7 @@ decoration {
     }
 }
 
-# === 🎬 动画 ===
+# === 🎬 动画 (注意大括号闭合) ===
 animations {
     enabled = yes
     bezier = wind, 0.05, 0.9, 0.1, 1.05
@@ -70,8 +70,8 @@ animations {
     animation = workspaces, 1, 5, wind
 }
 
-# === ✨ 特效规则 (修复报错的关键) ===
-# 注意：逗号后面必须加空格，否则可能报错 invalid field
+# === ✨ 特效规则 (已修复空格问题) ===
+# 之前的报错 invalid field blur 就是因为这里
 layerrule = blur, waybar
 layerrule = ignorezero, waybar
 
