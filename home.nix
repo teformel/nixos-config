@@ -23,6 +23,9 @@
     mihomo           # 强大的代理内核 (原 Clash Meta)
     font-awesome          # 常用图标字体
     nerd-fonts.jetbrains-mono # 你的主力字体
+    nerd-fonts.jetbrains-mono
+    nerd-fonts.fira-code
+    sarasa-gothic
     # 如果想显示更多怪奇图标，可以加上 material-design-icons
     material-design-icons
     # 定义一个叫 start-waybar 的小脚本
