@@ -1,95 +1,89 @@
-// -*- mode: jsonc -*-
 {
     "layer": "top",
-    "height": 35,
-    "spacing": 8,
+    "position": "top",
+    "margin-top": 5,       // 顶部留空，制造悬浮感
+    "margin-left": 10,
+    "margin-right": 10,
+    "height": 30,          // 高度
+    "spacing": 4,          // 模块间距
 
-    "modules-left": [
-        "clock",
-        "tray",
-        "hyprland/workspaces",
-        "hyprland/scratchpad"
-    ],
-    "modules-center": [
-        "hyprland/window",
-    ],
-    "modules-right": [
-        "cpu",
-        "memory",
-        "temperature",
-        "pulseaudio",
-        "network",
-        "idle_inhibitor",
-        "custom/power"
-    ],
+    // === 📦 模块布局 ===
+    "modules-left": ["hyprland/workspaces", "hyprland/window"],
+    "modules-center": ["clock"],
+    "modules-right": ["pulseaudio", "network", "cpu", "memory", "battery", "tray"],
+
+    // === 🛠️ 模块配置 ===
     "hyprland/workspaces": {
-        "format": "{name}"
+        "disable-scroll": true,
+        "all-outputs": true,
+        "format": "{icon}",
+        "format-icons": {
+            "1": "一",
+            "2": "二",
+            "3": "三",
+            "4": "四",
+            "5": "五",
+            "urgent": "!",
+            "active": "●",
+            "default": "○"
+        }
+    },
+
+    "hyprland/window": {
+        "max-length": 40,
+        "separate-outputs": true
     },
 
     "clock": {
-        "interval": 1,
-        "format": "{:%Y-%m-%d %H:%M:%S}",
-        "tooltip-format": "<tt>{calendar}</tt>"
-    },
-
-    "idle_inhibitor": {
-        "format": "{icon}",
-        "format-icons": {
-            "activated": "禁止休眠已开启",
-            "deactivated": "禁止休眠已关闭"
-        }
-    },
-
-    "pulseaudio": {
-        "format": "{volume}% {icon}",
-        "format-muted": "静音",
-        "format-icons": {
-            "headphone": "耳机",
-            "default": ["音量", "音量", "音量"]
-        },
-        "on-click": "systemsettings kcm_pulseaudio"
-    },
-
-    "network": {
-        "format-wifi": "{essid} {signalStrength}%",
-        "format-ethernet": "以太网已连接",
-        "format-disconnected": "以太网失去连接",
-        "tooltip-format": "{ifname} {ipaddr}",
-        "on-click": "systemsettings kcm_networkmanagement"
+        "format": " {:%H:%M  📅 %m-%d}",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
     },
 
     "cpu": {
-        "format": "CPU {usage}%",
-        "interval": 5,
-        "on-click": "plasma-systemmonitor"
+        "format": " {usage}%",
+        "tooltip": false
     },
 
     "memory": {
-        "format": "内存 {used:0.1f}G",
-        "interval": 10
+        "format": " {}%"
     },
 
-    "temperature": {
-        "hwmon-path": "/sys/devices/platform/coretemp.0/hwmon/hwmon4/temp1_input",
-        "format": "CPU温度 {temperatureC}°C",
-        "interval": 5
+    "battery": {
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon} {capacity}%",
+        "format-charging": "⚡ {capacity}%",
+        "format-plugged": " {capacity}%",
+        "format-icons": ["", "", "", "", ""]
     },
 
+    "network": {
+        "format-wifi": "  {essid}",
+        "format-ethernet": "🔗 Wired",
+        "format-disconnected": "⚠ Off",
+        "tooltip-format": "{ifname} via {gwaddr}"
+    },
+
+    "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "format-bluetooth": "{icon} {volume}%",
+        "format-muted": "🔇 Muted",
+        "format-icons": {
+            "headphone": "",
+            "hands-free": "",
+            "headset": "",
+            "phone": "",
+            "portable": "",
+            "car": "",
+            "default": ["", "", ""]
+        },
+        "on-click": "pavucontrol" // 点击打开音量控制
+    },
+    
     "tray": {
-        "icon-size": 20,
-        "spacing": 10,
-        "show-passive-items": true
-    },
-
-    "custom/power": {
-        "format": "电源",
-        "tooltip": false,
-        "menu": "on-click",
-        "menu-file": "$HOME/nixos-config/waybar/power_menu.xml",
-        "menu-actions": {
-            "shutdown": "poweroff",
-            "reboot": "reboot",
-            "suspend": "systemctl suspend"
-        }
+        "icon-size": 18,
+        "spacing": 10
     }
 }

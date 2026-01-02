@@ -1,80 +1,90 @@
+/* === 全局字体 === */
 * {
-font-family: "Noto Sans";
-font-size: 15px;
-border: none;
+    font-family: "JetBrainsMono Nerd Font";
+    font-size: 14px;
+    font-weight: bold;
 }
 
+/* === 透明背景，制造悬浮感 === */
 window#waybar {
-    background-color: transparent;
+    background-color: transparent; 
+    color: #cdd6f4; /* 字体白 */
+    transition-property: background-color;
+    transition-duration: .5s;
 }
 
-window#waybar #window label {
-    font-size: 18px;
-}
-
+/* === 胶囊形状的基础样式 === */
+#workspaces,
 #clock,
+#window,
+#pulseaudio,
+#network,
 #cpu,
 #memory,
-#temperature,
-#network,
-#pulseaudio,
-#tray,
-#idle_inhibitor,
-#custom-power {
-padding: 0 6px;
-margin: 2px 1px;
-border-radius: 20px;
-background-color: #d3e3fd;
-color: black;
-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+#battery,
+#tray {
+    background-color: #1e1e2e; /* 深蓝黑背景 */
+    padding: 0 15px;
+    margin: 0 5px;
+    border-radius: 15px; /* 圆角 */
+    border: 2px solid #11111b; /* 边框 */
+    color: #cdd6f4;
 }
 
-#workspaces {
-background-color: #2e3033;
-margin: 6px 4px;
-border-radius: 24px;
-padding: 0 4px;
-}
-
+/* === 工作区特殊样式 === */
 #workspaces button {
-padding: 0 12px;
-color: #9aa0a6;
-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 0 5px;
+    background-color: transparent;
+    color: #cdd6f4;
+    border-radius: 15px;
+}
+
+#workspaces button:hover {
+    background-color: #313244;
 }
 
 #workspaces button.active {
-color: #041e49;
-background-color: #d3e3fd;
-min-width: 45px;
-border-radius: 24px;
+    background-color: #89b4fa; /* 激活时变蓝 */
+    color: #1e1e2e; /* 激活时字变黑 */
+}
+
+/* === 各个模块的个性化颜色 (可选) === */
+#clock {
+    color: #fab387; /* 橙色 */
 }
 
 #pulseaudio {
-background-color: #ffd946;
-color: #322f00;
+    color: #f9e2af; /* 黄色 */
 }
 
 #network {
-background-color: #c4eed0;
-color: #072711;
+    color: #a6e3a1; /* 绿色 */
 }
 
-#network.disconnected {
-background-color: #f28b82;
-color: #3c0000;
+#battery {
+    color: #94e2d5; /* 青色 */
 }
 
-#clock {
-background-color: transparent;
-color: #fff;
+#battery.charging {
+    color: #a6e3a1;
 }
 
-#custom-power {
-margin-right: 12px;
-background-color: #f9d8d6;
-color: #b3261e;
+#battery.warning {
+    color: #fab387;
 }
 
-#tray {
-background-color: #d3e3fd;
+#battery.critical {
+    color: #f38ba8;
+    animation-name: blink;
+    animation-duration: 0.5s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+@keyframes blink {
+    to {
+        background-color: #f38ba8;
+        color: #1e1e2e;
+    }
 }
