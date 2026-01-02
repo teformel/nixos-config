@@ -100,7 +100,7 @@
   services.displayManager.sddm = {
     enable = true;
     wayland.enable = true; # 非常重要：让 SDDM 支持 Wayland 会话
-    theme = "sugar-dark";  # 指定我们要用的主题名字
+    theme = "sddm-astronaut-theme";  # 指定我们要用的主题名字
   };
 
   # === 🔊 声音服务配置 (PipeWire) ===
@@ -176,7 +176,7 @@
     nerd-fonts.fira-code
     sarasa-gothic
     curl
-    sddm-sugar-dark # ✨ 这里安装漂亮的主题包
+    sddm-astronaut # ✨ 这里安装漂亮的主题包
     libsForQt5.qt5.qtgraphicaleffects
     libsForQt5.qt5.qtquickcontrols2
   ];
