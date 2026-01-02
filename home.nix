@@ -56,6 +56,7 @@
     # === 手机同步 ===
     kdePackages.kdeconnect-kde # KDE Connect 核心程序
     pavucontrol  # 必装：图形化音量控制器
+    alsa-utils
   ];
 
   # === 你的 Git 配置 ===

@@ -101,6 +101,12 @@
     pulse.enable = true; # <--- 关键：兼容 PulseAudio，让 Chrome 能认出它
     # jack.enable = true; # 如果你搞音乐制作才需要这个
   };
+  # === 🚑 硬件固件补丁 ===
+  # 很多现代笔记本声卡和网卡需要这个才能正常工作
+  hardware.enableAllFirmware = true;
+  
+  # 专门针对 Intel 声卡的固件包
+  hardware.firmware = [ pkgs.sof-firmware ];
 
   # ❌ 确保你没有开启旧的 pulseaudio，二者会冲突
   # hardware.pulseaudio.enable = false; 
