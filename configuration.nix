@@ -91,6 +91,20 @@
     variant = "";
   };
 
+  # === 🔊 声音服务配置 (PipeWire) ===
+  # 必须开启 rtkit 才能让音频服务获得高优先级
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true; # <--- 关键：兼容 PulseAudio，让 Chrome 能认出它
+    # jack.enable = true; # 如果你搞音乐制作才需要这个
+  };
+
+  # ❌ 确保你没有开启旧的 pulseaudio，二者会冲突
+  # hardware.pulseaudio.enable = false; 
+
   # === 启用 KMSCON (支持中文的高清 TTY) ===
   services.kmscon = {
     enable = true;

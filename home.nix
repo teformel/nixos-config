@@ -47,7 +47,7 @@
         # 如果你确实想要 "缩放为 1" (原始大小)，就填 1
         # 如果你觉得 1 太小了，可以填 1.25, 1.5 (配合你的屏幕倍率)
         # 只要这里填了参数，字就是清晰的，不会糊！
-        "--force-device-scale-factor=1.33" 
+        "--force-device-scale-factor=1.5" 
       ];
     })
     # === 剪贴板工具 ===
@@ -55,6 +55,7 @@
     cliphist      # 历史记录管理器
     # === 手机同步 ===
     kdePackages.kdeconnect-kde # KDE Connect 核心程序
+    # pavucontrol  # 必装：图形化音量控制器
   ];
 
   # === 你的 Git 配置 ===
