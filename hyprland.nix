@@ -21,10 +21,11 @@
 monitor=,preferred,auto,auto
 
 # 2. 启动时自动运行的软件
-exec-once = dunst    # 状态栏和通知
-exec-once = waybar &
+exec-once = dunst    # 通知
+exec-once = waybar & # 状态栏
 exec-once = fcitx5 -d --replace  # 输入法 (后面会教你装)
 exec-once = hyprpaper       # 壁纸 (后面教你装)
+exec-once = clash-verge &
 
 # 3. 默认程序设定
 $terminal = kitty
