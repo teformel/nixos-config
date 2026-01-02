@@ -14,6 +14,16 @@ window#waybar {
     transition-duration: .5s;
 }
 
+#backlight {
+    color: #f9e2af; /* Catppuccin 的黄色 */
+    /* 保持和其他模块一样的磨砂背景 */
+    background-color: rgba(30, 30, 46, 0.6);
+    padding: 0 15px;
+    margin: 0 5px;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 /* === 胶囊模块通用样式 === */
 #workspaces,
 #clock,

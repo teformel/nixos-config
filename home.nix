@@ -64,6 +64,7 @@
     protonup-qt # 必装！用于下载 GE-Proton (解决很多游戏打不开的问题)
     wlogout  # 关机菜单
     btop     # 任务管理器
+    brightnessctl # ✨ 控制屏幕亮度的神器
   ];
 
   # === 你的 Git 配置 ===

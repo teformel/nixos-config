@@ -11,7 +11,7 @@
     // 左边加了 launcher，右边加了 power
     "modules-left": ["custom/launcher", "hyprland/workspaces", "hyprland/window"],
     "modules-center": ["clock"],
-    "modules-right": ["pulseaudio", "network", "cpu", "memory", "battery", "tray", "custom/power"],
+    "modules-right": ["backlight" ,"pulseaudio", "network", "cpu", "memory", "battery", "tray", "custom/power"],
 
     // === 🚀 新增：开始菜单按钮 ===
     "custom/launcher": {
@@ -94,5 +94,18 @@
     "tray": {
         "icon-size": 18,
         "spacing": 10
+    },
+
+    // === 💡 新增：亮度调节 ===
+    "backlight": {
+        "device": "intel_backlight", // 大部分笔记本是这个，如果不行删掉这行自动识别
+        "format": "{icon} {percent}%",
+        "format-icons": ["🌑", "🌘", "🌗", "🌖", "🌕"],
+        // ✨ 启用滚轮调节 (向上滚加亮度，向下滚减亮度)
+        "on-scroll-up": "brightnessctl set +5%",
+        "on-scroll-down": "brightnessctl set 5%-",
+        "on-click": "brightnessctl set 100%", // 点一下变最亮
+        "tooltip": false
     }
+
 }
