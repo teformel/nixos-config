@@ -144,14 +144,22 @@
     # 'Right Headphone Mixer Right DAC' 是我们要操作的开关名字
     # on 表示打开
     script = ''
-      # 1. 强制打开那个顽固的硬件开关
-      ${pkgs.alsa-utils}/bin/amixer -c 0 cset name='Right Headphone Mixer Right DAC' on
-      ${pkgs.alsa-utils}/bin/amixer -c 0 cset name='Left Headphone Mixer Left DAC' on
-      
-      # 2. 顺便把主音量解除静音并设为最大 (防止被意外静音)
-      ${pkgs.alsa-utils}/bin/amixer -c 0 set Master unmute
-      ${pkgs.alsa-utils}/bin/amixer -c 0 set Speaker unmute
-      ${pkgs.alsa-utils}/bin/amixer -c 0 set Headphone unmute
+      # 1. 定义声卡名称
+      CARD="sofessx8336"
+
+      # 2. 核心修复：打开左右声道的 DAC 硬件开关 (最重要的一步)
+      ${pkgs.alsa-utils}/bin/amixer -c $CARD sset 'Left Headphone Mixer Left DAC' on
+      ${pkgs.alsa-utils}/bin/amixer -c $CARD sset 'Right Headphone Mixer Right DAC' on
+
+      # 3. 打开扬声器和耳机 (并解除静音)
+      # 注意：去掉了不存在的 Master，直接操作 Speaker 和 Headphone
+      ${pkgs.alsa-utils}/bin/amixer -c $CARD sset 'Speaker' unmute
+      ${pkgs.alsa-utils}/bin/amixer -c $CARD sset 'Speaker' 100%
+      ${pkgs.alsa-utils}/bin/amixer -c $CARD sset 'Headphone' unmute
+      ${pkgs.alsa-utils}/bin/amixer -c $CARD sset 'Headphone' 100%
+
+      # 4. 确保 DAC (数字模拟转换) 音量也是满的
+      ${pkgs.alsa-utils}/bin/amixer -c $CARD sset 'DAC' 100%
     '';
   };
 
