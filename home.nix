@@ -60,6 +60,7 @@
     qq          # 官方 Linux QQ (新版 NT 架构，体验很好)
     wechat-uos  # 官方 Linux 微信 (UOS 适配版，功能较全)
     udiskie  # 自动挂载工具
+    appimage-run  # ✨ 必装：AppImage 运行器
   ];
 
   # === 你的 Git 配置 ===
