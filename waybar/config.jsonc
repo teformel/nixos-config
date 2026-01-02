@@ -85,7 +85,7 @@
         "format": "电源",
         "tooltip": false,
         "menu": "on-click",
-        "menu-file": "$HOME/.config/waybar/power_menu.xml",
+        "menu-file": "$HOME/nixos-config/waybar/power_menu.xml",
         "menu-actions": {
             "shutdown": "poweroff",
             "reboot": "reboot",
