@@ -57,6 +57,8 @@
     kdePackages.kdeconnect-kde # KDE Connect 核心程序
     pavucontrol  # 必装：图形化音量控制器
     alsa-utils
+    qq          # 官方 Linux QQ (新版 NT 架构，体验很好)
+    wechat-uos  # 官方 Linux 微信 (UOS 适配版，功能较全)
   ];
 
   # === 你的 Git 配置 ===
