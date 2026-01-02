@@ -317,10 +317,16 @@
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 
-  home-manager.useGlobalPkgs = true;
-  home-manager.useUserPackages = true;
-
-  home-manager.users.maorila = import ./home.nix;
+  # === 🏠 Home Manager 配置 ===
+  home-manager = {
+    useGlobalPkgs = true;
+    useUserPackages = true;
+    
+    # ✨✨✨ 新增这一行：遇到冲突时，自动把旧文件后缀改成 .backup
+    backupFileExtension = "backup";
+    
+    users.maorila = import ./home.nix;
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
