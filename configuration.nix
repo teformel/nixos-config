@@ -94,7 +94,9 @@
 
   # 1. 确保 Xserver 服务开启 (SDDM 依赖它)
   services.xserver.enable = true;
-
+  programs.hyprland.enable = true;
+  # services.displayManager.sddm.enable = true;
+  # services.displayManager.sddm.wayland.enable = true;
   # 2. 配置 SDDM 显示管理器
   services.xserver.displayManager.sddm = {
     enable = true;
@@ -150,10 +152,6 @@
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [];
   };
-
-  programs.hyprland.enable = true;
-  services.displayManager.sddm.enable = true;
-  services.displayManager.sddm.wayland.enable = true;
 
   # === 💾 存储设备管理 ===
   services.gvfs.enable = true; # 很多文件管理器依赖它
