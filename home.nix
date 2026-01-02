@@ -61,6 +61,8 @@
     wechat-uos  # 官方 Linux 微信 (UOS 适配版，功能较全)
     udiskie  # 自动挂载工具
     appimage-run  # ✨ 必装：AppImage 运行器
+    mangohud    # 游戏里显示 FPS/CPU 温度
+    protonup-qt # 必装！用于下载 GE-Proton (解决很多游戏打不开的问题)
   ];
 
   # === 你的 Git 配置 ===

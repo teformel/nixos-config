@@ -42,6 +42,13 @@ exec-once = udiskie -t -a &
 $terminal = kitty
 $menu = wofi --show drun
 
+windowrulev2 = float, class:^(steam)$, title:^(好友列表)$
+windowrulev2 = float, class:^(steam)$, title:^(Steam - News)$
+windowrulev2 = center, class:^(steam)$, title:^(Steam - News)$
+# 修复右键菜单错位
+windowrulev2 = stayfocused, title:^()$,class:^(steam)$
+windowrulev2 = minsize 1 1, title:^()$,class:^(steam)$
+
 # 4. 环境变量 (让鼠标和界面更好看)
 env = XCURSOR_SIZE,32
 

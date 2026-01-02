@@ -213,6 +213,25 @@
     };
   };
 
+  # === 🎮 Steam 游戏平台 ===
+  programs.steam = {
+    enable = true;
+    
+    # 如果你想用 Steam 串流 (手机玩电脑游戏)，把这个打开
+    remotePlay.openFirewall = true; 
+    
+    # 如果你想当服务器主机，把这个打开
+    dedicatedServer.openFirewall = true;
+    
+    # 修复 Steam 里的中文输入法问题 (Fcitx5)
+    # 这是一个比较新的选项，如果不生效也没关系，后续可以手动修
+    extest.enable = true; 
+  };
+  
+  # === 🎮 游戏模式 (可选但推荐) ===
+  # 这个工具能自动优化 CPU/GPU 性能，玩游戏时更流畅
+  programs.gamemode.enable = true;
+
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
