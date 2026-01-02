@@ -144,6 +144,10 @@
   services.displayManager.sddm.enable = true;
   services.displayManager.sddm.wayland.enable = true;
 
+  # === 💾 存储设备管理 ===
+  services.gvfs.enable = true; # 很多文件管理器依赖它
+  services.udisks2.enable = true; # 核心挂载服务
+
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 

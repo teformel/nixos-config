@@ -36,6 +36,9 @@ exec-once = wl-paste --type image --watch cliphist store
 # 启动托盘图标，用于配对手机
 exec-once = kdeconnect-indicator &
 
+# 启动 udiskie (参数 -t 表示显示托盘图标，-a 表示自动挂载)
+exec-once = udiskie -t -a &
+
 # 3. 默认程序设定
 $terminal = kitty
 $menu = wofi --show drun
