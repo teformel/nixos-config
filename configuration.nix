@@ -95,10 +95,9 @@
   # 1. 确保 Xserver 服务开启 (SDDM 依赖它)
   services.xserver.enable = true;
   programs.hyprland.enable = true;
-  # services.displayManager.sddm.enable = true;
-  # services.displayManager.sddm.wayland.enable = true;
+
   # 2. 配置 SDDM 显示管理器
-  services.xserver.displayManager.sddm = {
+  services.displayManager.sddm = {
     enable = true;
     wayland.enable = true; # 非常重要：让 SDDM 支持 Wayland 会话
     theme = "sugar-dark";  # 指定我们要用的主题名字
@@ -178,6 +177,8 @@
     sarasa-gothic
     curl
     sddm-sugar-dark # ✨ 这里安装漂亮的主题包
+    libsForQt5.qt5.qtgraphicaleffects
+    libsForQt5.qt5.qtquickcontrols2
   ];
 
   # === Google Chrome 强制插件策略 (系统级) ===
