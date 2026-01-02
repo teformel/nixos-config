@@ -101,6 +101,14 @@
     enable = true;
     wayland.enable = true; # 非常重要：让 SDDM 支持 Wayland 会话
     theme = "sddm-astronaut-theme";  # 指定我们要用的主题名字
+    # 💉 关键修改：直接把依赖注入给 SDDM 服务
+    # 这样它绝对能找到 QtMultimedia，不再依赖系统环境变量
+    extraPackages = with pkgs; [
+      kdePackages.qtmultimedia
+      kdePackages.qtsvg
+      kdePackages.qt5compat
+      sddm-astronaut # 主题包也可以放这里，或者保持在 systemPackages 都可以
+    ];
   };
 
   # === 🔊 声音服务配置 (PipeWire) ===
@@ -177,13 +185,6 @@
     sarasa-gothic
     curl
     sddm-astronaut # ✨ 这里安装漂亮的主题包
-    libsForQt5.qt5.qtgraphicaleffects
-    libsForQt5.qt5.qtquickcontrols2
-    # 🚑 修复 Astronaut 主题报错的关键依赖 (针对 Qt6 SDDM)
-    kdePackages.qtmultimedia  # 修复 "module QtMultimedia is not installed"
-    kdePackages.qtsvg         # 很多图标需要这个
-    kdePackages.qt5compat     # 很多新主题依然用到旧语法
-    # (如果你之前加了 libsForQt5 的包，为了保险可以留着，也可以删掉)
   ];
 
   # === Google Chrome 强制插件策略 (系统级) ===
