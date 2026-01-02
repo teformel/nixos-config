@@ -11,7 +11,7 @@
     // 左边加了 launcher，右边加了 power
     "modules-left": ["custom/launcher", "hyprland/workspaces", "hyprland/window"],
     "modules-center": ["clock"],
-    "modules-right": ["backlight" ,"pulseaudio", "pulseaudio#microphone", "network", "cpu", "memory", "battery", "tray", "custom/power"],
+    "modules-right": ["backlight" ,"pulseaudio", "pulseaudio#microphone", "network", "group/hardware", "battery", "tray", "custom/power"],
 
     // === 🚀 新增：开始菜单按钮 ===
     "custom/launcher": {
@@ -25,6 +25,17 @@
         "format": "⏻ ",
         "on-click": "wlogout", // 点击打开 wlogout
         "tooltip": false
+    },
+
+    // === 📦 新增：硬件监控抽屉 ===
+    "group/hardware": {
+        "orientation": "horizontal",
+        "modules": ["cpu", "memory"], // 抽屉里放什么
+        "drawer": {
+            "transition-duration": 500, // 动画速度
+            "children-class": "not-power",
+            "transition-left-to-right": false
+        }
     },
 
     "hyprland/workspaces": {
@@ -75,19 +86,23 @@
     },
 
     "network": {
-        "format-wifi": "  {essid}",
-        "format-ethernet": "🔗 Wired",
-        "format-disconnected": "⚠ Off",
-        "tooltip-format": "{ifname} via {gwaddr}",
-        "on-click": "kitty nmtui" // 点击打开网络管理器
+        // 👇 改成这样：只显示图标
+        "format-wifi": "{icon}", 
+        "format-ethernet": "🔗",
+        "format-disconnected": "⚠",
+        // 👇 鼠标放上去才显示名字和信号强度
+        "tooltip-format": "{essid} ({signalStrength}%)", 
+        "on-click": "kitty nmtui"
     },
 
     "pulseaudio": {
-        "format": "{icon} {volume}%",
-        "format-muted": "🔇 Muted",
+        // 👇 去掉了 {volume}%，只留图标
+        "format": "{icon}", 
+        "format-muted": "🔇",
         "format-icons": {
             "default": ["", "", ""]
         },
+        "tooltip-format": "Volume: {volume}%", // 鼠标放上去看数字
         "on-click": "pavucontrol"
     },
     
@@ -110,11 +125,12 @@
     // === 🎤 新增：麦克风监控 ===
     "pulseaudio#microphone": {
         "format": "{format_source}",
-        "format-source": " {volume}%",
-        "format-source-muted": " Muted",
-        "on-click": "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle", // 点击切换静音
+        // 👇 去掉了 {volume}%，只留图标
+        "format-source": "", 
+        "format-source-muted": "",
+        "on-click": "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle",
         "on-scroll-up": "wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 5%+",
         "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 5%-",
-        "tooltip-format": "{source_desc} | {source_volume}%"
+        "tooltip-format": "Mic: {source_volume}%"
     }
 }

@@ -111,3 +111,21 @@ window#waybar {
 @keyframes blink {
     to { background-color: #f38ba8; color: #1e1e2e; }
 }
+
+/* === 📦 硬件组样式 === */
+#group-hardware {
+    background-color: rgba(30, 30, 46, 0.6);
+    padding: 0 5px; /* 稍微紧凑一点 */
+    margin: 0 5px;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 组里面的单个模块去掉背景，防止双重背景 */
+#group-hardware #cpu,
+#group-hardware #memory {
+    background-color: transparent;
+    border: none;
+    margin: 0;
+    padding: 0 10px;
+}
