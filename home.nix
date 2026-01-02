@@ -16,7 +16,6 @@
   # === 你的个人软件 ===
   home.packages = with pkgs; [
     fastfetch
-    btop
     # 以后你想装 QQ、网易云、Spotify 都在这里加
     # === 代理工具 ===
     clash-verge-rev  # 现代化的 Clash GUI 客户端
@@ -63,6 +62,8 @@
     appimage-run  # ✨ 必装：AppImage 运行器
     mangohud    # 游戏里显示 FPS/CPU 温度
     protonup-qt # 必装！用于下载 GE-Proton (解决很多游戏打不开的问题)
+    wlogout  # 关机菜单
+    btop     # 任务管理器
   ];
 
   # === 你的 Git 配置 ===

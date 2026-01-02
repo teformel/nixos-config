@@ -1,31 +1,39 @@
 {
     "layer": "top",
     "position": "top",
-    "margin-top": 5,       // 顶部留空，制造悬浮感
+    "margin-top": 5,
     "margin-left": 10,
     "margin-right": 10,
-    "height": 30,          // 高度
-    "spacing": 4,          // 模块间距
+    "height": 30,
+    "spacing": 4,
 
-    // === 📦 模块布局 ===
-    "modules-left": ["hyprland/workspaces", "hyprland/window"],
+    // === 📦 布局变化 ===
+    // 左边加了 launcher，右边加了 power
+    "modules-left": ["custom/launcher", "hyprland/workspaces", "hyprland/window"],
     "modules-center": ["clock"],
-    "modules-right": ["pulseaudio", "network", "cpu", "memory", "battery", "tray"],
+    "modules-right": ["pulseaudio", "network", "cpu", "memory", "battery", "tray", "custom/power"],
 
-    // === 🛠️ 模块配置 ===
+    // === 🚀 新增：开始菜单按钮 ===
+    "custom/launcher": {
+        "format": " ", // NixOS 的图标
+        "on-click": "wofi --show drun", // 点击打开 Wofi
+        "tooltip": false
+    },
+
+    // === 🔴 新增：电源菜单按钮 ===
+    "custom/power": {
+        "format": "⏻ ",
+        "on-click": "wlogout", // 点击打开 wlogout
+        "tooltip": false
+    },
+
     "hyprland/workspaces": {
         "disable-scroll": true,
         "all-outputs": true,
         "format": "{icon}",
         "format-icons": {
-            "1": "一",
-            "2": "二",
-            "3": "三",
-            "4": "四",
-            "5": "五",
-            "urgent": "!",
-            "active": "●",
-            "default": "○"
+            "default": "○",
+            "active": "●"
         }
     },
 
@@ -34,18 +42,25 @@
         "separate-outputs": true
     },
 
+    // === 🖱️ 升级：时间 (支持点击) ===
     "clock": {
         "format": " {:%H:%M  📅 %m-%d}",
-        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        // 如果你没装 gnome-calendar，这行暂时没用，或者换成简单的 cal 命令
+        // "on-click": "gnome-calendar" 
     },
 
+    // === 🖱️ 升级：CPU (点击打开任务管理器) ===
     "cpu": {
         "format": " {usage}%",
-        "tooltip": false
+        "tooltip": false,
+        "on-click": "kitty btop" // 点击打开 btop
     },
 
+    // === 🖱️ 升级：内存 (点击打开任务管理器) ===
     "memory": {
-        "format": " {}%"
+        "format": " {}%",
+        "on-click": "kitty btop"
     },
 
     "battery": {
@@ -63,23 +78,17 @@
         "format-wifi": "  {essid}",
         "format-ethernet": "🔗 Wired",
         "format-disconnected": "⚠ Off",
-        "tooltip-format": "{ifname} via {gwaddr}"
+        "tooltip-format": "{ifname} via {gwaddr}",
+        "on-click": "kitty nmtui" // 点击打开网络管理器
     },
 
     "pulseaudio": {
         "format": "{icon} {volume}%",
-        "format-bluetooth": "{icon} {volume}%",
         "format-muted": "🔇 Muted",
         "format-icons": {
-            "headphone": "",
-            "hands-free": "",
-            "headset": "",
-            "phone": "",
-            "portable": "",
-            "car": "",
             "default": ["", "", ""]
         },
-        "on-click": "pavucontrol" // 点击打开音量控制
+        "on-click": "pavucontrol"
     },
     
     "tray": {
