@@ -4,7 +4,7 @@
   programs.waybar = {
     enable = true;
     # 这一行很重要，确保 waybar 能找到 systemd
-    systemd.enable = true;
+    systemd.enable = false;
   };
 
   # 直接把配置文件映射到 ~/.config/waybar/ 下
