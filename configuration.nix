@@ -90,6 +90,17 @@
     layout = "us";
     variant = "";
   };
+  # === 🖥️ 登录界面美化 (SDDM) ===
+
+  # 1. 确保 Xserver 服务开启 (SDDM 依赖它)
+  services.xserver.enable = true;
+
+  # 2. 配置 SDDM 显示管理器
+  services.xserver.displayManager.sddm = {
+    enable = true;
+    wayland.enable = true; # 非常重要：让 SDDM 支持 Wayland 会话
+    theme = "sugar-dark";  # 指定我们要用的主题名字
+  };
 
   # === 🔊 声音服务配置 (PipeWire) ===
   # 必须开启 rtkit 才能让音频服务获得高优先级
@@ -168,6 +179,7 @@
     nerd-fonts.fira-code
     sarasa-gothic
     curl
+    sddm-sugar-dark # ✨ 这里安装漂亮的主题包
   ];
 
   # === Google Chrome 强制插件策略 (系统级) ===
