@@ -102,6 +102,9 @@
       
       # 📄 文本/代码 -> 用 VSCode 打开
       "text/plain" = [ "code.desktop" ];
+
+      "x-scheme-handler/clash" = [ "clash-verge.desktop" ];
+      "x-scheme-handler/clash-verge" = [ "clash-verge.desktop" ];
     };
   };
 
