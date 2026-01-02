@@ -36,23 +36,27 @@ $menu = wofi --show drun
 # === 🎨 装饰配置 (核心美化) ===
 # 让窗口变得圆润、透明、有阴影
 decoration {
-    rounding = 15  # 圆角大小 (越大越圆)
+    rounding = 15
 
-    # ☁️ 毛玻璃模糊效果
+    # ☁️ 毛玻璃模糊
     blur {
         enabled = true
-        size = 5        # 模糊半径
-        passes = 3      # 模糊强度 (3是黄金数值)
+        size = 5
+        passes = 3
         new_optimizations = true
-        ignore_opacity = true # 即使窗口全透明也模糊
+        ignore_opacity = true
     }
 
-    # 🌑 阴影效果 (增加立体感)
-    drop_shadow = true
-    shadow_range = 30
-    shadow_render_power = 3
-    col.shadow = rgba(1a1a1aee)
+    # 👇 重点修复：新版 Hyprland 的阴影必须写在 shadow { ... } 里面
+    # 以前的 drop_shadow = true 这种写法已经被废弃了
+    shadow {
+        enabled = true
+        range = 30
+        render_power = 3
+        color = rgba(1a1a1aee)
+    }
 }
+
 
 # === 🎬 丝滑动画 (果冻效果) ===
 animations {
@@ -77,8 +81,8 @@ animations {
 
 # === ✨ 特效规则 ===
 # 让 Waybar 也就是顶栏变成毛玻璃效果 (前提是你 CSS 里设了透明)
-layerrule = blur, waybar
-layerrule = ignorezero, waybar
+layerrule = blur,waybar
+layerrule = ignorezero,waybar
 
 # 4. 环境变量
 env = XCURSOR_SIZE,32
