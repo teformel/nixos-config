@@ -39,8 +39,10 @@
       # 启动 waybar，并把日志输出丢掉，防止填满缓冲区
       waybar > /dev/null 2>&1 &
     '')
-    (pkgs.google-chrome.override {
-      commandLineArgs = "--ozone-platform=x11";
+    # ✅ 方案：强制 Wayland 模式 + 开启输入法支持
+    # 这样字体是高清的，而且 Chrome 自身会尝试去兼容 fcitx5
+    (google-chrome.override {
+      commandLineArgs = "--ozone-platform=wayland --enable-wayland-ime";
     })
     # === 剪贴板工具 ===
     wl-clipboard  # 基础工具 (Wayland 剪贴板后端)
