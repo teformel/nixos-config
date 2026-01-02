@@ -138,5 +138,99 @@
 
   # 让 Home Manager 管理自己
   programs.home-manager.enable = true;
+
+  # === 🔒 锁屏界面 (Hyprlock) ===
+  programs.hyprlock = {
+    enable = true;
+    
+    settings = {
+      general = {
+        no_fade_in = false;
+        grace = 0;
+        disable_loading_bar = true;
+      };
+
+      # 🖼️ 背景配置 (毛玻璃效果)
+      background = [
+        {
+          path = "/home/maorila/Pictures/壁纸/杂图/IMG_20251220_094732.png"; # 你的壁纸路径
+          blur_passes = 2; # 模糊强度 (0-4)
+          blur_size = 7;
+          noise = 0.0117;
+          contrast = 0.8916;
+          brightness = 0.8172;
+          vibrancy = 0.1696;
+          vibrancy_darkness = 0.0;
+        }
+      ];
+
+      # 🕒 时间显示 (大字体)
+      label = [
+        {
+          text = "$TIME";
+          color = "rgba(200, 200, 200, 1.0)";
+          font_size = 120;
+          font_family = "JetBrains Mono ExtraBold";
+          position = "0, -300";
+          halign = "center";
+          valign = "top";
+          shadow_passes = 2;
+        }
+        # 👤 用户问候语
+        {
+          text = "Hi, $USER";
+          color = "rgba(200, 200, 200, 1.0)";
+          font_size = 25;
+          font_family = "JetBrains Mono";
+          position = "0, -40";
+          halign = "center";
+          valign = "center";
+        }
+      ];
+
+      # ⌨️ 输入框 (极简风格)
+      input-field = [
+        {
+          size = "250, 60";
+          position = "0, -20";
+          monitor = "";
+          dots_center = true;
+          fade_on_empty = false;
+          font_color = "rgb(202, 211, 245)";
+          inner_color = "rgba(0, 0, 0, 0.5)"; # 半透明黑色背景
+          outer_color = "rgba(0, 0, 0, 0)";   # 无边框
+          outline_thickness = 5;
+          placeholder_text = "Password...";
+          shadow_passes = 2;
+        }
+      ];
+    };
+  };
+
+  # === 💤 自动休眠服务 (Hypridle) ===
+  # 必须装这个，否则无法自动锁屏
+  services.hypridle = {
+    enable = true;
+    settings = {
+      general = {
+        lock_cmd = "pidof hyprlock || hyprlock";       # 锁屏命令
+        before_sleep_cmd = "loginctl lock-session";    # 睡眠前锁屏
+        after_sleep_cmd = "hyprctl dispatch dpms on";  # 唤醒后打开屏幕
+      };
+
+      listener = [
+        {
+          timeout = 300;                                # 5分钟无操作
+          on-timeout = "loginctl lock-session";         # 锁屏
+        }
+        {
+          timeout = 330;                                # 5.5分钟无操作
+          on-timeout = "hyprctl dispatch dpms off";     # 关闭屏幕省电
+          on-resume = "hyprctl dispatch dpms on";       # 动鼠标就亮屏
+        }
+      ];
+    };
+  };
+
 }
 

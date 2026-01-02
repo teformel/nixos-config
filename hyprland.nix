@@ -111,6 +111,9 @@ bind = $mainMod, M, exit,
 # 使用 wofi 显示列表，选中后自动复制
 bind = SUPER SHIFT, V, exec, cliphist list | wofi --dmenu | cliphist decode | wl-copy
 
+# === 🔒 Win + L 锁屏 ===
+bind = $mainMod, L, exec, hyprlock
+
 # 切换焦点的快捷键 (用方向键或 hjkl)
 bind = $mainMod, left, movefocus, l
 bind = $mainMod, right, movefocus, r
