@@ -76,10 +76,14 @@ animations {
 # layerrule = ignorezero, waybar
 
 # 4. 环境变量与杂项
-env = XCURSOR_SIZE,32
 env = QT_AUTO_SCREEN_SCALE_FACTOR,1
 env = QT_QPA_PLATFORM,wayland;xcb
 env = GDK_SCALE,1
+# === 👇 新增：强制统一鼠标样式 (解决鼠标不一致的核心) ===
+# 告诉所有 XWayland 程序使用这个主题
+env = XCURSOR_THEME,Bibata-Modern-Ice
+# 确保大小一致 (如果你 home.nix 里是 24，这里也写 24)
+env = XCURSOR_SIZE,24
 
 xwayland {
   force_zero_scaling = true
