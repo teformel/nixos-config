@@ -88,3 +88,21 @@ window#waybar {
         color: #1e1e2e;
     }
 }
+
+/* === 🚀 开始菜单按钮样式 === */
+#custom-launcher {
+    background-color: #89b4fa; /* 蓝色背景 */
+    color: #1e1e2e; /* 黑色图标 */
+    border-radius: 15px;
+    padding: 0 10px;
+    margin-right: 10px; /* 和后面拉开点距离 */
+}
+
+/* === 🔴 电源按钮样式 === */
+#custom-power {
+    background-color: #f38ba8; /* 红色背景 */
+    color: #1e1e2e;
+    border-radius: 15px;
+    padding: 0 10px;
+    margin-left: 10px;
+}
