@@ -76,16 +76,31 @@ animations {
 # layerrule = ignorezero, waybar
 
 # 4. 环境变量与杂项
-env = QT_AUTO_SCREEN_SCALE_FACTOR,1
 env = QT_QPA_PLATFORM,wayland;xcb
-env = GDK_SCALE,1
 # === 👇 新增：强制统一鼠标样式 (解决鼠标不一致的核心) ===
 # 告诉所有 XWayland 程序使用这个主题
 env = XCURSOR_THEME,Bibata-Modern-Ice
-# 确保大小一致 (如果你 home.nix 里是 24，这里也写 24)
+
+# === 📺 屏幕缩放与 XWayland 修复 ===
+# 1. 告诉 Qt 程序："不用你自动缩放，听我的"
+# (之前你设为 1 可能导致了太小，我们先保留它，用下面的 scale factor 来控制)
+env = QT_AUTO_SCREEN_SCALE_FACTOR,1
+
+# 2. ✨ 核心：告诉 Qt 程序放大 1.5 倍 or 2 倍
+# 根据你的屏幕，如果觉得太小就填 1.5 或 2
+env = QT_SCALE_FACTOR,1.5
+
+# 3. ✨ 核心：告诉 GTK/X11 程序放大
+# GDK_SCALE 只能填整数 (1, 2, 3...)。
+# 如果填 2 太大，填 1 太小，那只能忍受 2 (稍微大点总比看不见好)
+env = GDK_SCALE,2
+
+# 4. 微调鼠标大小 (之前你设过，保持统一)
 env = XCURSOR_SIZE,24
 
 xwayland {
+  # false = 允许 Hyprland 拉伸 XWayland 窗口 (会变大，但轻微模糊)
+  # true  = 禁止拉伸 (点对点显示，非常清晰，但就是你现在的"蚂蚁字"状态)
   force_zero_scaling = true
 }
 
