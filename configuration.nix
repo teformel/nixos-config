@@ -123,7 +123,38 @@
     pulse.enable = true; # <--- 关键：兼容 PulseAudio，让 Chrome 能认出它
     # jack.enable = true; # 如果你搞音乐制作才需要这个
   };
-  
+
+  # === 🔊 声明式音频修复 (Sof-Essx8336) ===
+  # 这种声卡默认会把 DAC 通道静音，这里我们强制在开机时打开它
+  systemd.services.fix-sof-sound = {
+    description = "Unmute sof-essx8336 channels on boot";
+    
+    # 确保在音频系统启动后运行
+    after = [ "sound.target" "pipewire.service" ]; 
+    wantedBy = [ "multi-user.target" ];
+    
+    # 这是一次性任务
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+    };
+
+    # 👇 核心脚本：这里就是把你在 AlsaMixer 里做的操作写成代码
+    # -c 0 表示第一个声卡 (通常就是你的 SOF)
+    # 'Right Headphone Mixer Right DAC' 是我们要操作的开关名字
+    # on 表示打开
+    script = ''
+      # 1. 强制打开那个顽固的硬件开关
+      ${pkgs.alsa-utils}/bin/amixer -c 0 cset name='Right Headphone Mixer Right DAC' on
+      ${pkgs.alsa-utils}/bin/amixer -c 0 cset name='Left Headphone Mixer Left DAC' on
+      
+      # 2. 顺便把主音量解除静音并设为最大 (防止被意外静音)
+      ${pkgs.alsa-utils}/bin/amixer -c 0 set Master unmute
+      ${pkgs.alsa-utils}/bin/amixer -c 0 set Speaker unmute
+      ${pkgs.alsa-utils}/bin/amixer -c 0 set Headphone unmute
+    '';
+  };
+
   # === 🚀 切换到最新内核 (解决新硬件驱动问题) ===
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
