@@ -5,15 +5,16 @@
     font-weight: bold;
 }
 
-/* === 透明背景，制造悬浮感 === */
+/* === 透明背景 === */
+/* 让 Waybar 本体完全透明，只显示上面的模块 */
 window#waybar {
-    background-color: transparent; 
-    color: #cdd6f4; /* 字体白 */
+    background-color: transparent;
+    color: #cdd6f4;
     transition-property: background-color;
     transition-duration: .5s;
 }
 
-/* === 胶囊形状的基础样式 === */
+/* === 胶囊模块通用样式 === */
 #workspaces,
 #clock,
 #window,
@@ -22,16 +23,24 @@ window#waybar {
 #cpu,
 #memory,
 #battery,
-#tray {
-    background-color: #1e1e2e; /* 深蓝黑背景 */
+#tray,
+#custom-launcher,
+#custom-power {
+    /* 👇 关键点：背景色改成半透明 (0.6 = 60% 不透明度) */
+    /* 配合 Hyprland 的 blur 规则，这里会变成漂亮的毛玻璃 */
+    background-color: rgba(30, 30, 46, 0.6);
+
     padding: 0 15px;
     margin: 0 5px;
     border-radius: 15px; /* 圆角 */
-    border: 2px solid #11111b; /* 边框 */
+    
+    /* 给一个淡淡的半透明边框，增加精致感 */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
     color: #cdd6f4;
 }
 
-/* === 工作区特殊样式 === */
+/* === 工作区 (Workspaces) === */
 #workspaces button {
     padding: 0 5px;
     background-color: transparent;
@@ -40,69 +49,41 @@ window#waybar {
 }
 
 #workspaces button:hover {
-    background-color: #313244;
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 #workspaces button.active {
-    background-color: #89b4fa; /* 激活时变蓝 */
-    color: #1e1e2e; /* 激活时字变黑 */
+    background-color: #89b4fa; /* 激活项保持亮色 */
+    color: #1e1e2e;
 }
 
-/* === 各个模块的个性化颜色 (可选) === */
-#clock {
-    color: #fab387; /* 橙色 */
+/* === 颜色微调 (让字体颜色在深色磨砂背景上更清晰) === */
+#clock { color: #fab387; }
+#pulseaudio { color: #f9e2af; }
+#network { color: #a6e3a1; }
+#battery { color: #94e2d5; }
+
+#battery.charging { color: #a6e3a1; }
+#battery.warning { color: #fab387; }
+#battery.critical { color: #f38ba8; animation: blink 0.5s infinite alternate; }
+
+/* === 左右两侧按钮 === */
+#custom-launcher {
+    /* 开始菜单稍微亮一点 */
+    background-color: rgba(137, 180, 250, 0.8); 
+    color: #1e1e2e;
+    margin-right: 10px;
+    padding: 0 12px; /* 稍微宽一点 */
 }
 
-#pulseaudio {
-    color: #f9e2af; /* 黄色 */
-}
-
-#network {
-    color: #a6e3a1; /* 绿色 */
-}
-
-#battery {
-    color: #94e2d5; /* 青色 */
-}
-
-#battery.charging {
-    color: #a6e3a1;
-}
-
-#battery.warning {
-    color: #fab387;
-}
-
-#battery.critical {
-    color: #f38ba8;
-    animation-name: blink;
-    animation-duration: 0.5s;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-    animation-direction: alternate;
+#custom-power {
+    /* 电源按钮稍微亮一点 */
+    background-color: rgba(243, 139, 168, 0.8);
+    color: #1e1e2e;
+    margin-left: 10px;
+    padding: 0 10px;
 }
 
 @keyframes blink {
-    to {
-        background-color: #f38ba8;
-        color: #1e1e2e;
-    }
-}
-
-/* === 🚀 开始菜单按钮样式 === */
-#custom-launcher {
-    background-color: #89b4fa; /* 蓝色背景 */
-    color: #1e1e2e; /* 黑色图标 */
-    border-radius: 15px;
-    padding: 0 10px;
-    margin-right: 10px; /* 和后面拉开点距离 */
-}
-
-/* === 🔴 电源按钮样式 === */
-#custom-power {
-    background-color: #f38ba8; /* 红色背景 */
-    color: #1e1e2e;
-    border-radius: 15px;
-    padding: 0 10px;
-    margin-left: 10px;
+    to { background-color: #f38ba8; color: #1e1e2e; }
 }

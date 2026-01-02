@@ -5,66 +5,93 @@
   wayland.windowManager.hyprland = {
     enable = true;
 
-    # 这里是自动配置环境变量，为了保证最好的兼容性，建议设为 true
+    # 系统集成
     systemd.enable = true;
     xwayland.enable = true;
 
-    # === 方法 A：直接粘贴你的旧配置 ===
-    # 把你之前的 hyprland.conf 内容全部粘贴到下面两个单引号之间
+    # === 配置内容 ===
     extraConfig = ''
       
 # ==========================================
-#  我的第一个 Hyprland 配置
+#  ✨ Hyprland 美化版配置
 # ==========================================
 
-# 1. 显示器配置 (自动适配分辨率，如果不自动适配请手动指定)
+# 1. 显示器配置
 monitor=,preferred,auto,auto
 
-# 2. 启动时自动运行的软件
-exec-once = dunst    # 通知
-exec-once = start-waybar # 状态栏
-exec-once = fcitx5 -d --replace  # 输入法 (后面会教你装)
+# 2. 自启应用
+exec-once = dunst
+exec-once = start-waybar
+exec-once = fcitx5 -d --replace
 exec-once = clash-verge &
-
-# === 📋 剪贴板历史监听 ===
-# 监听文本和图片复制
 exec-once = wl-paste --type text --watch cliphist store
 exec-once = wl-paste --type image --watch cliphist store
-
-# === 📱 KDE Connect 守护进程 ===
-# 启动托盘图标，用于配对手机
 exec-once = kdeconnect-indicator &
-
-# 启动 udiskie (参数 -t 表示显示托盘图标，-a 表示自动挂载)
 exec-once = udiskie -t -a &
 
-# 3. 默认程序设定
+# 3. 默认程序
 $terminal = kitty
 $menu = wofi --show drun
 
-windowrulev2 = float, class:^(steam)$, title:^(好友列表)$
-windowrulev2 = float, class:^(steam)$, title:^(Steam - News)$
-windowrulev2 = center, class:^(steam)$, title:^(Steam - News)$
-# 修复右键菜单错位
-windowrulev2 = stayfocused, title:^()$,class:^(steam)$
-windowrulev2 = minsize 1 1, title:^()$,class:^(steam)$
+# === 🎨 装饰配置 (核心美化) ===
+# 让窗口变得圆润、透明、有阴影
+decoration {
+    rounding = 15  # 圆角大小 (越大越圆)
 
-# 4. 环境变量 (让鼠标和界面更好看)
+    # ☁️ 毛玻璃模糊效果
+    blur {
+        enabled = true
+        size = 5        # 模糊半径
+        passes = 3      # 模糊强度 (3是黄金数值)
+        new_optimizations = true
+        ignore_opacity = true # 即使窗口全透明也模糊
+    }
+
+    # 🌑 阴影效果 (增加立体感)
+    drop_shadow = true
+    shadow_range = 30
+    shadow_render_power = 3
+    col.shadow = rgba(1a1a1aee)
+}
+
+# === 🎬 丝滑动画 (果冻效果) ===
+animations {
+    enabled = yes
+
+    # 贝塞尔曲线 (定义动画的节奏：快-慢-快)
+    bezier = wind, 0.05, 0.9, 0.1, 1.05
+    bezier = winIn, 0.1, 1.1, 0.1, 1.1
+    bezier = winOut, 0.3, -0.3, 0, 1
+    bezier = liner, 1, 1, 1, 1
+
+    # 应用动画
+    animation = windows, 1, 6, wind, slide       # 窗口出现
+    animation = windowsIn, 1, 6, winIn, slide    # 窗口弹入
+    animation = windowsOut, 1, 5, winOut, slide  # 窗口弹出
+    animation = windowsMove, 1, 5, wind, slide   # 窗口移动
+    animation = border, 1, 1, liner
+    animation = borderangle, 1, 30, liner, loop  # 边框流光
+    animation = fade, 1, 10, default             # 渐变
+    animation = workspaces, 1, 5, wind           # 工作区切换
+}
+
+# === ✨ 特效规则 ===
+# 让 Waybar 也就是顶栏变成毛玻璃效果 (前提是你 CSS 里设了透明)
+layerrule = blur, waybar
+layerrule = ignorezero, waybar
+
+# 4. 环境变量
 env = XCURSOR_SIZE,32
-
 env = QT_AUTO_SCREEN_SCALE_FACTOR,1
 env = QT_QPA_PLATFORM,wayland;xcb
 env = QT_WAYLAND_DISABLE_WINDOWDECORATION,1
-
 env = GDK_SCALE,1
 
-# === 关键：禁止 XWayland 模糊 ===
-# 强制让 X11 程序按 1:1 渲染，不再模糊拉伸
 xwayland {
-  force_zero_scaling = true;
+  force_zero_scaling = true
 }
 
-# 5. 核心输入配置
+# 5. 输入配置
 input {
     kb_layout = us
     follow_mouse = 1
@@ -73,64 +100,61 @@ input {
     }
 }
 
-# 6. 外观配置 (圆角、边框颜色)
+# 6. 常规外观 (边框颜色)
 general {
-    gaps_in = 5
-    gaps_out = 10
+    gaps_in = 5      # 窗口间隙
+    gaps_out = 10    # 边缘间隙
     border_size = 2
-    col.active_border = rgba(33ccffee) rgba(00ff99ee) 45deg
+    
+    # 🎨 边框颜色：蓝紫渐变
+    col.active_border = rgba(89b4faee) rgba(cba6f7ee) 45deg
     col.inactive_border = rgba(595959aa)
+    
     layout = dwindle
 }
 
-# 7. 动画配置 (Hyprland 的精髓)
-animations {
-    enabled = yes
-    bezier = myBezier, 0.05, 0.9, 0.1, 1.05
-    animation = windows, 1, 7, myBezier
-    animation = windowsOut, 1, 7, default, popin 80%
-    animation = border, 1, 10, default
-    animation = fade, 1, 7, default
-    animation = workspaces, 1, 6, default
-}
+# 7. 窗口规则
+windowrulev2 = float, class:^(steam)$, title:^(好友列表)$
+windowrulev2 = float, class:^(steam)$, title:^(Steam - News)$
+windowrulev2 = center, class:^(steam)$, title:^(Steam - News)$
+windowrulev2 = stayfocused, title:^()$,class:^(steam)$
+windowrulev2 = minsize 1 1, title:^()$,class:^(steam)$
 
-# 8. 关键快捷键 (绑定)
+# 8. 快捷键
 $mainMod = SUPER
 
-bind = $mainMod, Q, exec, $terminal      # 打开终端
-bind = $mainMod, C, killactive,          # 关闭当前窗口
-bind = $mainMod, M, exit,                # 退出 Hyprland
-bind = $mainMod, E, exec, dolphin        # 打开文件管理器 (如果你修好了的话)
-bind = $mainMod, V, togglefloating,      # 切换窗口悬浮/平铺
-bind = $mainMod, R, exec, $menu          # 打开程序启动菜单 (Wofi)
-
-bind = $mainMod, Q, killactive,
+bind = $mainMod, Q, exec, $terminal
+bind = $mainMod, C, killactive,
 bind = $mainMod, M, exit,
+bind = $mainMod, E, exec, dolphin
+bind = $mainMod, V, togglefloating,
+bind = $mainMod, R, exec, $menu
 
-# === ✨ Super + V 呼出剪贴板历史 ===
-# 使用 wofi 显示列表，选中后自动复制
+# 剪贴板历史
 bind = SUPER SHIFT, V, exec, cliphist list | wofi --dmenu | cliphist decode | wl-copy
 
-# === 🔒 Win + L 锁屏 ===
+# 锁屏
 bind = $mainMod, L, exec, hyprlock
 
-# 切换焦点的快捷键 (用方向键或 hjkl)
+# 焦点移动
 bind = $mainMod, left, movefocus, l
 bind = $mainMod, right, movefocus, r
 bind = $mainMod, up, movefocus, u
 bind = $mainMod, down, movefocus, d
 
-# 切换工作区 (1-5)
+# 切换工作区
 bind = $mainMod, 1, workspace, 1
 bind = $mainMod, 2, workspace, 2
 bind = $mainMod, 3, workspace, 3
 bind = $mainMod, 4, workspace, 4
 bind = $mainMod, 5, workspace, 5
 
-# 移动窗口到工作区
+# 移动窗口
 bind = $mainMod SHIFT, 1, movetoworkspace, 1
 bind = $mainMod SHIFT, 2, movetoworkspace, 2
-# ...以此类推
+bind = $mainMod SHIFT, 3, movetoworkspace, 3
+bind = $mainMod SHIFT, 4, movetoworkspace, 4
+bind = $mainMod SHIFT, 5, movetoworkspace, 5
     '';
   };
 }
