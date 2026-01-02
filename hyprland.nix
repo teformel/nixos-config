@@ -110,7 +110,7 @@ windowrulev2 = stayfocused, title:^()$,class:^(steam)$
 windowrulev2 = minsize 1 1, title:^()$,class:^(steam)$
 
 # 6. 快捷键
-bind = $mainMod, Q, exec, $terminal
+bind = $mainMod, T, exec, $terminal
 bind = $mainMod, C, killactive,
 bind = $mainMod, M, exit,
 bind = $mainMod, E, exec, dolphin
