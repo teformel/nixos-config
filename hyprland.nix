@@ -24,7 +24,6 @@ monitor=,preferred,auto,auto
 exec-once = dunst    # 通知
 exec-once = start-waybar # 状态栏
 exec-once = fcitx5 -d --replace  # 输入法 (后面会教你装)
-exec-once = hyprpaper       # 壁纸 (后面教你装)
 exec-once = clash-verge &
 
 # === 📋 剪贴板历史监听 ===
