@@ -145,7 +145,7 @@
         update_url = "https://clients2.google.com/service/update2/crx";
       };
       # 2. Raindrop.io
-      "kdfieneakcjfaiglcfcgkidlkmljjgpl" = {
+      "ldgfbffkinooeloadekpmfoklnobpien" = {
         installation_mode = "force_installed";
         update_url = "https://clients2.google.com/service/update2/crx";
       };
