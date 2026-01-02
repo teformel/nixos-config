@@ -49,6 +49,12 @@ env = QT_WAYLAND_DISABLE_WINDOWDECORATION,1
 
 env = GDK_SCALE,1
 
+# === 关键：禁止 XWayland 模糊 ===
+# 强制让 X11 程序按 1:1 渲染，不再模糊拉伸
+xwayland {
+  force_zero_scaling = true;
+}
+
 # 5. 核心输入配置
 input {
     kb_layout = us

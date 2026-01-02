@@ -39,10 +39,16 @@
       # 启动 waybar，并把日志输出丢掉，防止填满缓冲区
       waybar > /dev/null 2>&1 &
     '')
-    # ✅ 方案：强制 Wayland 模式 + 开启输入法支持
-    # 这样字体是高清的，而且 Chrome 自身会尝试去兼容 fcitx5
     (google-chrome.override {
-      commandLineArgs = "--ozone-platform=wayland --enable-wayland-ime";
+      commandLineArgs = builtins.concatStringsSep " " [
+        "--ozone-platform=x11"
+
+        # ✨ 这里设置你想要的缩放比例
+        # 如果你确实想要 "缩放为 1" (原始大小)，就填 1
+        # 如果你觉得 1 太小了，可以填 1.25, 1.5 (配合你的屏幕倍率)
+        # 只要这里填了参数，字就是清晰的，不会糊！
+        "--force-device-scale-factor=1" 
+      ];
     })
     # === 剪贴板工具 ===
     wl-clipboard  # 基础工具 (Wayland 剪贴板后端)
