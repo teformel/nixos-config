@@ -118,6 +118,13 @@ bind = $mainMod, V, togglefloating,
 bind = $mainMod, R, exec, $menu
 bind = $mainMod, L, exec, hyprlock
 
+# === 📸 截图快捷键 ===
+    # Print 键：区域截图 -> 自动跳出编辑窗口 -> 编辑完按 Ctrl+C 复制，或点保存
+    bind = , Print, exec, ~/.local/bin/myshot
+
+    # Shift + Print 键：全屏截图 (不选区，直接截整个屏幕)
+    bind = SHIFT, Print, exec, grim - | swappy -f -
+
 # ==========================================
 # 🎹 笔记本功能键修复
 # ==========================================

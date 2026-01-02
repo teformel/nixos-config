@@ -66,7 +66,39 @@
     btop     # 任务管理器
     brightnessctl # ✨ 控制屏幕亮度的神器
     playerctl   # ✨ 媒体控制 (切歌/暂停)
+    # === 📸 截屏工具 ===
+    grim    # 核心：负责把屏幕画面抓下来
+    slurp   # 核心：负责让你用鼠标画一个框
+    swappy  # 核心：负责弹出一个编辑窗口，让你画箭头、保存
+    
   ];
+
+  # === 定义截图脚本 ===
+  # 这个脚本的逻辑是：
+  # 1. 运行 slurp 让用户选区
+  # 2. 运行 grim 把选区截图
+  # 3. 传给 swappy 进行编辑
+  home.file.".local/bin/myshot".source = pkgs.writeShellScript "myshot" ''
+    # 如果没选区直接取消，不报错
+    GEOMETRY=$(slurp) || exit 1
+    
+    # 截图并发送给 Swappy 编辑
+    grim -g "$GEOMETRY" - | swappy -f -
+  '';
+
+  # 配置 Swappy 把图片默认保存在哪里
+  xdg.configFile."swappy/config".text = ''
+    [Default]
+    save_dir=$HOME/Pictures/Screenshots
+    save_filename_format=Screenshot_%Y-%m-%d_%H-%M-%S.png
+    show_panel=true
+    line_size=5
+    text_size=20
+    text_font=sans-serif
+    paint_mode=brush
+    early_exit=false
+    fill_shape=false
+  '';
 
   # === 你的 Git 配置 ===
   programs.git = {
