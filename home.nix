@@ -34,7 +34,7 @@
       killall .waybar-wrapped waybar 2>/dev/null
 
       # 等待 1 秒，确保 Hyprland 图形界面已就绪
-      sleep 1
+      sleep 0.3
 
       # 启动 waybar，并把日志输出丢掉，防止填满缓冲区
       waybar > /dev/null 2>&1 &
