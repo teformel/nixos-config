@@ -38,9 +38,31 @@
   programs.bash = {
     enable = true;
     shellAliases = {
-      rebuild = "sudo nixos-rebuild switch";
       ll = "ls -l";
     };
+  };
+
+  # === Shell 别名配置 ===
+  # 这会同时应用到 bash, zsh, fish 等所有 Shell
+  home.shellAliases = {
+    # 给带参数的启动方式起个新名字，比如 "chrome-x11"
+    chrome-x11 = "google-chrome-stable --ozone-platform=x11";
+
+    # 常用命令缩写示例 (顺便送你两个好用的)
+    c = "clear";
+    rebuild = "sudo nixos-rebuild switch --flake ~/nixos-config";
+  };
+
+  # === 覆盖 Chrome 的启动图标 ===
+  xdg.desktopEntries."google-chrome" = {
+    name = "Google Chrome (X11)";  # 改个名方便确认生效了
+    genericName = "Web Browser";
+    # 重点在这里：强制加上 --ozone-platform=x11 参数
+    exec = "${pkgs.google-chrome}/bin/google-chrome-stable --ozone-platform=x11 %U";
+    terminal = false;
+    icon = "google-chrome";
+    categories = [ "Network" "WebBrowser" ];
+    mimeType = [ "text/html" "text/xml" "application/xhtml+xml" "x-scheme-handler/http" "x-scheme-handler/https" ];
   };
 
   programs.vscode = {
