@@ -23,6 +23,20 @@ window#waybar {
     border-radius: 15px;
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
+/* === 🎤 麦克风样式 === */
+#pulseaudio.microphone {
+    color: #f5c2e7; /* Catppuccin Pink */
+    background-color: rgba(30, 30, 46, 0.6);
+    padding: 0 15px;
+    margin: 0 5px;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+/* 静音时变暗或者变色 */
+#pulseaudio.microphone.muted {
+    color: #9399b2; /* 灰色，表示没在录音 */
+    background-color: rgba(30, 30, 46, 0.4);
+}
 
 /* === 胶囊模块通用样式 === */
 #workspaces,

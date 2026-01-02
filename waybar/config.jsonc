@@ -11,7 +11,7 @@
     // 左边加了 launcher，右边加了 power
     "modules-left": ["custom/launcher", "hyprland/workspaces", "hyprland/window"],
     "modules-center": ["clock"],
-    "modules-right": ["backlight" ,"pulseaudio", "network", "cpu", "memory", "battery", "tray", "custom/power"],
+    "modules-right": ["backlight" ,"pulseaudio", "pulseaudio#microphone", "network", "cpu", "memory", "battery", "tray", "custom/power"],
 
     // === 🚀 新增：开始菜单按钮 ===
     "custom/launcher": {
@@ -106,6 +106,15 @@
         "on-scroll-down": "brightnessctl set 5%-",
         "on-click": "brightnessctl set 100%", // 点一下变最亮
         "tooltip": false
+    },
+    // === 🎤 新增：麦克风监控 ===
+    "pulseaudio#microphone": {
+        "format": "{format_source}",
+        "format-source": " {volume}%",
+        "format-source-muted": " Muted",
+        "on-click": "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle", // 点击切换静音
+        "on-scroll-up": "wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 5%+",
+        "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 5%-",
+        "tooltip-format": "{source_desc} | {source_volume}%"
     }
-
 }
