@@ -133,6 +133,7 @@
     nerd-fonts.fira-code
     sarasa-gothic
     pkgs.google-chrome
+    curl
   ];
 
   # === Google Chrome 强制插件策略 (系统级) ===
