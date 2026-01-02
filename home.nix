@@ -104,7 +104,7 @@
   programs.git = {
     enable = true;
     # ✨ 改成这种层级结构
-    extraConfig = {
+    settings = {
       user = {
         name = "maorila";
         email = "maorila@qq.com";
