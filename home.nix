@@ -95,6 +95,10 @@
     nix-direnv.enable = true;
   };
 
+  # === 关键：让 Home Manager 接管字体配置 ===
+  # 这能解决部分软件在用户级安装后字体发虚、锯齿的问题
+  fonts.fontconfig.enable = true;
+
   # 让 Home Manager 管理自己
   programs.home-manager.enable = true;
 }
