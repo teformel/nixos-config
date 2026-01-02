@@ -27,6 +27,15 @@ exec-once = fcitx5 -d --replace  # 输入法 (后面会教你装)
 exec-once = hyprpaper       # 壁纸 (后面教你装)
 exec-once = clash-verge &
 
+# === 📋 剪贴板历史监听 ===
+# 监听文本和图片复制
+exec-once = wl-paste --type text --watch cliphist store
+exec-once = wl-paste --type image --watch cliphist store
+
+# === 📱 KDE Connect 守护进程 ===
+# 启动托盘图标，用于配对手机
+exec-once = kdeconnect-indicator &
+
 # 3. 默认程序设定
 $terminal = kitty
 $menu = wofi --show drun
@@ -79,6 +88,13 @@ bind = $mainMod, M, exit,                # 退出 Hyprland
 bind = $mainMod, E, exec, dolphin        # 打开文件管理器 (如果你修好了的话)
 bind = $mainMod, V, togglefloating,      # 切换窗口悬浮/平铺
 bind = $mainMod, R, exec, $menu          # 打开程序启动菜单 (Wofi)
+
+bind = $mainMod, Q, killactive,
+bind = $mainMod, M, exit,
+
+# === ✨ Super + V 呼出剪贴板历史 ===
+# 使用 wofi 显示列表，选中后自动复制
+bind = SUPER, V, exec, cliphist list | wofi --dmenu | cliphist decode | wl-copy
 
 # 切换焦点的快捷键 (用方向键或 hjkl)
 bind = $mainMod, left, movefocus, l

@@ -39,6 +39,11 @@
     (pkgs.google-chrome.override {
       commandLineArgs = "--ozone-platform=x11";
     })
+    # === 剪贴板工具 ===
+    wl-clipboard  # 基础工具 (Wayland 剪贴板后端)
+    cliphist      # 历史记录管理器
+    # === 手机同步 ===
+    kdePackages.kdeconnect-kde # KDE Connect 核心程序
   ];
 
   # === 你的 Git 配置 ===

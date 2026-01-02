@@ -34,6 +34,18 @@
   # 设置不走代理的地址 (避免本地回环也走代理导致连不上)
   networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
+  # === KDE Connect 防火墙规则 ===
+  # 必须开启，否则手机搜不到电脑
+  networking.firewall = {
+    enable = true;
+    allowedTCPPortRanges = [
+      { from = 1714; to = 1764; }
+    ];
+    allowedUDPPortRanges = [
+      { from = 1714; to = 1764; }
+    ];
+  };
+
   # Set your time zone.
   time.timeZone = "Asia/Shanghai";
 
