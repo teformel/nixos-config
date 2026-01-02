@@ -26,16 +26,19 @@
     # 如果想显示更多怪奇图标，可以加上 material-design-icons
     material-design-icons
     # 定义一个叫 start-waybar 的小脚本
-  (pkgs.writeShellScriptBin "start-waybar" ''
-    # 先杀掉所有可能存在的 waybar 进程
-    killall .waybar-wrapped waybar 2>/dev/null
+    (pkgs.writeShellScriptBin "start-waybar" ''
+      # 先杀掉所有可能存在的 waybar 进程
+      killall .waybar-wrapped waybar 2>/dev/null
 
-    # 等待 1 秒，确保 Hyprland 图形界面已就绪
-    sleep 1
+      # 等待 1 秒，确保 Hyprland 图形界面已就绪
+      sleep 1
 
-    # 启动 waybar，并把日志输出丢掉，防止填满缓冲区
-    waybar > /dev/null 2>&1 &
-  '')
+      # 启动 waybar，并把日志输出丢掉，防止填满缓冲区
+      waybar > /dev/null 2>&1 &
+    '')
+    (pkgs.google-chrome.override {
+      commandLineArgs = "--ozone-platform=x11";
+    })
   ];
 
   # === 你的 Git 配置 ===
@@ -56,28 +59,9 @@
   # === Shell 别名配置 ===
   # 这会同时应用到 bash, zsh, fish 等所有 Shell
   home.shellAliases = {
-    # 给带参数的启动方式起个新名字，比如 "chrome-x11"
-    chrome-x11 = "google-chrome-stable --ozone-platform=x11";
-
     # 常用命令缩写示例 (顺便送你两个好用的)
     c = "clear";
     rebuild = "sudo nixos-rebuild switch --flake ~/nixos-config";
-  };
-
-  # === 覆盖 Chrome 启动方式 ===
-  xdg.desktopEntries = {
-    # 键名必须和系统里的文件名一致（不带 .desktop）
-    # 既然你确认是 google-chrome，那就用这个：
-    "google-chrome" = {
-      name = "Chrome (X11 Mode)";  # 改个新名字，方便确认生效
-      genericName = "Web Browser";
-      # 注意：虽然文件名叫 google-chrome，但二进制命令通常叫 google-chrome-stable
-      exec = "${pkgs.google-chrome}/bin/google-chrome-stable --ozone-platform=x11 %U";
-      terminal = false;
-      icon = "google-chrome";
-      categories = [ "Network" "WebBrowser" ];
-      mimeType = [ "text/html" "text/xml" "application/xhtml+xml" "x-scheme-handler/http" "x-scheme-handler/https" ];
-    };
   };
 
   programs.vscode = {

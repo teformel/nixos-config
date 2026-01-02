@@ -132,7 +132,6 @@
     nerd-fonts.jetbrains-mono
     nerd-fonts.fira-code
     sarasa-gothic
-    pkgs.google-chrome
     curl
   ];
 
