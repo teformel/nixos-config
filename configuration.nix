@@ -15,7 +15,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   # Use latest kernel.
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  # boot.kernelPackages = pkgs.linuxPackages_latest;
 
   networking.hostName = "maorila-laptop"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -101,15 +101,14 @@
     pulse.enable = true; # <--- 关键：兼容 PulseAudio，让 Chrome 能认出它
     # jack.enable = true; # 如果你搞音乐制作才需要这个
   };
-  # === 🚑 硬件固件补丁 ===
-  # 很多现代笔记本声卡和网卡需要这个才能正常工作
-  hardware.enableAllFirmware = true;
   
-  # 专门针对 Intel 声卡的固件包
-  hardware.firmware = [ pkgs.sof-firmware ];
+  # === 🚀 切换到最新内核 (解决新硬件驱动问题) ===
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  # ❌ 确保你没有开启旧的 pulseaudio，二者会冲突
-  # hardware.pulseaudio.enable = false; 
+  # === 🚑 保持固件开启 ===
+  # 这个芯片必须要有 sof-firmware 才能发声，千万别删
+  hardware.enableAllFirmware = true;
+  hardware.firmware = [ pkgs.sof-firmware ];
 
   # === 启用 KMSCON (支持中文的高清 TTY) ===
   services.kmscon = {
