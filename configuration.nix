@@ -101,13 +101,15 @@
     enable = true;
     wayland.enable = true; # 非常重要：让 SDDM 支持 Wayland 会话
     # theme = "sddm-astronaut-theme";  # 指定我们要用的主题名字
-    theme = "where_is_my_sddm_theme";
+    theme = "sddm-astronaut_theme";
     # 💉 关键修改：直接把依赖注入给 SDDM 服务
     # 这样它绝对能找到 QtMultimedia，不再依赖系统环境变量
     extraPackages = with pkgs; [
       kdePackages.qtmultimedia
       kdePackages.qtsvg
       kdePackages.qt5compat
+      sddm-astronaut
+      where-is-my-sddm-theme
     ];
   };
 
