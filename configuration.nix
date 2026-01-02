@@ -179,6 +179,11 @@
     sddm-astronaut # ✨ 这里安装漂亮的主题包
     libsForQt5.qt5.qtgraphicaleffects
     libsForQt5.qt5.qtquickcontrols2
+    # 🚑 修复 Astronaut 主题报错的关键依赖 (针对 Qt6 SDDM)
+    kdePackages.qtmultimedia  # 修复 "module QtMultimedia is not installed"
+    kdePackages.qtsvg         # 很多图标需要这个
+    kdePackages.qt5compat     # 很多新主题依然用到旧语法
+    # (如果你之前加了 libsForQt5 的包，为了保险可以留着，也可以删掉)
   ];
 
   # === Google Chrome 强制插件策略 (系统级) ===
