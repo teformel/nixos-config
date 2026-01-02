@@ -118,6 +118,28 @@ bind = $mainMod, V, togglefloating,
 bind = $mainMod, R, exec, $menu
 bind = $mainMod, L, exec, hyprlock
 
+# ==========================================
+# 🎹 笔记本功能键修复
+# ==========================================
+
+# 1. 🔊 音量控制 (使用 wpctl，它是 PipeWire 的标准工具)
+# 这里的 @DEFAULT_AUDIO_SINK@ 会自动识别你当前的声卡
+bindel = , XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+
+bindel = , XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
+bindl  = , XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+# 麦克风静音
+bindl  = , XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
+
+# 2. ☀️ 亮度控制 (使用 brightnessctl)
+bindel = , XF86MonBrightnessUp, exec, brightnessctl set 5%+
+bindel = , XF86MonBrightnessDown, exec, brightnessctl set 5%-
+
+# 3. 🎵 媒体控制 (使用 playerctl)
+# 无论你在用 Spotify、网易云还是浏览器，它都能控制
+bindl = , XF86AudioPlay, exec, playerctl play-pause
+bindl = , XF86AudioNext, exec, playerctl next
+bindl = , XF86AudioPrev, exec, playerctl previous
+
 # 剪贴板
 bind = SUPER SHIFT, V, exec, cliphist list | wofi --dmenu | cliphist decode | wl-copy
 

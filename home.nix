@@ -65,6 +65,7 @@
     wlogout  # 关机菜单
     btop     # 任务管理器
     brightnessctl # ✨ 控制屏幕亮度的神器
+    playerctl   # ✨ 媒体控制 (切歌/暂停)
   ];
 
   # === 你的 Git 配置 ===
