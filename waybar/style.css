@@ -1,0 +1,113 @@
+* {
+    border: none;
+    border-radius: 0;
+    font-family: "JetBrainsMono Nerd Font", "Sarasa Mono SC";
+    font-weight: bold;
+    font-size: 14px;
+    min-height: 0;
+}
+
+window#waybar {
+    background: rgba(21, 18, 27, 0);
+    color: #cdd6f4;
+}
+
+tooltip {
+    background: #1e1e2e;
+    border-radius: 10px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #11111b;
+}
+
+#workspaces button {
+    padding: 5px;
+    color: #313244;
+    margin-right: 5px;
+}
+
+#workspaces button.active {
+    color: #a6e3a1;
+    background: transparent;
+}
+
+#workspaces button:hover {
+    background: #11111b;
+    color: #cdd6f4;
+    border-radius: 15px;
+}
+
+/* 模块通用样式：圆角胶囊 */
+#clock,
+#battery,
+#cpu,
+#memory,
+#disk,
+#temperature,
+#backlight,
+#network,
+#pulseaudio,
+#wireplumber,
+#custom-media,
+#tray,
+#mode,
+#idle_inhibitor,
+#scratchpad,
+#mpd {
+    padding: 0 10px;
+    color: #f5f5f5;
+    background-color: #1e1e2e; /* 深色背景 */
+    border-radius: 15px;
+    margin: 6px 3px;
+    opacity: 0.9;
+}
+
+/* 针对不同模块的特殊颜色点缀 */
+#clock {
+    background-color: #fab387; /* 橘色 (小橘猫/奶酥色) */
+    color: #1e1e2e;
+}
+
+#hyprland-workspaces {
+    background-color: #1e1e2e;
+    border-radius: 15px;
+    margin: 6px 3px;
+    padding: 0 5px;
+}
+
+#pulseaudio {
+    color: #89b4fa;
+}
+
+#memory {
+    color: #a6e3a1;
+}
+
+#cpu {
+    color: #f9e2af;
+}
+
+#battery {
+    color: #a6e3a1;
+}
+
+#battery.charging, #battery.plugged {
+    color: #26A65B;
+}
+
+#battery.critical:not(.charging) {
+    background-color: #f38ba8;
+    color: #bf5600;
+    animation-name: blink;
+    animation-duration: 0.5s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+@keyframes blink {
+    to {
+        background-color: #ffffff;
+        color: #000000;
+    }
+}

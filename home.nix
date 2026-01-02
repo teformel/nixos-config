@@ -3,6 +3,7 @@
 {
   imports = [
     ./hyprland.nix
+    ./waybar/default.nix
   ];
 
   # 注意：这是必须要有的基本信息
