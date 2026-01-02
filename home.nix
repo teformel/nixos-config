@@ -71,7 +71,39 @@
     slurp   # 核心：负责让你用鼠标画一个框
     swappy  # 核心：负责弹出一个编辑窗口，让你画箭头、保存
     adwaita-icon-theme  # ✨ 修复 Fcitx 和系统托盘图标丢失
+    # === 🎬 多媒体全家桶 ===
+    mpv              # 视频播放器 (极简、高性能)
+    imv              # 图片查看器 (Wayland 原生，超快)
+    amberol          # 音乐播放器 (界面很美，专注听歌)
+    # === 🧩 缩略图增强 (让 Dolphin 显示视频预览) ===
+    ffmpegthumbnailer 
+    kdePackages.qtimageformats # 让 Dolphin 支持更多图片格式(如webp)
   ];
+
+  # === 🖇️ 默认文件打开方式 ===
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications = {
+      # 🖼️ 图片 -> 用 imv 打开
+      "image/jpeg" = [ "imv.desktop" ];
+      "image/png"  = [ "imv.desktop" ];
+      "image/gif"  = [ "imv.desktop" ];
+      "image/webp" = [ "imv.desktop" ];
+
+      # 🎬 视频 -> 用 mpv 打开
+      "video/mp4"  = [ "mpv.desktop" ];
+      "video/mkv"  = [ "mpv.desktop" ];
+      "video/webm" = [ "mpv.desktop" ];
+      "video/x-matroska" = [ "mpv.desktop" ];
+
+      # 🎵 音乐 -> 用 Amberol 打开 (或者 mpv.desktop)
+      "audio/mpeg" = [ "io.bassi.Amberol.desktop" ];
+      "audio/flac" = [ "io.bassi.Amberol.desktop" ];
+      
+      # 📄 文本/代码 -> 用 VSCode 打开
+      "text/plain" = [ "code.desktop" ];
+    };
+  };
 
   # === 定义截图脚本 ===
   # 这个脚本的逻辑是：
