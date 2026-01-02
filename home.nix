@@ -64,16 +64,20 @@
     rebuild = "sudo nixos-rebuild switch --flake ~/nixos-config";
   };
 
-  # === 覆盖 Chrome 的启动图标 ===
-  xdg.desktopEntries."google-chrome" = {
-    name = "Google Chrome (X11)";  # 改个名方便确认生效了
-    genericName = "Web Browser";
-    # 重点在这里：强制加上 --ozone-platform=x11 参数
-    exec = "${pkgs.google-chrome}/bin/google-chrome-stable --ozone-platform=x11 %U";
-    terminal = false;
-    icon = "google-chrome";
-    categories = [ "Network" "WebBrowser" ];
-    mimeType = [ "text/html" "text/xml" "application/xhtml+xml" "x-scheme-handler/http" "x-scheme-handler/https" ];
+  # === 覆盖 Chrome 启动方式 ===
+  xdg.desktopEntries = {
+    # 键名必须和系统里的文件名一致（不带 .desktop）
+    # 既然你确认是 google-chrome，那就用这个：
+    "google-chrome" = {
+      name = "Chrome (X11 Mode)";  # 改个新名字，方便确认生效
+      genericName = "Web Browser";
+      # 注意：虽然文件名叫 google-chrome，但二进制命令通常叫 google-chrome-stable
+      exec = "${pkgs.google-chrome}/bin/google-chrome-stable --ozone-platform=x11 %U";
+      terminal = false;
+      icon = "google-chrome";
+      categories = [ "Network" "WebBrowser" ];
+      mimeType = [ "text/html" "text/xml" "application/xhtml+xml" "x-scheme-handler/http" "x-scheme-handler/https" ];
+    };
   };
 
   programs.vscode = {
