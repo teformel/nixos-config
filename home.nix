@@ -55,7 +55,7 @@
     cliphist      # 历史记录管理器
     # === 手机同步 ===
     kdePackages.kdeconnect-kde # KDE Connect 核心程序
-    # pavucontrol  # 必装：图形化音量控制器
+    pavucontrol  # 必装：图形化音量控制器
   ];
 
   # === 你的 Git 配置 ===
