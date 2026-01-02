@@ -100,14 +100,14 @@
   services.displayManager.sddm = {
     enable = true;
     wayland.enable = true; # 非常重要：让 SDDM 支持 Wayland 会话
-    theme = "sddm-astronaut-theme";  # 指定我们要用的主题名字
+    # theme = "sddm-astronaut-theme";  # 指定我们要用的主题名字
+    theme = "where_is_my_sddm_theme";
     # 💉 关键修改：直接把依赖注入给 SDDM 服务
     # 这样它绝对能找到 QtMultimedia，不再依赖系统环境变量
     extraPackages = with pkgs; [
       kdePackages.qtmultimedia
       kdePackages.qtsvg
       kdePackages.qt5compat
-      sddm-astronaut # 主题包也可以放这里，或者保持在 systemPackages 都可以
     ];
   };
 
@@ -185,6 +185,10 @@
     sarasa-gothic
     curl
     sddm-astronaut # ✨ 这里安装漂亮的主题包
+    where-is-my-sddm-theme # ✨ 极简高颜值主题
+    kdePackages.qtmultimedia
+    kdePackages.qtsvg
+    kdePackages.qt5compat
   ];
 
   # === Google Chrome 强制插件策略 (系统级) ===
