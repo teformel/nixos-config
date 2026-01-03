@@ -78,35 +78,51 @@
     # === 🧩 缩略图增强 (让 Dolphin 显示视频预览) ===
     ffmpegthumbnailer 
     kdePackages.qtimageformats # 让 Dolphin 支持更多图片格式(如webp)
+    # 🩹 核心修复：提供 Dolphin 缺失的菜单结构文件
+    gnome-menus
   ];
 
-  # === 🖇️ 默认文件打开方式 ===
-  # xdg.mimeApps = {
-  #   enable = true;
-  #   defaultApplications = {
-  #     # 🖼️ 图片 -> 用 imv 打开
-  #     "image/jpeg" = [ "imv.desktop" ];
-  #     "image/png"  = [ "imv.desktop" ];
-  #     "image/gif"  = [ "imv.desktop" ];
-  #     "image/webp" = [ "imv.desktop" ];
+  # === 1. 定义默认软件关联 (这是核心配置) ===
+  xdg.mimeApps = {
+    enable = true;
+    
+    # 强制让这套配置生效，不让 KDE 乱改
+    # 这会解决 "Existing file ... would be clobbered" 的报错
+    # 也会解决 Dolphin 记不住的问题
+    associations.added = {
+      "image/jpeg" = ["imv.desktop"];
+      "image/png" = ["imv.desktop"];
+      "video/mp4" = ["mpv.desktop"];
+    };
+    
+    defaultApplications = {
+      # 🖼️ 图片 -> imv
+      "image/jpeg" = [ "imv.desktop" ];
+      "image/png"  = [ "imv.desktop" ];
+      "image/gif"  = [ "imv.desktop" ];
+      "image/webp" = [ "imv.desktop" ];
+      "image/bmp"  = [ "imv.desktop" ];
 
-  #     # 🎬 视频 -> 用 mpv 打开
-  #     "video/mp4"  = [ "mpv.desktop" ];
-  #     "video/mkv"  = [ "mpv.desktop" ];
-  #     "video/webm" = [ "mpv.desktop" ];
-  #     "video/x-matroska" = [ "mpv.desktop" ];
+      # 🎬 视频 -> mpv
+      "video/mp4"  = [ "mpv.desktop" ];
+      "video/mkv"  = [ "mpv.desktop" ];
+      "video/webm" = [ "mpv.desktop" ];
+      "video/x-matroska" = [ "mpv.desktop" ];
 
-  #     # 🎵 音乐 -> 用 Amberol 打开 (或者 mpv.desktop)
-  #     "audio/mpeg" = [ "io.bassi.Amberol.desktop" ];
-  #     "audio/flac" = [ "io.bassi.Amberol.desktop" ];
+      # 🎵 音乐 -> Amberol
+      "audio/mpeg" = [ "io.bassi.Amberol.desktop" ];
+      "audio/flac" = [ "io.bassi.Amberol.desktop" ];
       
-  #     # 📄 文本/代码 -> 用 VSCode 打开
-  #     "text/plain" = [ "code.desktop" ];
-
-  #     "x-scheme-handler/clash" = [ "clash-verge.desktop" ];
-  #     "x-scheme-handler/clash-verge" = [ "clash-verge.desktop" ];
-  #   };
-  # };
+      # 📄 文本 -> VSCode
+      "text/plain" = [ "code.desktop" ];
+      "application/pdf" = [ "google-chrome.desktop" ]; 
+      "text/html" = [ "google-chrome.desktop" ];
+    };
+  };
+  # === 2. ✨ 关键修复：强制接管配置文件 ===
+  # 这行代码的意思是：如果不小心产生了冲突文件，直接覆盖它！
+  # 这样你就再也不用手动去 rm 删除文件了。
+  xdg.configFile."mimeapps.list".force = true;
 
   # === 定义截图脚本 ===
   # 这个脚本的逻辑是：

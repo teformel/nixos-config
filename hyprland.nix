@@ -98,6 +98,15 @@ env = GDK_SCALE,2
 # 4. 微调鼠标大小 (之前你设过，保持统一)
 env = XCURSOR_SIZE,24
 
+# env = [
+# # ✨✨✨ 修复 Dolphin 关联问题的关键变量
+# # 告诉 KDE 程序使用 plasma 的菜单定义
+# "XDG_MENU_PREFIX,plasma-"
+# ];
+# env = XDG_MENU_PREFIX,plasma-
+# ✨ 告诉 KDE/Dolphin：去读 GNOME 的菜单文件 (因为我们刚才装了这个)
+env = XDG_MENU_PREFIX,gnome-
+
 xwayland {
   # false = 允许 Hyprland 拉伸 XWayland 窗口 (会变大，但轻微模糊)
   # true  = 禁止拉伸 (点对点显示，非常清晰，但就是你现在的"蚂蚁字"状态)
