@@ -82,6 +82,8 @@
     gnome-menus
     # 📶 网络管理全家桶
     networkmanagerapplet  # 提供 nm-applet (托盘图标) 和 nm-connection-editor (编辑工具)
+    # 🦀 开源远程控制 (替代 TeamViewer/ToDesk)
+    rustdesk
   ];
 
   # === 1. 定义默认软件关联 (这是核心配置) ===
