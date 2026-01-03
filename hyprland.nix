@@ -24,6 +24,8 @@ exec-once = wl-paste --type text --watch cliphist store
 exec-once = wl-paste --type image --watch cliphist store
 exec-once = kdeconnect-indicator &
 exec-once = udiskie -t -a &
+# ✨ 启动 WiFi 托盘图标
+exec-once = nm-applet --indicator
 
 # 3. 基础变量
 $terminal = kitty

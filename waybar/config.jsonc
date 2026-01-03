@@ -11,8 +11,8 @@
     // 左边加了 launcher，右边加了 power
     "modules-left": ["custom/launcher", "hyprland/workspaces", "hyprland/window"],
     "modules-center": ["clock"],
-    "modules-right": ["backlight" ,"pulseaudio", "pulseaudio#microphone", "network", "group/hardware", "battery", "tray", "custom/power"],
-
+    "modules-right": ["backlight" ,"pulseaudio", "pulseaudio#microphone", "group/hardware", "battery", "network", "tray", "custom/power"],
+    
     // === 🚀 新增：开始菜单按钮 ===
     "custom/launcher": {
         "format": " ", // NixOS 的图标
@@ -85,14 +85,29 @@
         "format-icons": ["", "", "", "", ""]
     },
 
+    // "network": {
+    //     // 👇 改成这样：只显示图标
+    //     "format-wifi": "{icon}", 
+    //     "format-ethernet": "🔗",
+    //     "format-disconnected": "⚠",
+    //     // 👇 鼠标放上去才显示名字和信号强度
+    //     "tooltip-format": "{essid} ({signalStrength}%)", 
+    //     "on-click": "kitty nmtui"
+    // },
+
     "network": {
-        // 👇 改成这样：只显示图标
-        "format-wifi": "{icon}", 
-        "format-ethernet": "🔗",
-        "format-disconnected": "⚠",
-        // 👇 鼠标放上去才显示名字和信号强度
-        "tooltip-format": "{essid} ({signalStrength}%)", 
-        "on-click": "kitty nmtui"
+        // 📶 设定接口 (删除 interface 让它自动识别，这样最稳)
+        // "interface": "wlan0",
+        
+        "interval": 5,
+        // ✨ 修复重点：只使用最标准的 {ssid} 和 {signalStrength}
+        // 不要使用 {icon}，除非你定义了 format-icons
+        "format-wifi": "  {ssid} {signalStrength}%",
+        "format-ethernet": "🔗 Wired",
+        "format-disconnected": "💤 Disconnected",
+        "tooltip-format": "{ifname}: {ipaddr}",
+        // 点击可以直接打开网络管理器
+        "on-click": "nm-connection-editor"
     },
 
     "pulseaudio": {

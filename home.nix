@@ -80,6 +80,8 @@
     kdePackages.qtimageformats # 让 Dolphin 支持更多图片格式(如webp)
     # 🩹 核心修复：提供 Dolphin 缺失的菜单结构文件
     gnome-menus
+    # 📶 网络管理全家桶
+    networkmanagerapplet  # 提供 nm-applet (托盘图标) 和 nm-connection-editor (编辑工具)
   ];
 
   # === 1. 定义默认软件关联 (这是核心配置) ===
