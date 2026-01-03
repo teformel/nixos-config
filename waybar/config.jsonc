@@ -11,7 +11,7 @@
     // 左边加了 launcher，右边加了 power
     "modules-left": ["custom/launcher", "hyprland/workspaces", "hyprland/window"],
     "modules-center": ["clock"],
-    "modules-right": ["backlight" ,"pulseaudio", "pulseaudio#microphone", "group/hardware", "battery", "network", "tray", "custom/power"],
+    "modules-right": ["backlight" ,"pulseaudio", "pulseaudio#microphone", "group/hardware", "battery", "tray", "custom/power"],
     
     // === 🚀 新增：开始菜单按钮 ===
     "custom/launcher": {
@@ -83,16 +83,6 @@
         "format-charging": "⚡ {capacity}%",
         "format-plugged": " {capacity}%",
         "format-icons": ["", "", "", "", ""]
-    },
-
-    "network": {
-        "interval": 5,
-        "format-wifi": "{icon} {ssid} {signalStrength}%",
-        "format-ethernet": "Wired",
-        "format-disconnected": "Disconnected",
-        "tooltip-format": "{ifname}: {ipaddr}",
-        "on-click": "nm-connection-editor",
-        "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"]
     },
 
     "pulseaudio": {
