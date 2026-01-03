@@ -96,18 +96,15 @@
     // },
 
     "network": {
-        // 📶 设定接口 (删除 interface 让它自动识别，这样最稳)
-        // "interface": "wlan0",
-        
         "interval": 5,
-        // ✨ 修复重点：只使用最标准的 {ssid} 和 {signalStrength}
-        // 不要使用 {icon}，除非你定义了 format-icons
-        "format-wifi": "  {ssid} {signalStrength}%",
+        // 使用 {icon} 来显示动态图标
+        "format-wifi": "{icon} {ssid} {signalStrength}%",
         "format-ethernet": "🔗 Wired",
         "format-disconnected": "💤 Disconnected",
         "tooltip-format": "{ifname}: {ipaddr}",
-        // 点击可以直接打开网络管理器
-        "on-click": "nm-connection-editor"
+        "on-click": "nm-connection-editor",
+        // ✨ 这里定义了不同信号强度对应的图标
+        "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"]
     },
 
     "pulseaudio": {
