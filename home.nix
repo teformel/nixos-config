@@ -81,32 +81,32 @@
   ];
 
   # === 🖇️ 默认文件打开方式 ===
-  xdg.mimeApps = {
-    enable = true;
-    defaultApplications = {
-      # 🖼️ 图片 -> 用 imv 打开
-      "image/jpeg" = [ "imv.desktop" ];
-      "image/png"  = [ "imv.desktop" ];
-      "image/gif"  = [ "imv.desktop" ];
-      "image/webp" = [ "imv.desktop" ];
+  # xdg.mimeApps = {
+  #   enable = true;
+  #   defaultApplications = {
+  #     # 🖼️ 图片 -> 用 imv 打开
+  #     "image/jpeg" = [ "imv.desktop" ];
+  #     "image/png"  = [ "imv.desktop" ];
+  #     "image/gif"  = [ "imv.desktop" ];
+  #     "image/webp" = [ "imv.desktop" ];
 
-      # 🎬 视频 -> 用 mpv 打开
-      "video/mp4"  = [ "mpv.desktop" ];
-      "video/mkv"  = [ "mpv.desktop" ];
-      "video/webm" = [ "mpv.desktop" ];
-      "video/x-matroska" = [ "mpv.desktop" ];
+  #     # 🎬 视频 -> 用 mpv 打开
+  #     "video/mp4"  = [ "mpv.desktop" ];
+  #     "video/mkv"  = [ "mpv.desktop" ];
+  #     "video/webm" = [ "mpv.desktop" ];
+  #     "video/x-matroska" = [ "mpv.desktop" ];
 
-      # 🎵 音乐 -> 用 Amberol 打开 (或者 mpv.desktop)
-      "audio/mpeg" = [ "io.bassi.Amberol.desktop" ];
-      "audio/flac" = [ "io.bassi.Amberol.desktop" ];
+  #     # 🎵 音乐 -> 用 Amberol 打开 (或者 mpv.desktop)
+  #     "audio/mpeg" = [ "io.bassi.Amberol.desktop" ];
+  #     "audio/flac" = [ "io.bassi.Amberol.desktop" ];
       
-      # 📄 文本/代码 -> 用 VSCode 打开
-      "text/plain" = [ "code.desktop" ];
+  #     # 📄 文本/代码 -> 用 VSCode 打开
+  #     "text/plain" = [ "code.desktop" ];
 
-      "x-scheme-handler/clash" = [ "clash-verge.desktop" ];
-      "x-scheme-handler/clash-verge" = [ "clash-verge.desktop" ];
-    };
-  };
+  #     "x-scheme-handler/clash" = [ "clash-verge.desktop" ];
+  #     "x-scheme-handler/clash-verge" = [ "clash-verge.desktop" ];
+  #   };
+  # };
 
   # === 定义截图脚本 ===
   # 这个脚本的逻辑是：
