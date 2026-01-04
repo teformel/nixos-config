@@ -23,7 +23,7 @@
     
     # 你的别名
     shellAliases = {
-      
+      ll = "eza -l";
     };
     
     # 历史记录

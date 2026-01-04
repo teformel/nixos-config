@@ -164,21 +164,13 @@
     };
   };
 
-  # === 你的 Bash 配置 ===
-  programs.bash = {
-    enable = true;
-    shellAliases = {
-      ll = "ls -l";
-    };
-  };
-
   # === Shell 别名配置 ===
   # 这会同时应用到 bash, zsh, fish 等所有 Shell
   home.shellAliases = {
     # 常用命令缩写示例 (顺便送你两个好用的)
     c = "clear";
     rebuild = "sudo nixos-rebuild switch --flake ~/nixos-config";
-    ff= "fastfetch";
+    ff = "fastfetch";
   };
 
   programs.vscode = {
