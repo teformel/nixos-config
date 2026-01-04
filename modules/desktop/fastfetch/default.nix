@@ -1,17 +1,16 @@
 { pkgs, ... }:
 
 {
-  # 安装 fastfetch
   home.packages = with pkgs; [ fastfetch ];
 
-  # 生成配置文件
   xdg.configFile."fastfetch/config.jsonc".text = ''
     {
       "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
       "logo": {
-        "type": "nixos",
+        "source": "nixos_small",  // ✨ 改用小 Logo，更优雅
         "padding": {
-          "top": 2
+          "top": 1,
+          "left": 2   // 给左边一点留白，让它居中一点
         }
       },
       "display": {
@@ -21,7 +20,7 @@
         // ─── Title ───
         {
             "type": "title",
-            "format": "{user}@{host-name}"
+            "format": "{1}@{2}"  // ✨ 修复：使用 {1} (用户) 和 {2} (主机)
         },
         // ─── System Info ───
         {
