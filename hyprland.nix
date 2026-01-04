@@ -161,6 +161,18 @@
         "$mainMod SHIFT, 3, movetoworkspace, 3"
         "$mainMod SHIFT, 4, movetoworkspace, 4"
         "$mainMod SHIFT, 5, movetoworkspace, 5"
+
+        # 🔄 移动窗口位置 (比如把左边的窗口换到右边)
+        "$mainMod SHIFT, left, movewindow, l"
+        "$mainMod SHIFT, right, movewindow, r"
+        "$mainMod SHIFT, up, movewindow, u"
+        "$mainMod SHIFT, down, movewindow, d"
+        
+        # 🔄 调整窗口大小 (按住 Super + Alt + 方向键)
+        "$mainMod ALT, left, resizeactive, -40 0"
+        "$mainMod ALT, right, resizeactive, 40 0"
+        "$mainMod ALT, up, resizeactive, 0 -40"
+        "$mainMod ALT, down, resizeactive, 0 40"
       ];
 
       # 媒体与特殊按键 (bindl / bindel)
@@ -183,6 +195,14 @@
         ", XF86AudioPlay, exec, playerctl play-pause"
         ", XF86AudioNext, exec, playerctl next"
         ", XF86AudioPrev, exec, playerctl previous"
+      ];
+
+      # === 鼠标绑定 (最像 Windows 的操作) ===
+      # 1. 按住 Super + 鼠标左键：拖拽移动窗口 (像 Windows 一样)
+      # 2. 按住 Super + 鼠标右键：拖拽调整大小
+      bindm = [
+        "$mainMod, mouse:272, movewindow"
+        "$mainMod, mouse:273, resizewindow"
       ];
     };
   };
