@@ -2,9 +2,10 @@
 
 {
   imports = [
-    ./modules/desktop/hyprland/default.nix
-    ./modules/desktop/waybar/default.nix
-    ./modules/desktop/fastfetch/default.nix
+    ./modules/desktop/hyprland
+    ./modules/desktop/waybar
+    ./modules/desktop/fastfetch
+    ./modules/desktop/shell
   ];
 
   # 注意：这是必须要有的基本信息
