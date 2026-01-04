@@ -4,6 +4,7 @@
   imports = [
     ./modules/desktop/hyprland/default.nix
     ./modules/desktop/waybar/default.nix
+    ./modules/desktop/fastfetch/default.nix
   ];
 
   # 注意：这是必须要有的基本信息
@@ -14,7 +15,6 @@
 
   # === 你的个人软件 ===
   home.packages = with pkgs; [
-    fastfetch
     # 以后你想装 QQ、网易云、Spotify 都在这里加
     # === 代理工具 ===
     clash-verge-rev  # 现代化的 Clash GUI 客户端
@@ -177,6 +177,7 @@
     # 常用命令缩写示例 (顺便送你两个好用的)
     c = "clear";
     rebuild = "sudo nixos-rebuild switch --flake ~/nixos-config";
+    ff= "fastfetch";
   };
 
   programs.vscode = {
