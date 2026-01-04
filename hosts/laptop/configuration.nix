@@ -108,6 +108,15 @@
     kdePackages.qtsvg
     kdePackages.qt5compat
   ];
+  
+  # === 🔐 密钥环服务 (解决 Google/VSCode 登录无法保存的问题) ===
+  services.gnome.gnome-keyring.enable = true;
+  
+  # 这一步很重要：让 Hyprland 登录时自动解锁密钥环
+  security.pam.services.hyprland.enableGnomeKeyring = true;
+  
+  # 如果你是用 sddm 或其它登录管理器，最好也加上通用的 login 解锁
+  security.pam.services.login.enableGnomeKeyring = true;
 
   system.stateVersion = "25.11"; 
 }

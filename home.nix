@@ -17,6 +17,7 @@
     ./modules/programs/vscode     # ✨ 路径变了
     ./modules/programs/fastfetch  # ✨ 归类到这里了
     ./modules/programs/shell      # ✨ 归类到这里了
+    # ./modules/programs/antigravity
   ];
 
   # === 用户基本信息 ===
@@ -74,7 +75,7 @@
 
     # 以后你想装 QQ、网易云、Spotify 都在这里加
     adwaita-icon-theme  # ✨ 修复 Fcitx 和系统托盘图标丢失
-    pkgs.antigravity
+    seahorse # GUI 密钥管理器
   ];
 
   # === 🖱️ 全局鼠标光标配置 (修复 Gdk-Message 报错) ===
