@@ -85,6 +85,7 @@
     grim    # 核心：负责把屏幕画面抓下来
     slurp   # 核心：负责让你用鼠标画一个框
     swappy  # 核心：负责弹出一个编辑窗口，让你画箭头、保存
+    psmisc
     # 自定义脚本：启动 Waybar
     (pkgs.writeShellScriptBin "start-waybar" ''
       killall .waybar-wrapped waybar 2>/dev/null
