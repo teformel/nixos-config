@@ -74,6 +74,7 @@
 
     # 以后你想装 QQ、网易云、Spotify 都在这里加
     adwaita-icon-theme  # ✨ 修复 Fcitx 和系统托盘图标丢失
+    pkgs.antigravity
   ];
 
   # === 🖱️ 全局鼠标光标配置 (修复 Gdk-Message 报错) ===
