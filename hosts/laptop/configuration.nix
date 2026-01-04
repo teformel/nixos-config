@@ -17,15 +17,26 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = pkgs.linuxPackages_latest; # 使用最新内核
 
+  # === 🚀 [新增] 内核参数 (开启 IP 转发，辅助 TUN 模式) ===
+  boot.kernel.sysctl = {
+    "net.ipv4.ip_forward" = 1;
+    "net.ipv6.conf.all.forwarding" = 1;
+  };
+
   # === 网络与代理 ===
   networking.hostName = "maorila-laptop";
   networking.networkmanager.enable = true;
   networking.proxy.default = "http://127.0.0.1:7897";
   networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
   
-  # 防火墙 (KDE Connect)
+# 防火墙 (KDE Connect & TUN 模式支持)
   networking.firewall = {
     enable = true;
+    
+    # 🚀 [新增] 关闭反向路径过滤
+    # 这是 TUN 模式最关键的设置！如果不加这行，开启 TUN 后会彻底没网。
+    checkReversePath = false; 
+
     allowedTCPPortRanges = [ { from = 1714; to = 1764; } ];
     allowedUDPPortRanges = [ { from = 1714; to = 1764; } ];
   };

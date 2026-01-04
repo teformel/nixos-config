@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   imports = [
@@ -86,6 +86,24 @@
     name = "Bibata-Modern-Ice";
     size = 24;
   };
+
+  # 2. 第二步：激进清理 (Activation Script)
+  # 在新配置写入完成后，立即把刚才生成的 .backup 文件全删了
+  home.activation.removeExisting = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    # ⚠️ 警告：这会删除目录下所有后缀为 .backup 的文件
+    # 请确保你没有重要文件正好叫这个后缀
+    
+    echo "🧹 [激进模式] 正在清理冲突文件的备份..."
+    
+    # 清理 .config 下的备份
+    find ${config.home.homeDirectory}/.config -name "*.backup" -type f -delete
+    
+    # 清理 Fcitx5 相关的特定备份 (针对你刚才的问题)
+    rm -f ${config.home.homeDirectory}/.config/fcitx5/conf/classicui.conf.backup
+    
+    # 如果你想更狠一点，清理家目录下所有的 (慎用!)
+    find ${config.home.homeDirectory} -maxdepth 2 -name "*.backup" -type f -delete
+  '';
 
   # === 关键：让 Home Manager 接管字体配置 ===
   # 这能解决部分软件在用户级安装后字体发虚、锯齿的问题

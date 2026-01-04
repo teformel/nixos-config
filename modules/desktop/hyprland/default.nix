@@ -136,7 +136,7 @@
         "$mainMod, L, exec, hyprlock"
 
         # 截图
-        ", Print, exec, ~/.local/bin/myshot"
+        ", Print, exec, myshot"
         "SHIFT, Print, exec, grim - | swappy -f -"
         
         # 剪贴板

@@ -7,24 +7,26 @@
     noto-fonts-cjk-serif
     source-han-sans
     fcitx5-nord  # <--- 新的救星：Nord 深色主题
+    fcitx5-material-color
   ];
 
   i18n.inputMethod = {
-    enabled = "fcitx5";
+    enable = true;
+    type = "fcitx5";
     fcitx5.addons = with pkgs; [
       qt6Packages.fcitx5-chinese-addons
       fcitx5-gtk
       fcitx5-rime
-      # fcitx5-material-color # <--- 删掉这个可能坏掉的包
     ];
   };
 
-  # 2. 强制指定 Nord-Dark 主题
   xdg.configFile."fcitx5/conf/classicui.conf".text = ''
     Vertical Candidate List=False
     PerScreenDPI=True
     Font="Sans 16"
-    Theme=Nord-Dark
+    
+    # ✨ 关键修改：使用深紫色主题
+    Theme=Material-Color-DeepPurple
   '';
   
   # 3. 环境变量保险
