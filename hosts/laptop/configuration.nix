@@ -191,13 +191,18 @@
     # 自动登录 (可选：如果你不想每次在 TTY 输密码，仅限调试用)
     # autologinUser = "maorila";
   };
-
+  # =========================================
+  # 👇 新增：必须在系统层级启用 zsh
+  # =========================================
+  programs.zsh.enable = true;
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.maorila = {
     isNormalUser = true;
     description = "maorila";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [];
+    # 👇 新增：指定默认 Shell 为 Zsh
+    shell = pkgs.zsh;
   };
 
   # === 💾 存储设备管理 ===
