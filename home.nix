@@ -2,21 +2,21 @@
 
 {
   imports = [
-    # === 桌面环境 ===
+    # === 🖥️ 桌面环境 (Desktop Environment) ===
     ./modules/desktop/hyprland
     ./modules/desktop/waybar
-    ./modules/desktop/fastfetch
-    ./modules/desktop/shell
-    ./modules/desktop/hyprpaper  # 壁纸
-    ./modules/desktop/hyprlock   # 锁屏
-    ./modules/desktop/hypridle   # 休眠
-    ./modules/desktop/scripts    # 截图等脚本
-    ./modules/desktop/xdg.nix    # 文件关联
+    ./modules/desktop/hyprpaper
+    ./modules/desktop/hyprlock
+    ./modules/desktop/hypridle
     ./modules/desktop/fcitx5
+    ./modules/desktop/screenshot  # ✨ 改名了：这里很清楚它是负责截图的
+    ./modules/desktop/xdg.nix
 
-    # === 常用工具 ===
-    ./modules/tools/git
-    ./modules/tools/vscode
+# === 📦 常用软件 (Programs) ===
+    ./modules/programs/git        # ✨ 路径变了
+    ./modules/programs/vscode     # ✨ 路径变了
+    ./modules/programs/fastfetch  # ✨ 归类到这里了
+    ./modules/programs/shell      # ✨ 归类到这里了
   ];
 
   # === 用户基本信息 ===
