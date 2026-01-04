@@ -6,197 +6,184 @@
     systemd.enable = true;
     xwayland.enable = true;
 
-    extraConfig = ''
+    # ✨ 核心改变：使用 settings 代替 extraConfig
+    settings = {
       
-# ==========================================
-#  ✨ Hyprland 修复版配置
-# ==========================================
+      # === 1. 显示器与基础变量 ===
+      monitor = ",preferred,auto,auto";
+      
+      "$terminal" = "kitty";
+      "$menu" = "wofi --show drun";
+      "$mainMod" = "SUPER";
 
-# 1. 显示器
-monitor=,preferred,auto,auto
+      # === 2. 环境变量 (列表形式) ===
+      env = [
+        "QT_QPA_PLATFORM,wayland;xcb"
+        "XCURSOR_THEME,Bibata-Modern-Ice"
+        "XCURSOR_SIZE,24"
+        
+        # 📺 屏幕缩放修复
+        "QT_AUTO_SCREEN_SCALE_FACTOR,1"
+        "QT_SCALE_FACTOR,1.5"
+        "GDK_SCALE,2"
+        
+        # 📂 修复 Dolphin 关联问题的关键 (GNOME 菜单)
+        "XDG_MENU_PREFIX,gnome-"
+      ];
 
-# 2. 自启服务
-exec-once = dunst
-exec-once = start-waybar
-exec-once = fcitx5 -d --replace
-exec-once = clash-verge &
-exec-once = wl-paste --type text --watch cliphist store
-exec-once = wl-paste --type image --watch cliphist store
-exec-once = kdeconnect-indicator &
-exec-once = udiskie -t -a &
-# ✨ 启动 WiFi 托盘图标
-exec-once = nm-applet --indicator
+      # === 3. 自启服务 (列表形式，更加整洁) ===
+      exec-once = [
+        "dunst"
+        "start-waybar" # 确保你有这个脚本，或者直接写 "waybar"
+        "fcitx5 -d --replace"
+        "clash-verge &"
+        "wl-paste --type text --watch cliphist store"
+        "wl-paste --type image --watch cliphist store"
+        "kdeconnect-indicator &"
+        "udiskie -t -a &"
+        "nm-applet --indicator" # WiFi 托盘
+      ];
 
-# 3. 基础变量
-$terminal = kitty
-$menu = wofi --show drun
-$mainMod = SUPER
+      # === 4. 输入设备配置 ===
+      input = {
+        kb_layout = "us";
+        follow_mouse = 1;
+        touchpad = {
+          natural_scroll = false;
+        };
+      };
 
-# === 🎨 外观与装饰 (已适配 Hyprland v0.45+) ===
-decoration {
-    rounding = 15
+      # === 5. 外观与装饰 ===
+      general = {
+        gaps_in = 5;
+        gaps_out = 10;
+        border_size = 2;
+        "col.active_border" = "rgba(89b4faee) rgba(cba6f7ee) 45deg";
+        "col.inactive_border" = "rgba(595959aa)";
+        layout = "dwindle";
+      };
 
-    # ☁️ 毛玻璃
-    blur {
-        enabled = true
-        size = 5
-        passes = 3
-        new_optimizations = true
-        ignore_opacity = true
-    }
+      decoration = {
+        rounding = 15;
 
-    # 🌑 阴影 (新版语法：必须嵌套在 shadow {} 里)
-    shadow {
-        enabled = true
-        range = 30
-        render_power = 3
-        color = rgba(1a1a1aee)
-    }
-}
+        blur = {
+          enabled = true;
+          size = 5;
+          passes = 3;
+          new_optimizations = true;
+          ignore_opacity = true;
+        };
 
-# === 🎬 动画 (注意大括号闭合) ===
-animations {
-    enabled = yes
-    bezier = wind, 0.05, 0.9, 0.1, 1.05
-    bezier = winIn, 0.1, 1.1, 0.1, 1.1
-    bezier = winOut, 0.3, -0.3, 0, 1
-    bezier = liner, 1, 1, 1, 1
+        # 适配 Hyprland v0.45+ 的阴影写法
+        shadow = {
+          enabled = true;
+          range = 30;
+          render_power = 3;
+          color = "rgba(1a1a1aee)";
+        };
+      };
 
-    animation = windows, 1, 6, wind, slide
-    animation = windowsIn, 1, 6, winIn, slide
-    animation = windowsOut, 1, 5, winOut, slide
-    animation = windowsMove, 1, 5, wind, slide
-    animation = border, 1, 1, liner
-    animation = borderangle, 1, 30, liner, loop
-    animation = fade, 1, 10, default
-    animation = workspaces, 1, 5, wind
-}
+      # === 6. 动画配置 ===
+      animations = {
+        enabled = true;
+        # 贝塞尔曲线定义
+        bezier = [
+          "wind, 0.05, 0.9, 0.1, 1.05"
+          "winIn, 0.1, 1.1, 0.1, 1.1"
+          "winOut, 0.3, -0.3, 0, 1"
+          "liner, 1, 1, 1, 1"
+        ];
+        # 动画规则
+        animation = [
+          "windows, 1, 6, wind, slide"
+          "windowsIn, 1, 6, winIn, slide"
+          "windowsOut, 1, 5, winOut, slide"
+          "windowsMove, 1, 5, wind, slide"
+          "border, 1, 1, liner"
+          "borderangle, 1, 30, liner, loop"
+          "fade, 1, 10, default"
+          "workspaces, 1, 5, wind"
+        ];
+      };
 
-# === ✨ 特效规则 (已修复空格问题) ===
-# 之前的报错 invalid field blur 就是因为这里
-# layerrule = blur, waybar
-# layerrule = ignorezero, waybar
+      # === 7. 布局与 XWayland ===
+      dwindle = {
+        pseudotile = true;
+        preserve_split = true;
+      };
 
-# 4. 环境变量与杂项
-env = QT_QPA_PLATFORM,wayland;xcb
-# === 👇 新增：强制统一鼠标样式 (解决鼠标不一致的核心) ===
-# 告诉所有 XWayland 程序使用这个主题
-env = XCURSOR_THEME,Bibata-Modern-Ice
+      xwayland = {
+        force_zero_scaling = true; # 解决模糊问题
+      };
 
-# === 📺 屏幕缩放与 XWayland 修复 ===
-# 1. 告诉 Qt 程序："不用你自动缩放，听我的"
-# (之前你设为 1 可能导致了太小，我们先保留它，用下面的 scale factor 来控制)
-env = QT_AUTO_SCREEN_SCALE_FACTOR,1
+      # === 8. 窗口规则 (Window Rules) ===
+      windowrulev2 = [
+        "float, class:^(steam)$, title:^(好友列表)$"
+        "float, class:^(steam)$, title:^(Steam - News)$"
+        "center, class:^(steam)$, title:^(Steam - News)$"
+        "stayfocused, title:^()$,class:^(steam)$"
+        "minsize 1 1, title:^()$,class:^(steam)$"
+      ];
 
-# 2. ✨ 核心：告诉 Qt 程序放大 1.5 倍 or 2 倍
-# 根据你的屏幕，如果觉得太小就填 1.5 或 2
-env = QT_SCALE_FACTOR,1.5
+      # === 9. 按键绑定 (Keybinds) ===
+      bind = [
+        "$mainMod, T, exec, $terminal"
+        "$mainMod, C, killactive,"
+        "$mainMod, M, exit,"
+        "$mainMod, E, exec, dolphin"
+        "$mainMod, V, togglefloating,"
+        "$mainMod, R, exec, $menu"
+        "$mainMod, L, exec, hyprlock"
 
-# 3. ✨ 核心：告诉 GTK/X11 程序放大
-# GDK_SCALE 只能填整数 (1, 2, 3...)。
-# 如果填 2 太大，填 1 太小，那只能忍受 2 (稍微大点总比看不见好)
-env = GDK_SCALE,2
+        # 截图
+        ", Print, exec, ~/.local/bin/myshot"
+        "SHIFT, Print, exec, grim - | swappy -f -"
+        
+        # 剪贴板
+        "SUPER SHIFT, V, exec, cliphist list | wofi --dmenu | cliphist decode | wl-copy"
 
-# 4. 微调鼠标大小 (之前你设过，保持统一)
-env = XCURSOR_SIZE,24
+        # 焦点移动
+        "$mainMod, left, movefocus, l"
+        "$mainMod, right, movefocus, r"
+        "$mainMod, up, movefocus, u"
+        "$mainMod, down, movefocus, d"
 
-# env = [
-# # ✨✨✨ 修复 Dolphin 关联问题的关键变量
-# # 告诉 KDE 程序使用 plasma 的菜单定义
-# "XDG_MENU_PREFIX,plasma-"
-# ];
-# env = XDG_MENU_PREFIX,plasma-
-# ✨ 告诉 KDE/Dolphin：去读 GNOME 的菜单文件 (因为我们刚才装了这个)
-env = XDG_MENU_PREFIX,gnome-
+        # 工作区切换
+        "$mainMod, 1, workspace, 1"
+        "$mainMod, 2, workspace, 2"
+        "$mainMod, 3, workspace, 3"
+        "$mainMod, 4, workspace, 4"
+        "$mainMod, 5, workspace, 5"
 
-xwayland {
-  # false = 允许 Hyprland 拉伸 XWayland 窗口 (会变大，但轻微模糊)
-  # true  = 禁止拉伸 (点对点显示，非常清晰，但就是你现在的"蚂蚁字"状态)
-  force_zero_scaling = true
-}
+        # 移动窗口到工作区
+        "$mainMod SHIFT, 1, movetoworkspace, 1"
+        "$mainMod SHIFT, 2, movetoworkspace, 2"
+        "$mainMod SHIFT, 3, movetoworkspace, 3"
+        "$mainMod SHIFT, 4, movetoworkspace, 4"
+        "$mainMod SHIFT, 5, movetoworkspace, 5"
+      ];
 
-input {
-    kb_layout = us
-    follow_mouse = 1
-    touchpad {
-        natural_scroll = no
-    }
-}
+      # 媒体与特殊按键 (bindl / bindel)
+      # 这里比较特殊，Nix 的 keys 必须是唯一的，所以我们将它们混入 bind 列表
+      # 或者使用 bindl = [...] 和 bindel = [...] 分开写
+      
+      bindel = [
+        # 音量
+        ", XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
+        ", XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
+        # 亮度
+        ", XF86MonBrightnessUp, exec, brightnessctl set 5%+"
+        ", XF86MonBrightnessDown, exec, brightnessctl set 5%-"
+      ];
 
-general {
-    gaps_in = 5
-    gaps_out = 10
-    border_size = 2
-    col.active_border = rgba(89b4faee) rgba(cba6f7ee) 45deg
-    col.inactive_border = rgba(595959aa)
-    layout = dwindle
-}
-
-# 5. 窗口规则
-windowrulev2 = float, class:^(steam)$, title:^(好友列表)$
-windowrulev2 = float, class:^(steam)$, title:^(Steam - News)$
-windowrulev2 = center, class:^(steam)$, title:^(Steam - News)$
-windowrulev2 = stayfocused, title:^()$,class:^(steam)$
-windowrulev2 = minsize 1 1, title:^()$,class:^(steam)$
-
-# 6. 快捷键
-bind = $mainMod, T, exec, $terminal
-bind = $mainMod, C, killactive,
-bind = $mainMod, M, exit,
-bind = $mainMod, E, exec, dolphin
-bind = $mainMod, V, togglefloating,
-bind = $mainMod, R, exec, $menu
-bind = $mainMod, L, exec, hyprlock
-
-# === 📸 截图快捷键 ===
-    # Print 键：区域截图 -> 自动跳出编辑窗口 -> 编辑完按 Ctrl+C 复制，或点保存
-    bind = , Print, exec, ~/.local/bin/myshot
-
-    # Shift + Print 键：全屏截图 (不选区，直接截整个屏幕)
-    bind = SHIFT, Print, exec, grim - | swappy -f -
-
-# ==========================================
-# 🎹 笔记本功能键修复
-# ==========================================
-
-# 1. 🔊 音量控制 (使用 wpctl，它是 PipeWire 的标准工具)
-# 这里的 @DEFAULT_AUDIO_SINK@ 会自动识别你当前的声卡
-bindel = , XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+
-bindel = , XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
-bindl  = , XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
-# 麦克风静音
-bindl  = , XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
-
-# 2. ☀️ 亮度控制 (使用 brightnessctl)
-bindel = , XF86MonBrightnessUp, exec, brightnessctl set 5%+
-bindel = , XF86MonBrightnessDown, exec, brightnessctl set 5%-
-
-# 3. 🎵 媒体控制 (使用 playerctl)
-# 无论你在用 Spotify、网易云还是浏览器，它都能控制
-bindl = , XF86AudioPlay, exec, playerctl play-pause
-bindl = , XF86AudioNext, exec, playerctl next
-bindl = , XF86AudioPrev, exec, playerctl previous
-
-# 剪贴板
-bind = SUPER SHIFT, V, exec, cliphist list | wofi --dmenu | cliphist decode | wl-copy
-
-# 焦点与工作区
-bind = $mainMod, left, movefocus, l
-bind = $mainMod, right, movefocus, r
-bind = $mainMod, up, movefocus, u
-bind = $mainMod, down, movefocus, d
-
-bind = $mainMod, 1, workspace, 1
-bind = $mainMod, 2, workspace, 2
-bind = $mainMod, 3, workspace, 3
-bind = $mainMod, 4, workspace, 4
-bind = $mainMod, 5, workspace, 5
-
-bind = $mainMod SHIFT, 1, movetoworkspace, 1
-bind = $mainMod SHIFT, 2, movetoworkspace, 2
-bind = $mainMod SHIFT, 3, movetoworkspace, 3
-bind = $mainMod SHIFT, 4, movetoworkspace, 4
-bind = $mainMod SHIFT, 5, movetoworkspace, 5
-    '';
+      bindl = [
+        # 静音与媒体控制
+        ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+        ", XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
+        ", XF86AudioPlay, exec, playerctl play-pause"
+        ", XF86AudioNext, exec, playerctl next"
+        ", XF86AudioPrev, exec, playerctl previous"
+      ];
+    };
   };
 }
