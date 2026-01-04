@@ -27,20 +27,22 @@
 
         modules = [
           # 导入你的系统配置
-          ./configuration.nix
+          ./hosts/laptop/configuration.nix
 
           # 导入 Home Manager 模块 (这就替代了之前那个 imports <...>)
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            
+            # 作用：遇到文件冲突时自动备份为 .backup，防止报错
+            home-manager.backupFileExtension = "backup";
             # 同样把 inputs 传给 home-manager
             home-manager.extraSpecialArgs = { inherit inputs; };
             
             # 这里告诉系统去哪里找用户的配置
             # 注意：configuration.nix 里那句 import ./home.nix 依然有效，
             # 但为了清晰，你也可以在这里直接指定（看你喜好，目前保持不动即可）
+            home-manager.users.maorila = import ./home.nix;
           }
         ];
       };

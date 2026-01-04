@@ -7,6 +7,7 @@
 {
   imports =
     [ # Include the results of the hardware scan.
+      # 同级目录直接引用即可
       ./hardware-configuration.nix
     ];
 
@@ -209,22 +210,16 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    vim
     wget
-    git
-    kitty
-    wofi
-    waybar
-    dunst
-    kdePackages.dolphin
-    hyprpaper
-    qt6Packages.fcitx5-configtool
-    nerd-fonts.jetbrains-mono
-    nerd-fonts.fira-code
-    sarasa-gothic
     curl
-    sddm-astronaut # ✨ 这里安装漂亮的主题包
-    where-is-my-sddm-theme # ✨ 极简高颜值主题
+    git
+    # 像 waybar, wofi, kitty, dunst 这种 UI 软件，全部交给 Home Manager
+    # 这里不需要了，删掉它们能让系统更干净
+    
+    # SDDM 相关依赖必须留在这里
+    sddm-astronaut
+    where-is-my-sddm-theme
     kdePackages.qtmultimedia
     kdePackages.qtsvg
     kdePackages.qt5compat
@@ -258,6 +253,10 @@
       noto-fonts-color-emoji
       sarasa-gothic
       nerd-fonts.jetbrains-mono # 确保装了这个，它是目前最好的编程字体之一
+      nerd-fonts.fira-code
+      font-awesome          # 常用图标字体
+      # 如果想显示更多怪奇图标，可以加上 material-design-icons
+      material-design-icons
     ];
 
     fontconfig = {
@@ -316,17 +315,6 @@
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
-
-  # === 🏠 Home Manager 配置 ===
-  home-manager = {
-    useGlobalPkgs = true;
-    useUserPackages = true;
-    
-    # ✨✨✨ 新增这一行：遇到冲突时，自动把旧文件后缀改成 .backup
-    backupFileExtension = "backup";
-    
-    users.maorila = import ./home.nix;
-  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
