@@ -173,6 +173,12 @@
         "$mainMod ALT, right, resizeactive, 40 0"
         "$mainMod ALT, up, resizeactive, 0 -40"
         "$mainMod ALT, down, resizeactive, 0 40"
+
+        # 🔀 核心功能：切换分割方向 (横排变竖排，竖排变横排)
+        "$mainMod, J, togglesplit"
+        
+        # 🎯 伪平铺模式 (让窗口保持原始大小浮在平铺布局中，很适合看视频)
+        "$mainMod, P, pseudo"
       ];
 
       # 媒体与特殊按键 (bindl / bindel)
