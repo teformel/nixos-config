@@ -24,6 +24,9 @@
     # 你的别名
     shellAliases = {
       ll = "eza -l";
+      c = "clear";
+      rebuild = "sudo nixos-rebuild switch --flake ~/nixos-config";
+      ff = "fastfetch";
     };
     
     # 历史记录
