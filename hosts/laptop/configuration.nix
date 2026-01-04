@@ -7,7 +7,7 @@
       
       # === 系统功能模块 ===
       ../../modules/system/gaming.nix        # 游戏优化
-      ../../modules/system/chrome-policy.nix # 浏览器策略
+      ../../modules/system/apps/chrome.nix   # 浏览器模块
       ../../modules/system/audio.nix         # 音频与修复
       ../../modules/system/fonts.nix         # 字体配置
     ];

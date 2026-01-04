@@ -29,16 +29,6 @@
     # === 代理工具 ===
     clash-verge-rev  # 现代化的 Clash GUI 客户端
     mihomo           # 强大的代理内核 (原 Clash Meta)
-    (google-chrome.override {
-      commandLineArgs = builtins.concatStringsSep " " [
-        "--ozone-platform=x11"
-        # ✨ 这里设置你想要的缩放比例
-        # 如果你确实想要 "缩放为 1" (原始大小)，就填 1
-        # 如果你觉得 1 太小了，可以填 1.25, 1.5 (配合你的屏幕倍率)
-        # 只要这里填了参数，字就是清晰的，不会糊！
-        "--force-device-scale-factor=1.5" 
-      ];
-    })
     qq          # 官方 Linux QQ (新版 NT 架构，体验很好)
     wechat-uos  # 官方 Linux 微信 (UOS 适配版，功能较全)
 
