@@ -31,7 +31,7 @@ in
   #    我们把 home.nix 里的安装代码搬到这里，变成系统级安装
   # ==========================================================
   environment.systemPackages = [
-    (google-chrome.override {
+    (pkgs.google-chrome.override {
       commandLineArgs = builtins.concatStringsSep " " [
         "--ozone-platform=x11"
         # ✨ 这里设置你想要的缩放比例
