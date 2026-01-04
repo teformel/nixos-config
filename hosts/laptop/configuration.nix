@@ -9,6 +9,9 @@
     [ # Include the results of the hardware scan.
       # 同级目录直接引用即可
       ./hardware-configuration.nix
+      # 👇 引入我们拆分出去的模块
+      ../../modules/system/gaming.nix
+      ../../modules/system/chrome-policy.nix
     ];
 
   # Bootloader.
@@ -86,17 +89,13 @@
   # 开启 Nix 命令和 Flakes 功能
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-  # Configure keymap in X11
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
-  };
-  # === 🖥️ 登录界面美化 (SDDM) ===
-
-  # 1. 确保 Xserver 服务开启 (SDDM 依赖它)
+  # 显卡与显示服务
   services.xserver.enable = true;
+  services.xserver.xkb.layout = "us";
   programs.hyprland.enable = true;
+  hardware.graphics.enable = true;
 
+  # === 🖥️ 登录界面美化 (SDDM) ===
   # 2. 配置 SDDM 显示管理器
   services.displayManager.sddm = {
     enable = true;
@@ -129,17 +128,14 @@
   # 这种声卡默认会把 DAC 通道静音，这里我们强制在开机时打开它
   systemd.services.fix-sof-sound = {
     description = "Unmute sof-essx8336 channels on boot";
-    
     # 确保在音频系统启动后运行
     after = [ "sound.target" "pipewire.service" ]; 
     wantedBy = [ "multi-user.target" ];
-    
     # 这是一次性任务
     serviceConfig = {
       Type = "oneshot";
       User = "root";
     };
-
     # 👇 核心脚本：这里就是把你在 AlsaMixer 里做的操作写成代码
     # -c 0 表示第一个声卡 (通常就是你的 SOF)
     # 'Right Headphone Mixer Right DAC' 是我们要操作的开关名字
@@ -174,7 +170,7 @@
   services.kmscon = {
     enable = true;
     hwRender = true; # 尝试使用显卡加速 (如果花屏就改成 false)
-    
+
     # 配置字体：使用我们之前装好的更纱黑体
     fonts = [
       {
@@ -187,7 +183,7 @@
     extraConfig = ''
       font-size=24
     '';
-    
+  
     # 自动登录 (可选：如果你不想每次在 TTY 输密码，仅限调试用)
     # autologinUser = "maorila";
   };
@@ -230,26 +226,6 @@
     kdePackages.qt5compat
   ];
 
-  # === Google Chrome 强制插件策略 (系统级) ===
-  environment.etc."opt/chrome/policies/managed/extensions.json".text = builtins.toJSON {
-    ExtensionSettings = {
-      # 1. Bitwarden
-      "nngceckbapebfimnlniiiahkandclblb" = {
-        installation_mode = "force_installed";
-        update_url = "https://clients2.google.com/service/update2/crx";
-      };
-      # 2. Raindrop.io
-      "ldgfbffkinooeloadekpmfoklnobpien" = {
-        installation_mode = "force_installed";
-        update_url = "https://clients2.google.com/service/update2/crx";
-      };
-      "fdpohaocaechififmbbbbbknoalclacl" = {
-        installation_mode = "force_installed";
-        update_url = "https://clients2.google.com/service/update2/crx";
-      };
-    };
-  };
-
   # === 字体配置 ===
   fonts = {
     packages = with pkgs; [
@@ -280,26 +256,7 @@
       };
     };
   };
-
-  # === 🎮 Steam 游戏平台 ===
-  programs.steam = {
-    enable = true;
-    
-    # 如果你想用 Steam 串流 (手机玩电脑游戏)，把这个打开
-    remotePlay.openFirewall = true; 
-    
-    # 如果你想当服务器主机，把这个打开
-    dedicatedServer.openFirewall = true;
-    
-    # 修复 Steam 里的中文输入法问题 (Fcitx5)
-    # 这是一个比较新的选项，如果不生效也没关系，后续可以手动修
-    extest.enable = true; 
-  };
   
-  # === 🎮 游戏模式 (可选但推荐) ===
-  # 这个工具能自动优化 CPU/GPU 性能，玩游戏时更流畅
-  programs.gamemode.enable = true;
-
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
@@ -307,8 +264,6 @@
   #   enable = true;
   #   enableSSHSupport = true;
   # };
-
-  hardware.graphics.enable = true;
 
   # List services that you want to enable:
 
