@@ -46,16 +46,6 @@
     LC_MESSAGES = "en_US.UTF-8"; 
   };
 
-  i18n.inputMethod = {
-    enable = true;
-    type = "fcitx5";
-    fcitx5.addons = with pkgs; [
-      qt6Packages.fcitx5-chinese-addons
-      fcitx5-gtk
-      fcitx5-rime
-    ];
-  };
-
   # === Nix 核心设置 ===
   nix.settings.substituters = [ "https://mirrors.ustc.edu.cn/nix-channels/store" "https://cache.nixos.org" ];
   nix.settings.experimental-features = [ "nix-command" "flakes" ];

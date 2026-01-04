@@ -12,6 +12,7 @@
     ./modules/desktop/hypridle   # 休眠
     ./modules/desktop/scripts    # 截图等脚本
     ./modules/desktop/xdg.nix    # 文件关联
+    ./modules/desktop/fcitx5
 
     # === 常用工具 ===
     ./modules/tools/git
@@ -103,23 +104,6 @@
     enable = true;
     nix-direnv.enable = true;
   };
-
-  # === ⌨️ 强制修复 Fcitx5 输入法界面太小 ===
-  # 直接生成配置文件，强制设置大字体
-  home.file.".config/fcitx5/conf/classicui.conf".text = ''
-    # 垂直列表 (选词更符合直觉)
-    Vertical Candidate List=False
-    
-    # 按屏幕 DPI 缩放 (如果这个不管用，下面的 Font 会兜底)
-    PerScreenDPI=True
-    
-    # ✨ 核心修复：强制设置一个大字体
-    # "字体名 字号"，比如这里设为 16 或 18 (默认通常是 10，太小了)
-    Font="JetBrains Mono 16"
-    
-    # 主题设置 (你可以选个喜欢的主题，或者用默认)
-    Theme=default
-  '';
 
   # 让 Home Manager 管理自己
   programs.home-manager.enable = true;
