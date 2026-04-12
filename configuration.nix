@@ -55,9 +55,10 @@
     type = "fcitx5";
     fcitx5.addons = with pkgs; [
       #qt6Packages.fcitx5-chinese-addons  # 官方中文拼音引擎
-      fcitx5-gtk                         # 增强在 GTK 程序中的输入体验
+      #fcitx5-gtk                         # 增强在 GTK 程序中的输入体验
       fcitx5-rime                        # 核心组件：引入 Rime 引擎
     ];
+    fcitx5.waylandFrontend = true; 
   };
 
   # 强制全局注入 Fcitx5 环境变量，专治 i3wm 各种不服
@@ -74,35 +75,44 @@
   #   useXkbConfig = true; # use xkb.options in tty.
   # };
 
-  # Enable the X11 windowing system.
-  services.xserver = {
+  # 1. 开启 Niri 混成器
+  programs.niri.enable = true;
+
+  # 2. 显示管理器
+  services.displayManager.sddm = {
     enable = true;
+    wayland.enable = true;
+  };
+
+  # Enable the X11 windowing system.
+  #services.xserver = {
+    #enable = true;
 
     # 1. 开启 LXQt (轻量级桌面环境)
-    desktopManager.lxqt.enable = true;
+    #desktopManager.lxqt.enable = true;
 
     # 2. 开启 i3wm (平铺式窗口管理器 - 极客首选)
-    windowManager.i3 = {
-      enable = true;
-      extraPackages = with pkgs; [
-        dmenu 
-        i3status
-      ];
-    };
+    #windowManager.i3 = {
+    #  enable = true;
+    #  extraPackages = with pkgs; [
+    #    dmenu 
+    #    i3status
+    #  ];
+    #};
 
     # 3. 开启 IceWM (复古极轻量窗口管理器)
-    windowManager.icewm.enable = true;
+    #windowManager.icewm.enable = true;
 
     # 建议使用 LightDM 作为登录界面，它对多环境切换支持很好
-    displayManager.lightdm.enable = true;
+    #displayManager.lightdm.enable = true;
   };
   
 
   # Configure keymap in X11
-  services.xserver.xkb = {
-    layout = "cn";
-    variant = "";
-  };
+  #services.xserver.xkb = {
+  #  layout = "cn";
+  #  variant = "";
+  #};
 
   fonts.packages = with pkgs; [
     noto-fonts
@@ -189,6 +199,13 @@
     pkgs.ungoogled-chromium
     htop
     btop
+    # 从 flake inputs 中安装 Noctalia
+    inputs.noctalia.packages.${pkgs.system}.default
+    
+    kitty              # Niri 默认绑定的终端
+    wl-clipboard       # Wayland 剪贴板支持
+    xwayland-satellite # XWayland 兼容支持
+
   ];
 
   # 开启 ZRAM
@@ -210,6 +227,19 @@
 
   # 可选：如果希望合上笔记本盖子时直接休眠（Suspend to disk）而不是睡眠（Suspend to RAM）
   # services.logind.lidSwitch = "hibernate"; 
+
+  # 5. Shell 环境支持
+  # 确保 Fish Shell 在 Wayland 桌面下环境变量正常加载
+  programs.bash.enable = true;
+
+  # 6. XDG 门户机制 (对于屏幕共享和文件选择框是刚需)
+  xdg.portal = {
+    enable = true;
+    extraPortals = with pkgs; [ 
+      xdg-desktop-portal-gtk
+      xdg-desktop-portal-gnome 
+    ];
+  };
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.

@@ -5,17 +5,21 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
 
-    # 🌟 新增：引入 Home Manager 的代码仓库，并保持版本与系统一致
+    # 引入 Home Manager 的代码仓库，并保持版本与系统一致
     home-manager = {
       url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     
-    # 🌟 新增 disko
+    # 新增 disko
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    
+    # 引入 Noctalia 的 Flake 源
+    noctalia.url = "github:noctalia-dev/noctalia-shell";
+
   };
 
   # 这是你的施工图纸：教 Nix 如何组装系统
@@ -24,6 +28,8 @@
       # 🚨 重要：请把这里的 "nixos" 替换成你真实的电脑主机名！
       "nixos" = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
+        # 将 inputs 传递给所有的 module，这一步非常关键
+        specialArgs = { inherit inputs; }; 
         modules = [
           disko.nixosModules.disko # 🌟 加载模块
           ./disko-config.nix       # 🌟 加载刚才写的分区配置
