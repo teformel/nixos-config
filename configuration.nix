@@ -111,7 +111,7 @@
     wqy_microhei
     wqy_zenhei
     nerd-fonts.fira-code  # 最受程序员欢迎的连字代码字体 FiraCode 的 Nerd 版
-    nerd-fonts.meslo-lg      # 另一个非常好看的终端字体
+    nerd-fonts.meslo-lg   # 另一个非常好看的终端字体
   ];
 
   # Enable CUPS to print documents.
@@ -136,6 +136,29 @@
     #media-session.enable = true;
   };
 
+  # === 🚑 固件支持 ===
+  hardware.enableAllFirmware = true;
+  hardware.firmware = [ pkgs.sof-firmware ];
+
+  # === 🔊 声明式音频修复 (Sof-Essx8336) ===
+  # 这种声卡默认会把 DAC 通道静音，这里我们强制在开机时打开它
+  systemd.services.fix-sof-sound = {
+    description = "Unmute sof-essx8336 channels on boot";
+    after = [ "sound.target" "pipewire.service" ]; 
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+    };
+    script = ''
+      CARD="sofessx8336"
+      ${pkgs.alsa-utils}/bin/amixer -c $CARD sset 'Left Headphone Mixer Left DAC' on
+      ${pkgs.alsa-utils}/bin/amixer -c $CARD sset 'Right Headphone Mixer Right DAC' on
+      ${pkgs.alsa-utils}/bin/amixer -c $CARD sset 'Speaker' on
+      ${pkgs.alsa-utils}/bin/amixer -c $CARD sset 'Headphone' on
+      ${pkgs.alsa-utils}/bin/amixer -c $CARD sset 'DAC' 100% || true
+    '';
+  };
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.libinput.enable = true;
