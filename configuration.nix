@@ -202,7 +202,7 @@
     # 从 flake inputs 中安装 Noctalia
     inputs.noctalia.packages.${pkgs.system}.default
     
-    kitty              # Niri 默认绑定的终端
+    alacritty          # Niri 默认绑定的终端
     wl-clipboard       # Wayland 剪贴板支持
     xwayland-satellite # XWayland 兼容支持
 
