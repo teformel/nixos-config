@@ -105,7 +105,7 @@
 
     # 建议使用 LightDM 作为登录界面，它对多环境切换支持很好
     #displayManager.lightdm.enable = true;
-  };
+  #};
   
 
   # Configure keymap in X11
