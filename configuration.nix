@@ -25,7 +25,7 @@
   networking.networkmanager.enable = true;
 
   # Enable network manager applet
-  programs.nm-applet.enable = true;
+  #programs.nm-applet.enable = true;
 
   # Set your time zone.
   time.timeZone = "Asia/Shanghai";
@@ -205,7 +205,7 @@
     alacritty          # Niri 默认绑定的终端
     wl-clipboard       # Wayland 剪贴板支持
     xwayland-satellite # XWayland 兼容支持
-
+    papirus-icon-theme  # 极其强大的标准图标库
   ];
 
   # 开启 ZRAM
@@ -217,6 +217,13 @@
 
   # 电源管理与休眠支持
   powerManagement.enable = true;
+  # 1. 开启电源与性能管理（MateBook 电池与性能模式刚需）
+  services.upower.enable = true;
+  services.power-profiles-daemon.enable = true;
+
+  # 2. 开启蓝牙服务
+  hardware.bluetooth.enable = true;
+  hardware.bluetooth.powerOnBoot = true;
 
   # 为了防止平时运行中的交换空间写入到真实的物理 Swap（拖慢速度并损耗 SSD），
   # 需要确保 ZRAM 的优先级高于物理 Swap 分区。
