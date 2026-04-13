@@ -20,6 +20,14 @@
   # 确保 TUN 内核模块已加载
   boot.kernelModules = [ "tun" ];
 
+  boot.kernelParams = [
+    "transparent_hugepage=never" # 禁用透明大页，改用我们手动控制的显式大页
+    "hugepagesz=2M" 
+    "default_hugepagesz=2M"
+    # 针对 Intel 12 代，确保电源管理不会影响性能
+    "intel_pstate=passive"
+   ];
+
   nix.settings = {
       # 你已经有的开启 Flakes 的配置，保留它
       experimental-features = [ "nix-command" "flakes" ];
@@ -40,6 +48,9 @@
         # （注：SJTU 和 USTC 都是全量同步官方缓存，所以只要有官方的公钥就可以验证包的签名，不需要额外加它们的特定公钥）
       ];
     };
+
+  # 允许 wheel 组的用户（也就是你）信任第三方缓存
+  nix.settings.trusted-users = [ "root" "@wheel" ];
 
   networking.hostName = "nixos"; # Define your hostname.
 
@@ -65,6 +76,7 @@
     # 宽松的反向路径过滤（老生常谈的必须项）
     checkReversePath = "loose";
 
+    allowedTCPPorts = [ 6800 ];
     allowedTCPPortRanges = [ { from = 1714; to = 1764; } ];
     allowedUDPPortRanges = [ { from = 1714; to = 1764; } ];
     # 信任 Clash 创建的虚拟网卡（根据你的配置，通常叫 Mihomo 或者 Meta）
@@ -81,9 +93,16 @@
     platformTheme = "qt5ct"; 
   };
 
-  # Select internationalisation properties.
+  # 🌐 系统语言与本地化 (i18n)
   i18n.defaultLocale = "zh_CN.UTF-8";
+  
+  # 确保系统编译了所有需要的本地化支持库
+  i18n.supportedLocales = [
+    "zh_CN.UTF-8/UTF-8"
+    "en_US.UTF-8/UTF-8"
+  ];
 
+  # 精细化时间、货币、纸张等格式为中国标准
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "zh_CN.UTF-8";
     LC_IDENTIFICATION = "zh_CN.UTF-8";
@@ -94,6 +113,7 @@
     LC_PAPER = "zh_CN.UTF-8";
     LC_TELEPHONE = "zh_CN.UTF-8";
     LC_TIME = "zh_CN.UTF-8";
+    LC_MESSAGES = "zh_CN.UTF-8";
   };
 
   # 系统语言与中文输入法支持 (Fcitx5)
@@ -124,6 +144,9 @@
     NIXOS_OZONE_WL = "1";
     # 🚀 [新增] 强制全局写入 Qt 主题变量，专治 Wayland 下的环境变量丢失
     QT_QPA_PLATFORMTHEME = "qt5ct";
+    # 强制 Wayland/图形界面继承中文环境
+    LANG = "zh_CN.UTF-8";
+    LC_ALL = "zh_CN.UTF-8";
   };
 
   # console = {
@@ -205,7 +228,7 @@
     isNormalUser = true;
     description = "maorila";
     # 🚨 [修改这里] 加入 libvirtd 和 kvm
-    extraGroups = [ "networkmanager" "wheel" "libvirtd" "kvm" ];
+    extraGroups = [ "networkmanager" "wheel" "libvirtd" "kvm" "adbusers" ];
     #hashedPassword = "$6$hnQqq.qZqnTZvLyx$3I.tDiuePXkQWDFaHfisK8ZSvwiX6jHckJM35xUcNaq7FtPhsNB5wbMcvOVxS9.Sh9/CLOddtGudDmBDrRJOY/";
   };
 
@@ -240,6 +263,47 @@
     # 安装 Qt 主题设置工具（因为最新的 Fcitx5 已经全面迁移到 Qt6）
     kdePackages.qt6ct 
     libsForQt5.qt5ct  # 顺手兼容旧版的 Qt5 软件
+    udiskie       # U 盘自动挂载守护进程
+    
+    yazi          # 极速 Rust 终端文件管理器
+    file-roller   # 配合 Thunar 使用的压缩/解压后端
+    freerdp # 建议使用新版 freerdp
+    libnotify # 用于接收 Windows 的系统通知
+
+    # 🚨 终极修正版魔法
+    (inputs.winapps.packages.${pkgs.system}.winapps.overrideAttrs (oldAttrs: {
+      postPatch = (oldAttrs.postPatch or "") + ''
+        # 使用 @ 作为分隔符，避免与路径或双引号冲突
+        sed -i 's@/app:"||@/app:"program:||@g' bin/winapps
+      '';
+    }))
+    # 启动器环境不需要打补丁，直接引入
+    inputs.winapps.packages.${pkgs.system}.winapps-launcher
+    #/audio-mode:2：不重定向音频（如果你不需要 Windows 发声），能省下不少带宽。
+    #/compression-level:0：关闭压缩，让 CPU 负担降到最低，利用局域网的高带宽换取极低的响应延迟。
+    #如果你觉得全屏太压抑，看不到 Linux 的状态栏（比如 Top Bar）导致没有安全感，可以把脚本里的 /f 换成 /workarea 和 /decorations
+    #如果你希望 Linux 的快捷键永远优先级最高（即：我按 Mod + 1 永远是切工作区，而不是传给 Windows），我们可以在脚本里关掉强制抓取: -grab-keyboard
+    #+grab-keyboard: 显式声明开启键盘抓取（有时默认是关闭或半开启的）。
+    #/kbd:fn-key:0x5b: 这是一个冷门参数。0x5b 是 Windows 键的扫描码。这行命令是告诉 FreeRDP：“哪怕宿主机想拦，也请务必把这个键传给 Windows。”
+    (pkgs.writeShellScriptBin "win11-full" ''
+      # 解决虚拟机状态检查的 URI 问题
+      export LIBVIRT_DEFAULT_URI="qemu:///system"
+      
+      # 启动连接：全屏、动态分辨率、剪贴板共享、性能优化
+      ${pkgs.freerdp}/bin/xfreerdp \
+        /v:192.168.122.180 \
+        /u:"maorila" \
+        /p:"maorila" \
+        /cert:ignore \
+        /f \
+        +grab-keyboard \
+        /kbd:fn-key:0x5b \
+        /dynamic-resolution \
+        /compression-level:0 \
+        /network:lan \
+        +clipboard \
+        /gfx:avc420 \
+    '')
   ];
 
   # 开启 ZRAM
@@ -290,10 +354,6 @@
     serviceMode = true; 
     autoStart = true;
   };
-
-  # === 基础服务 ===
-  services.gvfs.enable = true;
-  services.udisks2.enable = true;
   
   #nix.extraOptions = ''
   #  # 填入你自己的 GitHub Personal Access Token (Classic 即可，不需要勾选任何权限，只要是个有效的 Token 就行)
@@ -321,17 +381,67 @@
       package = pkgs.qemu_kvm;
       runAsRoot = true;
       swtpm.enable = true; # 开启 TPM 2.0 模拟 (Win11 刚需)
-      ovmf = {
-        enable = true;
-        packages = [ pkgs.OVMFFull.fd ]; # 支持 Secure Boot 的完整 UEFI 固件
-      };
+      # 确保 virtiofsd 可用
+      vhostUserPackages = [ pkgs.virtiofsd ];
+    };
+    hooks.qemu = {
+      # 使用 pkgs.writeShellScript 将字符串包装成一个真正的脚本文件
+      dynamicHugepages = pkgs.writeShellScript "dynamic-hugepages" ''
+        guest=$1
+        operation=$2
+      
+        if [ "$guest" = "win11" ]; then
+          case "$operation" in
+            prepare)
+              # 尝试清理内存碎片，提高 2MB 大页分配成功率
+              sync
+              echo 3 > /proc/sys/vm/drop_caches
+              echo 1 > /proc/sys/vm/compact_memory
+                  
+              # 申请 8GB 的 2MB 大页 (4096 * 2MB = 8192MB)
+              echo 4096 > /proc/sys/vm/nr_hugepages
+                 
+              # 这里的检查是可选的，2MB 几乎稳过
+              allocated=$(cat /proc/sys/vm/nr_hugepages)
+              if [ "$allocated" -lt 4096 ]; then
+                echo "Error: Failed to allocate 8GB of 2MB hugepages."
+                exit 1
+              fi
+              ;;
+            release)
+              # 虚拟机关闭后释放内存
+              echo 0 > /proc/sys/vm/nr_hugepages
+              ;;
+          esac
+        fi
+      '';
     };
   };
-
+  # 关键：允许 USB 重定向
+  virtualisation.spiceUSBRedirection.enable = true;
   # 启用 Virt-Manager 图形化管理工具
   # （使用 programs 模块启用，它会自动帮你处理 dconf 和 GTK 主题等依赖，不要只写在 systemPackages 里）
   programs.virt-manager.enable = true;
 
+  # 🗂️ 文件管理与自动挂载
+  # 1. 开启 Thunar 文件管理器及其插件模块（不要只写在 systemPackages 里）
+  programs.thunar = {
+    enable = true;
+    plugins = with pkgs.xfce; [
+      thunar-archive-plugin # 压缩包支持
+      thunar-volman         # U 盘/外部存储管理支持
+    ];
+  };
+
+  # === 基础服务 ===
+  services.gvfs.enable = true;
+  services.udisks2.enable = true;
+
+  # 为 Looking Glass 准备共享内存文件
+  systemd.tmpfiles.rules = [
+    "f /dev/shm/looking-glass 0660 maorila qemu-libvirtd -"
+  ];
+  
   # Copy the NixOS configuration file and link it from the resulting system
   # (/run/current-system/configuration.nix). This is useful in case you
   # accidentally delete configuration.nix.

@@ -20,6 +20,11 @@
     # 引入 Noctalia 的 Flake 源
     noctalia.url = "github:noctalia-dev/noctalia-shell";
 
+    # 🚨 原汁原味的官方上游，不加任何修改
+    winapps = {
+      url = "github:winapps-org/winapps";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   # 这是你的施工图纸：教 Nix 如何组装系统

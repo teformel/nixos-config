@@ -43,6 +43,43 @@
   	settings.user.name = "maorila";
   };
 
+  # 📥 aria2 后台下载服务
+  programs.aria2 = {
+    enable = true;
+    # 核心配置：开启 RPC 接口
+    settings = {
+      dir = "${config.home.homeDirectory}/Downloads";
+      enable-rpc = true;
+      rpc-listen-all = true;
+      max-connection-per-server = 16;
+      rpc-allow-origin-all = true;
+      # 如果你担心安全，可以加个 token，否则留空
+      # rpc-secret = "your_token_here";
+      # 性能优化
+      continue = true;           # 断点续传
+      split = 10;
+      min-split-size = "10M";
+      # 增加 Tracker 列表（这里建议去 github 找最新的列表，或者加一行静态的）
+      bt-tracker = "udp://tracker.opentrackr.org:1337/announce,udp://tracker.openbittorrent.com:6969/announce";
+    };
+  };
+  # 🚀 让 Aria2 读取上面生成的配置，并作为后台常驻进程运行
+  systemd.user.services.aria2 = {
+    Unit = {
+      Description = "Aria2c download manager";
+      After = [ "network.target" ];
+    };
+    Install = {
+      WantedBy = [ "default.target" ];
+    };
+    Service = {
+      # 🚨 核心修改：去掉 -D，并明确指定配置文件路径
+      # %h 在 Systemd 里代表当前用户的家目录 (即 /home/maorila)
+      ExecStart = "${pkgs.aria2}/bin/aria2c --conf-path=%h/.config/aria2/aria2.conf"; 
+      Restart = "on-failure";
+    };
+  };
+
   # 🌟 这一行不要改，它与系统版本的含义类似，用于兼容性控制
   home.stateVersion = "25.11"; 
 
