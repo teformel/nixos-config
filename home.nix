@@ -8,7 +8,6 @@
   # 1. 软件安装：这里安装的软件只有 maorila 能用
   home.packages = with pkgs; [
     fastfetch
-    # 你可以在这里继续添加你想用的工具，比如 ripgrep, fzf 等
   ];
 
   programs.eza = {

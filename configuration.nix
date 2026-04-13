@@ -17,7 +17,29 @@
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  # 确保 TUN 内核模块已加载
+  boot.kernelModules = [ "tun" ];
+
+  nix.settings = {
+      # 你已经有的开启 Flakes 的配置，保留它
+      experimental-features = [ "nix-command" "flakes" ];
+  
+      # 替换官方的缓存源，这里推荐按优先级排列：
+      # 1. SJTU (上海交大) 的镜像，目前 NixOS 社区反馈在国内速度极其稳定
+      # 2. USTC (中科大) 镜像，作为备用
+      # 3. 官方缓存源，作为最后的兜底
+      substituters = [
+        "https://mirror.sjtu.edu.cn/nix-channels/store"
+        "https://mirrors.ustc.edu.cn/nix-channels/store"
+        "https://cache.nixos.org/"
+      ];
+  
+      # 这是必须的，你需要添加这些镜像源的公钥，Nix 才会信任它们下载的二进制包
+      trusted-public-keys = [
+        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+        # （注：SJTU 和 USTC 都是全量同步官方缓存，所以只要有官方的公钥就可以验证包的签名，不需要额外加它们的特定公钥）
+      ];
+    };
 
   networking.hostName = "nixos"; # Define your hostname.
 
@@ -31,8 +53,33 @@
   time.timeZone = "Asia/Shanghai";
 
   # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
+  #networking.proxy.default = "http://127.0.0.1:7897";
+  #networking.proxy.allProxy = "socks5://127.0.0.1:7897";
+  #networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
+
+  # 防火墙 (KDE Connect & TUN 模式支持)
+  networking.firewall = {
+    enable = true;
+    
+    # 🚀 [新增] 关闭反向路径过滤
+    # 宽松的反向路径过滤（老生常谈的必须项）
+    checkReversePath = "loose";
+
+    allowedTCPPortRanges = [ { from = 1714; to = 1764; } ];
+    allowedUDPPortRanges = [ { from = 1714; to = 1764; } ];
+    # 信任 Clash 创建的虚拟网卡（根据你的配置，通常叫 Mihomo 或者 Meta）
+    trustedInterfaces = [ "Mihomo" ];
+    #extraReversePathFilterRules = ''iifname { "Mihomo" } accept comment "trusted interface"'';
+  };
+
+  # 1. 开启 dconf（在独立窗口管理器中，这是保存和读取图标主题必须的核心）
+  programs.dconf.enable = true;
+  # 🚀 [新增] 启用 Qt 模块并指定配置工具
+  qt = {
+    enable = true;
+    # 指定使用 qt5ct/qt6ct 作为 Qt 程序的全局主题管理器
+    platformTheme = "qt5ct"; 
+  };
 
   # Select internationalisation properties.
   i18n.defaultLocale = "zh_CN.UTF-8";
@@ -54,19 +101,29 @@
     enable = true;
     type = "fcitx5";
     fcitx5.addons = with pkgs; [
-      #qt6Packages.fcitx5-chinese-addons  # 官方中文拼音引擎
-      #fcitx5-gtk                         # 增强在 GTK 程序中的输入体验
-      fcitx5-rime                        # 核心组件：引入 Rime 引擎
+      # 🚀 核心魔法：重载 fcitx5-rime，把基础数据和雾凇词库同时注入进去
+      (fcitx5-rime.override { rimeDataPkgs = [ rime-data rime-ice ]; })
+      # 🚨 把这个恢复开启！它不仅增强输入体验，还负责很多托盘图标的渲染
+      fcitx5-gtk 
+          
+      # (可选) 强烈建议顺手装个官方配置工具，方便以后改快捷键
+      qt6Packages.fcitx5-configtool
+      # 🚀 [新增] Fcitx5 专属的 Material 风格主题，自带所有 UI 图标
+      fcitx5-material-color
     ];
-    fcitx5.waylandFrontend = true; 
+    fcitx5.waylandFrontend = true;
   };
 
   # 强制全局注入 Fcitx5 环境变量，专治 i3wm 各种不服
   environment.sessionVariables = {
     GLFW_IM_MODULE = "ibus"; # 顺手解决一些游戏/图形库的输入问题
-    GTK_IM_MODULE = "fcitx";
+    #GTK_IM_MODULE = "fcitx";
     QT_IM_MODULE = "fcitx";
     XMODIFIERS = "@im=fcitx";
+
+    NIXOS_OZONE_WL = "1";
+    # 🚀 [新增] 强制全局写入 Qt 主题变量，专治 Wayland 下的环境变量丢失
+    QT_QPA_PLATFORMTHEME = "qt5ct";
   };
 
   # console = {
@@ -83,36 +140,6 @@
     enable = true;
     wayland.enable = true;
   };
-
-  # Enable the X11 windowing system.
-  #services.xserver = {
-    #enable = true;
-
-    # 1. 开启 LXQt (轻量级桌面环境)
-    #desktopManager.lxqt.enable = true;
-
-    # 2. 开启 i3wm (平铺式窗口管理器 - 极客首选)
-    #windowManager.i3 = {
-    #  enable = true;
-    #  extraPackages = with pkgs; [
-    #    dmenu 
-    #    i3status
-    #  ];
-    #};
-
-    # 3. 开启 IceWM (复古极轻量窗口管理器)
-    #windowManager.icewm.enable = true;
-
-    # 建议使用 LightDM 作为登录界面，它对多环境切换支持很好
-    #displayManager.lightdm.enable = true;
-  #};
-  
-
-  # Configure keymap in X11
-  #services.xserver.xkb = {
-  #  layout = "cn";
-  #  variant = "";
-  #};
 
   fonts.packages = with pkgs; [
     noto-fonts
@@ -177,12 +204,13 @@
   users.users.maorila = {
     isNormalUser = true;
     description = "maorila";
-    extraGroups = [ "networkmanager" "wheel" ];
+    # 🚨 [修改这里] 加入 libvirtd 和 kvm
+    extraGroups = [ "networkmanager" "wheel" "libvirtd" "kvm" ];
     #hashedPassword = "$6$hnQqq.qZqnTZvLyx$3I.tDiuePXkQWDFaHfisK8ZSvwiX6jHckJM35xUcNaq7FtPhsNB5wbMcvOVxS9.Sh9/CLOddtGudDmBDrRJOY/";
   };
 
   # Install firefox.
-  programs.firefox.enable = true;
+  programs.firefox.enable = false;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -196,9 +224,11 @@
     micro
     eza
     git
-    pkgs.ungoogled-chromium
+    #pkgs.ungoogled-chromium
+    pkgs.google-chrome
     htop
     btop
+    vscode
     # 从 flake inputs 中安装 Noctalia
     inputs.noctalia.packages.${pkgs.system}.default
     
@@ -206,6 +236,10 @@
     wl-clipboard       # Wayland 剪贴板支持
     xwayland-satellite # XWayland 兼容支持
     papirus-icon-theme  # 极其强大的标准图标库
+    nwg-look # 🚀 [新增] 专门用于 Wayland 的外观设置工具
+    # 安装 Qt 主题设置工具（因为最新的 Fcitx5 已经全面迁移到 Qt6）
+    kdePackages.qt6ct 
+    libsForQt5.qt5ct  # 顺手兼容旧版的 Qt5 软件
   ];
 
   # 开启 ZRAM
@@ -248,6 +282,25 @@
     ];
   };
 
+  # 1. Clash Verge Rev 官方推荐满血配置
+  programs.clash-verge = {
+    enable = true;
+    tunMode = true;
+    # 【致胜关键】开启后，系统会自动在底层跑服务模式，彻底解决权限报错
+    serviceMode = true; 
+    autoStart = true;
+  };
+
+  # === 基础服务 ===
+  services.gvfs.enable = true;
+  services.udisks2.enable = true;
+  
+  #nix.extraOptions = ''
+  #  # 填入你自己的 GitHub Personal Access Token (Classic 即可，不需要勾选任何权限，只要是个有效的 Token 就行)
+  #  # 格式：access-tokens = github.com=ghp_xxxxxxxxxxxxxxxxxxxx
+  #  access-tokens = github.com=你的真实TOKEN
+  #'';
+
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
@@ -261,11 +314,23 @@
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
 
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
+  # 🚀 KVM / QEMU 满血虚拟化支持
+  virtualisation.libvirtd = {
+    enable = true;
+    qemu = {
+      package = pkgs.qemu_kvm;
+      runAsRoot = true;
+      swtpm.enable = true; # 开启 TPM 2.0 模拟 (Win11 刚需)
+      ovmf = {
+        enable = true;
+        packages = [ pkgs.OVMFFull.fd ]; # 支持 Secure Boot 的完整 UEFI 固件
+      };
+    };
+  };
+
+  # 启用 Virt-Manager 图形化管理工具
+  # （使用 programs 模块启用，它会自动帮你处理 dconf 和 GTK 主题等依赖，不要只写在 systemPackages 里）
+  programs.virt-manager.enable = true;
 
   # Copy the NixOS configuration file and link it from the resulting system
   # (/run/current-system/configuration.nix). This is useful in case you
