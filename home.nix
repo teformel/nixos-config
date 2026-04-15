@@ -8,7 +8,11 @@
   # 1. 软件安装：这里安装的软件只有 maorila 能用
   home.packages = with pkgs; [
     fastfetch
+    pkgs.go-musicfox
+    pkgs.cava
   ];
+
+  programs.bottom.enable = true;
 
   programs.eza = {
     enable = true;
@@ -16,17 +20,12 @@
     git = true;
     # 自动开启图标支持（极其绚丽）
     icons = "auto";
+    #enableBashIntegration = false;
   };
 
   # 明确启用 Bash 管理，这样 Home Manager 会自动把 direnv 注入到你的 .bashrc 中
   programs.bash = {
     enable = true;
-    shellAliases = {
-      ls = "eza --icons=always --color=always";
-      ll = "eza -hl --icons=always --color=always --git"; # 替代 ls -l
-      la = "eza -hla --icons=always --color=always --git"; # 替代 ls -la
-      tree = "eza --tree --icons=always"; # 甚至可以替代 tree 命令！
-    };
   };
  
   programs.direnv = {
@@ -78,6 +77,20 @@
       ExecStart = "${pkgs.aria2}/bin/aria2c --conf-path=%h/.config/aria2/aria2.conf"; 
       Restart = "on-failure";
     };
+  };
+
+  services.udiskie = {
+    enable = true;
+    tray = "always"; # 对应你的 -t 参数
+  };
+
+  programs.obs-studio = {
+    enable = true;
+    # Niri 环境下不需要 wlrobs 插件，OBS 30+ 原生支持 PipeWire
+    # 如果需要高级音频处理或特效，可以按需添加其它插件
+    plugins = with pkgs.obs-studio-plugins; [
+      obs-pipewire-audio-capture
+    ];
   };
 
   # 🌟 这一行不要改，它与系统版本的含义类似，用于兼容性控制
