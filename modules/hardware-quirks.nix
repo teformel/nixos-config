@@ -7,6 +7,8 @@
     # === 🔊 新增：音频修复参数 ===
     # 0x01 是最通用的值，如果重启后还没声音，可以尝试 0x02 或 0x04
     "snd_soc_sof_8336.quirk=0x01"
+    # 针对 Intel 12 代，确保电源管理不会影响性能
+    "intel_pstate=passive"
   ];
   # 固件支持
   hardware.enableAllFirmware = true;
@@ -55,4 +57,18 @@
       ${pkgs.alsa-utils}/bin/amixer -c $CARD_ID sset 'Output System Free' on || true
     '';
   };
+
+  # 电源管理与休眠支持
+  powerManagement.enable = true;
+  # 1. 开启电源与性能管理（MateBook 电池与性能模式刚需）
+  services.upower.enable = true;
+  services.power-profiles-daemon.enable = true;
+
+  # 可选：如果希望合上笔记本盖子时直接休眠（Suspend to disk）而不是睡眠（Suspend to RAM）
+  # services.logind.lidSwitch = "hibernate"; 
+
+  # 2. 开启蓝牙服务
+  hardware.bluetooth.enable = true;
+  hardware.bluetooth.powerOnBoot = true;
+  
 }

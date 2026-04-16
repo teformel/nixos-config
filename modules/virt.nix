@@ -2,6 +2,12 @@
 { config, pkgs, inputs, ... }:
 
 {
+  boot.kernelParams = [
+    "transparent_hugepage=never" # 禁用透明大页，改用我们手动控制的显式大页
+    "hugepagesz=2M" 
+    "default_hugepagesz=2M"
+  ];
+
   # 开启 KVM / QEMU 满血虚拟化
   virtualisation.libvirtd = {
     enable = true;

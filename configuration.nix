@@ -8,11 +8,11 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ./modules/gaming.nix
-      ./modules/virt.nix            # 🖥️  虚拟化与 Windows
-      ./modules/desktop.nix         # 🎨 桌面环境与外观
-      ./modules/i18n.nix            # 🌐 本地化与输入法
-      ./modules/hardware-quirks.nix # 🚑 硬件修复与音频
+      ./modules/gaming.nix          # 🎮 [游戏] Steam, Lutris, ProtonPlus
+      ./modules/virt.nix            # 🖥️ [虚拟机] KVM, FreeRDP, WinApps, 大页脚本
+      ./modules/desktop.nix         # 🎨 [图形桌面] Niri, SDDM, 字体, UI 包
+      ./modules/i18n.nix            # 🌐 [本地化] 中文、时间格式、Fcitx5 输入法
+      ./modules/hardware-quirks.nix # 🚑 [硬件特调] Intel 12代参数, SOF 补丁, 蓝牙, 电池管理
     ];
 
   # Use the systemd-boot EFI boot loader.
@@ -24,14 +24,6 @@
 
   # 确保 TUN 内核模块已加载
   boot.kernelModules = [ "tun" ];
-
-  boot.kernelParams = [
-    "transparent_hugepage=never" # 禁用透明大页，改用我们手动控制的显式大页
-    "hugepagesz=2M" 
-    "default_hugepagesz=2M"
-    # 针对 Intel 12 代，确保电源管理不会影响性能
-    "intel_pstate=passive"
-   ];
 
   nix.settings = {
       # 你已经有的开启 Flakes 的配置，保留它
@@ -110,16 +102,6 @@
     autoStart = true;
   };
 
-  # 电源管理与休眠支持
-  powerManagement.enable = true;
-  # 1. 开启电源与性能管理（MateBook 电池与性能模式刚需）
-  services.upower.enable = true;
-  services.power-profiles-daemon.enable = true;
-
-  # 2. 开启蓝牙服务
-  hardware.bluetooth.enable = true;
-  hardware.bluetooth.powerOnBoot = true;
-
   # 为了防止平时运行中的交换空间写入到真实的物理 Swap（拖慢速度并损耗 SSD），
   # 需要确保 ZRAM 的优先级高于物理 Swap 分区。
   # 事实上，NixOS 默认开启 ZRAM 时的优先级（100）远高于普通 Swap 分区（通常 < 0）。
@@ -132,9 +114,6 @@
     # 默认算法是 zstd，默认占用最大内存比例是 50%。
     # 一般不需要额外配置，开箱即用的默认值就非常优秀。
   };
-
-  # 可选：如果希望合上笔记本盖子时直接休眠（Suspend to disk）而不是睡眠（Suspend to RAM）
-  # services.logind.lidSwitch = "hibernate"; 
 
   # console = {
   #   font = "Lat2-Terminus16";
