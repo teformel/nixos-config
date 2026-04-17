@@ -7,14 +7,46 @@
     # === 🔊 新增：音频修复参数 ===
     # 0x01 是最通用的值，如果重启后还没声音，可以尝试 0x02 或 0x04
     "snd_soc_sof_8336.quirk=0x01"
-    # 针对 Intel 12 代，确保电源管理不会影响性能
-    "intel_pstate=passive"
   ];
+
   # 固件支持
   hardware.enableAllFirmware = true;
   hardware.firmware = [ pkgs.sof-firmware ];
 
-  # 音频服务
+  # === 2. 硬件视频加速 (省电核心) ===
+  # 在 Wayland 下硬解视频，大幅降低 CPU 占用和发热
+  hardware.graphics = {
+    enable = true;
+    extraPackages = with pkgs; [
+      intel-media-driver # LIBVA_DRIVER_NAME=iHD (Intel 12代 Iris Xe 首选)
+      intel-vaapi-driver # 备用回退
+    ];
+  };
+  environment.variables = {
+    LIBVA_DRIVER_NAME = "iHD";
+  };
+
+  # === 3. 🔋 现代电源与功耗控制栈 (PPD 方案) ===
+  powerManagement.enable = true;
+  
+  # 开启 Powertop 后台自动调优（将所有空闲总线和设备设为节能状态）
+  powerManagement.powertop.enable = true;
+
+  # 开启 Linux 散热守护进程（Intel 笔记本刚需，结合 PPD 动态控制温度墙，防止过热死机或掉帧）
+  services.thermald.enable = true;
+
+  # 启用 UPower (电量状态读取) 和 PPD (电源模式调度)
+  services.upower.enable = true;
+  services.power-profiles-daemon.enable = true;
+
+  # 可选：如果希望合上笔记本盖子时直接休眠（Suspend to disk）而不是睡眠（Suspend to RAM）
+  # services.logind.lidSwitch = "hibernate"; 
+
+  # === 4. 蓝牙服务 ===
+  hardware.bluetooth.enable = true;
+  hardware.bluetooth.powerOnBoot = true;
+
+  # === 5. 音频服务及修复脚本 ===
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -58,17 +90,4 @@
     '';
   };
 
-  # 电源管理与休眠支持
-  powerManagement.enable = true;
-  # 1. 开启电源与性能管理（MateBook 电池与性能模式刚需）
-  services.upower.enable = true;
-  services.power-profiles-daemon.enable = true;
-
-  # 可选：如果希望合上笔记本盖子时直接休眠（Suspend to disk）而不是睡眠（Suspend to RAM）
-  # services.logind.lidSwitch = "hibernate"; 
-
-  # 2. 开启蓝牙服务
-  hardware.bluetooth.enable = true;
-  hardware.bluetooth.powerOnBoot = true;
-  
 }

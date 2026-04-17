@@ -1,6 +1,10 @@
 # modules/virt.nix
 { config, pkgs, inputs, ... }:
 
+let
+  # 提前定义好 unstable 的包集合，方便调用
+  unstablePkgs = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system};
+in
 {
   boot.kernelParams = [
     "transparent_hugepage=never" # 禁用透明大页，改用我们手动控制的显式大页
@@ -58,23 +62,14 @@
   # （使用 programs 模块启用，它会自动帮你处理 dconf 和 GTK 主题等依赖，不要只写在 systemPackages 里）
   programs.virt-manager.enable = true;
 
-  # 为 Looking Glass 准备共享内存文件
-  systemd.tmpfiles.rules = [
-    "f /dev/shm/looking-glass 0660 maorila qemu-libvirtd -"
-  ];
-
   # 将与 Windows 强相关的软件也放在这里
   environment.systemPackages = with pkgs; [
+    pkgs.looking-glass-client
     libnotify # 用于接收 Windows 的系统通知
-    freerdp # 建议使用新版 freerdp
-    # 🚨 终极修正版魔法 winapps
-    (inputs.winapps.packages.${pkgs.system}.winapps.overrideAttrs (oldAttrs: {
-      postPatch = (oldAttrs.postPatch or "") + ''
-        # 使用 @ 作为分隔符，避免与路径或双引号冲突
-        sed -i 's@/app:"||@/app:"program:||@g' bin/winapps
-      '';
-    }))
-    # 启动器环境不需要打补丁，直接引入
+    # 🚨 关键：使用 unstable 版本的 freerdp 替换原有的 freerdp
+    unstablePkgs.freerdp
+    # 1. 恢复最纯净的官方 winapps（删掉之前的 overrideAttrs）
+    inputs.winapps.packages.${pkgs.system}.winapps
     inputs.winapps.packages.${pkgs.system}.winapps-launcher
 
     #/audio-mode:2：不重定向音频（如果你不需要 Windows 发声），能省下不少带宽。
@@ -84,23 +79,28 @@
     #+grab-keyboard: 显式声明开启键盘抓取（有时默认是关闭或半开启的）。
     #/kbd:fn-key:0x5b: 这是一个冷门参数。0x5b 是 Windows 键的扫描码。这行命令是告诉 FreeRDP：“哪怕宿主机想拦，也请务必把这个键传给 Windows。”
     (pkgs.writeShellScriptBin "win11-full" ''
-      # 解决虚拟机状态检查的 URI 问题
       export LIBVIRT_DEFAULT_URI="qemu:///system"
       
-      # 启动连接：全屏、动态分辨率、剪贴板共享、性能优化
-      ${pkgs.freerdp}/bin/xfreerdp \
+      # 清除 Wayland 强制环境变量，安稳走 XWayland
+      unset GDK_BACKEND
+      unset WLD_CHECK
+    
+      # FreeRDP 3 纯净满血版
+      ${unstablePkgs.freerdp}/bin/xfreerdp \
         /v:192.168.122.180 \
-        /u:"maorila" \
-        /p:"maorila" \
+        /u:maorila \
+        /p:maorila \
         /cert:ignore \
         /f \
-        +grab-keyboard \
-        /kbd:fn-key:0x5b \
         /dynamic-resolution \
-        /compression-level:0 \
+        /scale-desktop:125 \
+        /kbd:layout:0x00000804 \
         /network:lan \
-        +clipboard \
-        /gfx:avc420 \
+        /gfx:avc444 \
+        /compression-level:0 \
+        /clipboard \
+        /audio-mode:0 \
+        /microphone
     '')
   ];
 }

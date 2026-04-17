@@ -5,6 +5,9 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
 
+    # 🌟 新增 unstable 分支，专门用来拯救 FreeRDP
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+
     # 引入 Home Manager 的代码仓库，并保持版本与系统一致
     home-manager = {
       url = "github:nix-community/home-manager/release-25.11";
