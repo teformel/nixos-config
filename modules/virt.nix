@@ -100,7 +100,8 @@ in
         /compression-level:0 \
         /clipboard \
         /audio-mode:0 \
-        /microphone
+        /sound:sys:pulse \
+        /microphone:sys:pulse
     '')
   ];
 }
