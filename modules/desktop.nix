@@ -85,5 +85,7 @@
     #pkgs.ungoogled-chromium
     pkgs.google-chrome
     pkgs.mission-center
+
+    localsend
   ];
 }
