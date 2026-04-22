@@ -20,13 +20,19 @@
   # 3. 启用 Gamemode (系统服务，游戏启动时动态优化 CPU 调度和 GPU 性能)
   programs.gamemode.enable = true;
 
+  programs.gamescope = {
+    enable = true;
+    capSysNice = false;
+  };
+
   # 4. 安装 Lutris 及其他辅助工具
   environment.systemPackages = with pkgs; [
     lutris
     protonplus     # 现代化的 Proton 版本管理工具
     mangohud       # 游戏性能监控浮窗 (类似 MSI Afterburner)
     protonup-qt    # 图形化工具，用于方便地下载并安装非官方的 Proton-GE 兼容层
-    # gamescope      # 微型合成器，常用来强行给游戏限制分辨率或突破无边框全屏限制
+    gamescope-wsi
+    #gamescope      # 微型合成器，常用来强行给游戏限制分辨率或突破无边框全屏限制
   ];
 
   # 可选：如果你使用特定的手柄，建议开启系统级 udev 规则

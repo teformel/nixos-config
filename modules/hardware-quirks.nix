@@ -4,9 +4,11 @@
 {
   # 把内核参数移过来
   boot.kernelParams = [ 
-    # === 🔊 新增：音频修复参数 ===
-    # 0x01 是最通用的值，如果重启后还没声音，可以尝试 0x02 或 0x04
-    "snd_soc_sof_8336.quirk=0x01"
+    "snd_intel_dspcfg.dsp_driver=3" # 1 = HDA, 3 = SOF，显式强制使用 SOF 驱动链路
+    "snd_soc_sof_8336.quirk=0x20"   # 华为板子优先尝试 0x02 (Headphone GPIO)，若无效则换为 0x04
+    # --- 根治核心：禁用音频节能防止“睡死” ---
+    "snd_hda_intel.power_save=0"
+    "snd_hda_intel.power_save_controller=N"
   ];
 
   # 固件支持
@@ -30,7 +32,7 @@
   powerManagement.enable = true;
   
   # 开启 Powertop 后台自动调优（将所有空闲总线和设备设为节能状态）
-  powerManagement.powertop.enable = true;
+  powerManagement.powertop.enable = false;
 
   # 开启 Linux 散热守护进程（Intel 笔记本刚需，结合 PPD 动态控制温度墙，防止过热死机或掉帧）
   services.thermald.enable = true;
@@ -53,6 +55,25 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
+
+    # 3. 根治方案：禁用 WirePlumber 的节点挂起功能
+    # 这会防止声卡在无声音输出时自动关闭电源
+    wireplumber.extraConfig = {
+      "10-disable-suspend" = {
+        "monitor.alsa.rules" = [
+          {
+            matches = [
+              { "node.name" = "~alsa_output.*"; }
+            ];
+            actions = {
+              update-props = {
+                "session.suspend-on-idle" = false;
+              };
+            };
+          }
+        ];
+      };
+    };
   };
 
   # 把音频相关的包移过来
@@ -61,6 +82,7 @@
     alsa-utils
     # 推荐装这个，方便图形化看哪个通道没开
     pavucontrol
+    wireplumber # 方便使用 wpctl 调试
   ];
 
   # 🔊 声明式音频修复 (Sof-Essx8336)

@@ -8,11 +8,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ./modules/gaming.nix          # 🎮 [游戏] Steam, Lutris, ProtonPlus
-      ./modules/virt.nix            # 🖥️ [虚拟机] KVM, FreeRDP, WinApps, 大页脚本
-      ./modules/desktop.nix         # 🎨 [图形桌面] Niri, SDDM, 字体, UI 包
-      ./modules/i18n.nix            # 🌐 [本地化] 中文、时间格式、Fcitx5 输入法
-      ./modules/hardware-quirks.nix # 🚑 [硬件特调] Intel 12代参数, SOF 补丁, 蓝牙, 电池管理
+      ./modules
     ];
 
   # Use the systemd-boot EFI boot loader.
@@ -136,8 +132,7 @@
     isNormalUser = true;
     description = "maorila";
     # 🚨 [修改这里] 加入 libvirtd 和 kvm
-    extraGroups = [ "networkmanager" "wheel" "libvirtd" "kvm" "adbusers" ];
-    #hashedPassword = "$6$hnQqq.qZqnTZvLyx$3I.tDiuePXkQWDFaHfisK8ZSvwiX6jHckJM35xUcNaq7FtPhsNB5wbMcvOVxS9.Sh9/CLOddtGudDmBDrRJOY/";
+    extraGroups = [ "networkmanager" "wheel" "libvirtd" "kvm" ];
   };
 
   # Allow unfree packages
@@ -156,6 +151,8 @@
     btop
     yazi          # 极速 Rust 终端文件管理器
     p7zip
+    #android-studio
+    android-tools # 🌟 添加这个包来获取 adb 和 fastboot 命令
   ];
   
   #nix.extraOptions = ''

@@ -1,10 +1,6 @@
 # modules/virt.nix
 { config, pkgs, inputs, ... }:
 
-let
-  # 提前定义好 unstable 的包集合，方便调用
-  unstablePkgs = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system};
-in
 {
   boot.kernelParams = [
     "transparent_hugepage=never" # 禁用透明大页，改用我们手动控制的显式大页
@@ -64,10 +60,9 @@ in
 
   # 将与 Windows 强相关的软件也放在这里
   environment.systemPackages = with pkgs; [
-    pkgs.looking-glass-client
+    looking-glass-client
     libnotify # 用于接收 Windows 的系统通知
-    # 🚨 关键：使用 unstable 版本的 freerdp 替换原有的 freerdp
-    unstablePkgs.freerdp
+    freerdp
     # 1. 恢复最纯净的官方 winapps（删掉之前的 overrideAttrs）
     inputs.winapps.packages.${pkgs.system}.winapps
     inputs.winapps.packages.${pkgs.system}.winapps-launcher
@@ -86,7 +81,7 @@ in
       unset WLD_CHECK
     
       # FreeRDP 3 纯净满血版
-      ${unstablePkgs.freerdp}/bin/xfreerdp \
+      ${pkgs.freerdp}/bin/xfreerdp \
         /v:192.168.122.180 \
         /u:maorila \
         /p:maorila \
