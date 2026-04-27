@@ -2,16 +2,15 @@
 { config, pkgs, ... }:
 
 {
-  # 把内核参数移过来
+  # === 1. 内核与固件 ===
   boot.kernelParams = [ 
     "snd_intel_dspcfg.dsp_driver=3" # 1 = HDA, 3 = SOF，显式强制使用 SOF 驱动链路
-    "snd_soc_sof_8336.quirk=0x20"   # 华为板子优先尝试 0x02 (Headphone GPIO)，若无效则换为 0x04
+    "snd_soc_sof_8336.quirk=0x02"   # 华为板子优先尝试 0x02 (Headphone GPIO)，若无效则换为 0x04
     # --- 根治核心：禁用音频节能防止“睡死” ---
     "snd_hda_intel.power_save=0"
     "snd_hda_intel.power_save_controller=N"
   ];
 
-  # 固件支持
   hardware.enableAllFirmware = true;
   hardware.firmware = [ pkgs.sof-firmware ];
 
@@ -28,21 +27,33 @@
     LIBVA_DRIVER_NAME = "iHD";
   };
 
-  # === 3. 🔋 现代电源与功耗控制栈 (PPD 方案) ===
+  # === 3. 🔋 现代电源与功耗控制栈 ===
   powerManagement.enable = true;
-  
-  # 开启 Powertop 后台自动调优（将所有空闲总线和设备设为节能状态）
   powerManagement.powertop.enable = false;
 
-  # 开启 Linux 散热守护进程（Intel 笔记本刚需，结合 PPD 动态控制温度墙，防止过热死机或掉帧）
+  # 启用 UPower (电量状态读取)
+  services.upower.enable = true;
+  # 禁用默认的 PPD，给 auto-cpufreq 让路
+  services.power-profiles-daemon.enable = false;
+
+  # 🌟 开启 Intel 专属温控守护进程（防过热降频）
   services.thermald.enable = true;
 
-  # 启用 UPower (电量状态读取) 和 PPD (电源模式调度)
-  services.upower.enable = true;
-  services.power-profiles-daemon.enable = true;
-
-  # 可选：如果希望合上笔记本盖子时直接休眠（Suspend to disk）而不是睡眠（Suspend to RAM）
-  # services.logind.lidSwitch = "hibernate"; 
+  # 🌟 开启自动频率调度神器
+  services.auto-cpufreq.enable = true;
+  services.auto-cpufreq.settings = {
+    # 🔋 拔电状态（电池模式）
+    battery = {
+      governor = "powersave";   
+      turbo = "never";          
+    };
+    
+    # 🔌 插电状态（性能模式）
+    charger = {
+      governor = "performance"; 
+      turbo = "auto";           
+    };
+  };
 
   # === 4. 蓝牙服务 ===
   hardware.bluetooth.enable = true;
@@ -56,8 +67,7 @@
     alsa.support32Bit = true;
     pulse.enable = true;
 
-    # 3. 根治方案：禁用 WirePlumber 的节点挂起功能
-    # 这会防止声卡在无声音输出时自动关闭电源
+    # 禁用 WirePlumber 的节点挂起功能，防止没声音时声卡休眠睡死
     wireplumber.extraConfig = {
       "10-disable-suspend" = {
         "monitor.alsa.rules" = [
@@ -76,20 +86,18 @@
     };
   };
 
-  # 把音频相关的包移过来
   environment.systemPackages = with pkgs; [
     alsa-ucm-conf
     alsa-utils
-    # 推荐装这个，方便图形化看哪个通道没开
     pavucontrol
-    wireplumber # 方便使用 wpctl 调试
+    wireplumber 
   ];
 
   # 🔊 声明式音频修复 (Sof-Essx8336)
-  # 这种声卡默认会把 DAC 通道静音，这里我们强制在开机时打开它
   systemd.services.fix-sof-sound = {
     description = "Unmute sof-essx8336 channels on boot";
-    after = [ "sound.target" "pipewire.service" ]; 
+    # 🚨 修复：去掉了 pipewire.service，仅依赖底层硬件初始化完成
+    after = [ "sound.target" "alsa-restore.service" ]; 
     wantedBy = [ "multi-user.target" ];
     serviceConfig = {
       Type = "oneshot";
@@ -100,7 +108,7 @@
     script = ''
       # 自动查找包含 sof-ess8336 的声卡编号
       CARD_ID=$(${pkgs.alsa-utils}/bin/aplay -l | grep -i "essx8336" | head -n1 | cut -d' ' -f2 | tr -d ':')
-      if [ -z "$CARD_ID" ]; then CARD_ID="0"; fi # 找不到则默认 0
+      if [ -z "$CARD_ID" ]; then CARD_ID="0"; fi 
   
       # 强制开启所有可能被静音的通道
       ${pkgs.alsa-utils}/bin/amixer -c $CARD_ID sset 'Left Headphone Mixer Left DAC' on || true
@@ -111,5 +119,4 @@
       ${pkgs.alsa-utils}/bin/amixer -c $CARD_ID sset 'Output System Free' on || true
     '';
   };
-
 }

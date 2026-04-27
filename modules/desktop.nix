@@ -3,13 +3,28 @@
 
 {
   # === 桌面环境与显示管理器 ===
-  # 1. 恢复并启用 SDDM
   services.displayManager.sddm = {
     enable = true;
-    wayland.enable = true; # 开启 SDDM 的纯 Wayland 模式，抛弃 X11 依赖
-    # 🌟 指定主题文件夹的名称 sddm-astronaut-theme (宇航员) 主题
-    theme = "sddm-catppuccin-mocha"; 
-    # 如果你想用 Catppuccin，这里可以写 "catppuccin-mocha"
+    wayland.enable = true;
+    theme = "catppuccin-mocha-mauve"; 
+    
+    # 🌟 1. 显式告诉 SDDM 使用哪个鼠标指针主题
+    settings = {
+      Theme = {
+        # 这里的名字必须和光标主题文件夹的名字完全对应
+        CursorTheme = "catppuccin-mocha-mauve-cursors"; 
+      };
+    };
+    
+    extraPackages = with pkgs; [
+      kdePackages.qtsvg
+      kdePackages.qtmultimedia
+      kdePackages.qtvirtualkeyboard
+      kdePackages.qt5compat
+      
+      # 🌟 2. 补上 Qt6 的 Wayland 支持模块，确保输入设备在 Wayland 下正确渲染
+      kdePackages.qtwayland 
+    ];
   };
 
   # 2. 保持 Niri 混成器为主力
@@ -63,6 +78,13 @@
   services.gvfs.enable = true;
   services.udisks2.enable = true;
 
+  # 🌟 新增：声明全局默认终端
+  environment.variables = {
+    TERMINAL = "ghostty";
+    # 顺手加上这个，能让很多终端应用（比如 bottom）的色彩显示更正常
+    COLORTERM = "truecolor"; 
+  };
+
   # === 系统包 ===
   environment.systemPackages = with pkgs; [
     glib                       
@@ -87,17 +109,11 @@
     
     # 🚨 删除了 gnome-tweaks 和下面那一大坨 GNOME 游戏/全家桶的屏蔽代码
     #antigravity-fhs
-
-    # 🌟 1. 引入主题包（二选一即可）
-    #sddm-astronaut      # 极具科幻感的深空主题
-    catppuccin-sddm   # 时下最流行的柔和暗色主题
-
-    # 🚨 2. 防白屏终极指南（非常关键）
-    # 在 NixOS 中，许多高级 SDDM 主题使用了额外的 Qt 渲染特效。
-    # 因为 Unstable 版本的 SDDM 已经默认迁移到 Qt6，我们必须显式提供这些 Qt6 组件，
-    # 否则大概率会遇到登录界面白屏、只剩鼠标或者输入框出不来的情况。
-    kdePackages.qtsvg
-    kdePackages.qtmultimedia
-    kdePackages.qtvirtualkeyboard
+    catppuccin-sddm
+    # 🌟 3. 安装与你主题配套的 Catppuccin 鼠标包，提供实体的光标文件
+    catppuccin-cursors.mochaMauve
+        
+    # (💡 备用方案：如果你更喜欢原生的光标，可以把上面那行换成 adwaita-icon-theme，
+    # 并将 CursorTheme 改为 "Adwaita")
   ];
 }

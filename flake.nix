@@ -35,10 +35,13 @@
       # 让你的仓库使用系统当前的 nixpkgs 版本进行构建，避免重复下载依赖
       inputs.nixpkgs.follows = "nixpkgs"; 
     };
+
+    # 🌟 1. 引入 CachyOS 内核的 Flake 源
+    nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel";
   };
 
   # 这是你的施工图纸：教 Nix 如何组装系统
-  outputs = { self, nixpkgs, nixpkgs-stable, home-manager, disko, ... }@inputs: {
+  outputs = { self, nixpkgs, nixpkgs-stable, home-manager, disko, nix-cachyos-kernel, ... }@inputs: {
     nixosConfigurations = {
       # 🚨 重要：请把这里的 "nixos" 替换成你真实的电脑主机名！
       "nixos" = nixpkgs.lib.nixosSystem {
@@ -87,6 +90,11 @@
               # 如果某个软件在 unstable 坏了，你可以这样调用 25.11 的版本：
               # pkgs.stable.git
             ];
+          })
+
+          # 🌟 2. 注入 Overlay，使系统级 pkgs 能够识别 cachyosKernels
+          ({ pkgs, ... }: {
+            nixpkgs.overlays = [ nix-cachyos-kernel.overlays.default ];
           })
         ];
       };

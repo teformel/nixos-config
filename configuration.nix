@@ -2,7 +2,7 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 
 {
   imports =
@@ -16,7 +16,11 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   # Use latest kernel.
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  #boot.kernelPackages = pkgs.linuxPackages_latest;
+  # 使用 Zen 内核以获得更低的桌面延迟和更好的游戏响应
+  #boot.kernelPackages = pkgs.linuxPackages_zen;
+  # 使用 linuxPackagesFor 函数，将 CachyOS 最新的 v3 优化版内核包装成系统可用的完整套件
+  boot.kernelPackages = pkgs.linuxPackagesFor inputs."nix-cachyos-kernel".packages.${pkgs.system}.linux-cachyos-latest-lto-x86_64-v3;
 
   # 确保 TUN 内核模块已加载
   boot.kernelModules = [ "tun" ];
@@ -30,6 +34,7 @@
       # 2. USTC (中科大) 镜像，作为备用
       # 3. 官方缓存源，作为最后的兜底
       substituters = [
+        "https://attic.xuyh0120.win/lantian" # 🌟 [新增] CachyOS 内核专属的二进制缓存源
         "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store" # 清华源
         "https://mirrors.ustc.edu.cn/nix-channels/store"
         "https://mirror.sjtu.edu.cn/nix-channels/store"
@@ -38,6 +43,7 @@
   
       # 这是必须的，你需要添加这些镜像源的公钥，Nix 才会信任它们下载的二进制包
       trusted-public-keys = [
+        "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc=" # 🌟 [新增] 必须添加此公钥，否则不信任该缓存
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
         # （注：SJTU 和 USTC 都是全量同步官方缓存，所以只要有官方的公钥就可以验证包的签名，不需要额外加它们的特定公钥）
       ];
@@ -126,11 +132,15 @@
   # 5. Shell 环境支持
   # 确保 Fish Shell 在 Wayland 桌面下环境变量正常加载
   programs.bash.enable = true;
+  # 1. 必须在系统层面启用 fish
+  # 这非常重要，它会配置必要的环境变量和补全，否则你的 fish 可能会缺少很多功能
+  programs.fish.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.maorila = {
     isNormalUser = true;
     description = "maorila";
+    shell = pkgs.fish;
     # 🚨 [修改这里] 加入 libvirtd 和 kvm
     extraGroups = [ "networkmanager" "wheel" "libvirtd" "kvm" ];
   };
@@ -153,6 +163,7 @@
     p7zip
     #android-studio
     android-tools # 🌟 添加这个包来获取 adb 和 fastboot 命令
+    fish
   ];
   
   #nix.extraOptions = ''

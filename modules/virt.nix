@@ -75,24 +75,23 @@
     #/kbd:fn-key:0x5b: 这是一个冷门参数。0x5b 是 Windows 键的扫描码。这行命令是告诉 FreeRDP：“哪怕宿主机想拦，也请务必把这个键传给 Windows。”
     (pkgs.writeShellScriptBin "win11-full" ''
       export LIBVIRT_DEFAULT_URI="qemu:///system"
-      
+          
       # 清除 Wayland 强制环境变量，安稳走 XWayland
       unset GDK_BACKEND
       unset WLD_CHECK
-    
-      # FreeRDP 3 纯净满血版
+      
       ${pkgs.freerdp}/bin/xfreerdp \
         /v:192.168.122.180 \
         /u:maorila \
         /p:maorila \
         /cert:ignore \
         /f \
-        /dynamic-resolution \
-        /scale-desktop:125 \
+        /bpp:32 \
+        /gfx \
         /kbd:layout:0x00000804 \
         /network:lan \
-        /gfx:avc444 \
-        /compression-level:0 \
+        /scale-desktop:125 \
+        /scale-device:140 \
         /clipboard \
         /audio-mode:0 \
         /sound:sys:pulse \

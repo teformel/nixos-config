@@ -27,10 +27,22 @@
   programs.bash = {
     enable = true;
   };
+
+  # 🌟 新增：让 Home Manager 接管 Fish 的配置
+  programs.fish = {
+    enable = true;
+    # 你可以在这里顺手配几个日常缩写（可选）
+    shellAliases = {
+      #ls = "eza";
+      #ll = "eza -l";
+      #la = "eza -la";
+    };
+  };  
  
   programs.direnv = {
     enable = true;
     enableBashIntegration = true; # 明确开启 Bash 支持
+    enableFishIntegration = true; # 🌟 新增：让闪电加载环境在 Fish 里也能生效！
     # 这一行极其重要，它是闪电加载的核心（nix-direnv 缓存机制）
     nix-direnv.enable = true; 
   };
