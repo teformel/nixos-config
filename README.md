@@ -62,6 +62,15 @@ nh os switch github:maorila/nixos-config
 ```bash
 nix run github:nix-community/nixos-anywhere -- --flake github:maorila/nixos-config#Laptop-maorila root@localhost
 ```
+
+> **🔧 备用连招（官方工具分步安装）**：如果你觉得 `nixos-anywhere` 是个黑盒，或者想在 Live U 盘下更可控地进行，也可以使用官方自带的工具连招（假设你事先拉取了配置文件）：
+> ```bash
+> # 1. 自动根据代码配置格式化硬盘并挂载
+> sudo nix run github:nix-community/disko -- --mode disko /tmp/disko-config.nix
+> # 2. 将系统安装进刚刚挂载好的硬盘中
+> sudo nixos-install --flake github:maorila/nixos-config#Laptop-maorila
+> ```
+> 效果是完全一样的！
 > **⚠️ 危险预警**：只有在使用 `nixos-anywhere`（或专门执行 disko 脚本）时，硬盘才会被真正格式化！如果你是在空机器上执行这个命令，请确保硬盘里的数据已经备份。
 
 ### 场景 3：传统的本地修改模式
