@@ -2,6 +2,10 @@
 { config, pkgs, inputs, ... }:
 
 {
+  # KDE Connect 防火墙规则
+  networking.firewall.allowedTCPPortRanges = [ { from = 1714; to = 1764; } ];
+  networking.firewall.allowedUDPPortRanges = [ { from = 1714; to = 1764; } ];
+
   # === 桌面环境与显示管理器 ===
   services.displayManager.sddm = {
     enable = true;
@@ -90,7 +94,6 @@
     glib                       
     gsettings-desktop-schemas  
     inputs.noctalia.packages.${pkgs.system}.default    
-    ghostty
     wl-clipboard       
     xwayland-satellite 
     papirus-icon-theme 
@@ -100,20 +103,26 @@
     
     kdePackages.qt6ct 
     libsForQt5.qt5ct  
-    udiskie       
-    file-roller   
-    vscode
-    google-chrome
-    mission-center
-    localsend
     
-    # 🚨 删除了 gnome-tweaks 和下面那一大坨 GNOME 游戏/全家桶的屏蔽代码
-    #antigravity-fhs
     catppuccin-sddm
     # 🌟 3. 安装与你主题配套的 Catppuccin 鼠标包，提供实体的光标文件
     catppuccin-cursors.mochaMauve
-        
-    # (💡 备用方案：如果你更喜欢原生的光标，可以把上面那行换成 adwaita-icon-theme，
-    # 并将 CursorTheme 改为 "Adwaita")
   ];
+
+  # 【用户层配置】
+  home-manager.users.maorila = {
+    home.packages = with pkgs; [
+      ghostty
+      file-roller   
+      vscode
+      google-chrome
+      mission-center
+      localsend
+    ];
+
+    services.udiskie = {
+      enable = true;
+      tray = "always";
+    };
+  };
 }

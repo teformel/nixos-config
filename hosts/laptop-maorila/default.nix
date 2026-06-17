@@ -8,7 +8,8 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ./modules
+      ./hardware-quirks.nix
+      ../../modules
     ];
 
   # Use the systemd-boot EFI boot loader.
@@ -52,7 +53,7 @@
   # 允许 wheel 组的用户（也就是你）信任第三方缓存
   nix.settings.trusted-users = [ "root" "@wheel" ];
 
-  networking.hostName = "nixos"; # Define your hostname.
+  networking.hostName = "Laptop-maorila"; # Define your hostname.
 
   # Configure network connections interactively with nmcli or nmtui.
   networking.networkmanager.enable = true;
@@ -79,31 +80,6 @@
   #networking.proxy.allProxy = "socks5://127.0.0.1:7897";
   #networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
-  # 防火墙 (KDE Connect & TUN 模式支持)
-  networking.firewall = {
-    enable = true;
-    
-    # 🚀 [新增] 关闭反向路径过滤
-    # 宽松的反向路径过滤（老生常谈的必须项）
-    checkReversePath = "loose";
-
-    allowedTCPPorts = [ 6800 ];
-    allowedTCPPortRanges = [ { from = 1714; to = 1764; } ];
-    allowedUDPPortRanges = [ { from = 1714; to = 1764; } ];
-    # 信任 Clash 创建的虚拟网卡（根据你的配置，通常叫 Mihomo 或者 Meta）
-    trustedInterfaces = [ "Mihomo" ];
-    #extraReversePathFilterRules = ''iifname { "Mihomo" } accept comment "trusted interface"'';
-  };
-
-  # 1. Clash Verge Rev 官方推荐满血配置
-  programs.clash-verge = {
-    enable = true;
-    tunMode = true;
-    # 【致胜关键】开启后，系统会自动在底层跑服务模式，彻底解决权限报错
-    serviceMode = true; 
-    autoStart = true;
-  };
-
   # 为了防止平时运行中的交换空间写入到真实的物理 Swap（拖慢速度并损耗 SSD），
   # 需要确保 ZRAM 的优先级高于物理 Swap 分区。
   # 事实上，NixOS 默认开启 ZRAM 时的优先级（100）远高于普通 Swap 分区（通常 < 0）。
@@ -129,13 +105,6 @@
   # Enable touchpad support (enabled default in most desktopManager).
   # services.libinput.enable = true;
 
-  # 5. Shell 环境支持
-  # 确保 Fish Shell 在 Wayland 桌面下环境变量正常加载
-  programs.bash.enable = true;
-  # 1. 必须在系统层面启用 fish
-  # 这非常重要，它会配置必要的环境变量和补全，否则你的 fish 可能会缺少很多功能
-  programs.fish.enable = true;
-
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.maorila = {
     isNormalUser = true;
@@ -148,22 +117,22 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
+  # 🌟 启用 nh 工具 (Nix Helper)，提供更快的构建体验和自动清理
+  programs.nh = {
+    enable = true;
+    clean.enable = true;
+    clean.extraArgs = "--keep-since 4d --keep 3";
+    # 指定系统的 Flake 源路径，这样你可以在任何地方运行 nh os switch
+    flake = "/home/maorila/nixos-config"; 
+  };
+
+  # 为保证全终端兼容，顺手注入全局环境变量
+  environment.variables.FLAKE = "/home/maorila/nixos-config";
+
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
   environment.systemPackages = with pkgs; [
-    neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-    wget
-    curl
-    micro
-    eza
-    git
-    htop
-    btop
-    yazi          # 极速 Rust 终端文件管理器
-    p7zip
-    #android-studio
-    android-tools # 🌟 添加这个包来获取 adb 和 fastboot 命令
-    fish
+    #的大部分核心终端工具已经移至 modules/core/cli.nix
   ];
   
   #nix.extraOptions = ''

@@ -10,7 +10,7 @@
           partitions = {
             # ESP 分区 (UEFI 引导)
             ESP = {
-              size = "1G";
+              size = "512M";
               type = "EF00";
               content = {
                 type = "filesystem";
@@ -23,8 +23,8 @@
             # Swap 分区 (用于系统休眠 Suspend-to-Disk)
             swap = {
               # 注意：休眠需要将内存数据完整写入硬盘。
-              # 请将此处的大小修改为【大于等于你电脑的物理内存大小】（如 16G 内存建议设为 18G 或 20G）
-              size = "20G"; 
+              # 请将此处的大小修改为【大于等于你电脑的物理内存大小】（一般设置为 16G 左右）
+              size = "16G"; 
               content = {
                 type = "swap";
                 # 关键参数：告诉 Disko 这个分区用于休眠，它会自动在生成配置时注入 boot.resumeDevice
