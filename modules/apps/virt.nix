@@ -2,12 +2,6 @@
 { config, pkgs, inputs, ... }:
 
 {
-  boot.kernelParams = [
-    "transparent_hugepage=never" # 禁用透明大页，改用我们手动控制的显式大页
-    "hugepagesz=2M" 
-    "default_hugepagesz=2M"
-  ];
-
   # 开启 KVM / QEMU 满血虚拟化
   virtualisation.libvirtd = {
     enable = true;
@@ -17,38 +11,6 @@
       swtpm.enable = true; # 开启 TPM 2.0 模拟 (Win11 刚需)
       # 确保 virtiofsd 可用
       vhostUserPackages = [ pkgs.virtiofsd ];
-    };
-    hooks.qemu = {
-      # 使用 pkgs.writeShellScript 将字符串包装成一个真正的脚本文件
-      dynamicHugepages = pkgs.writeShellScript "dynamic-hugepages" ''
-        guest=$1
-        operation=$2
-      
-        if [ "$guest" = "win11" ]; then
-          case "$operation" in
-            prepare)
-              # 尝试清理内存碎片，提高 2MB 大页分配成功率
-              sync
-              echo 3 > /proc/sys/vm/drop_caches
-              echo 1 > /proc/sys/vm/compact_memory
-                  
-              # 申请 8GB 的 2MB 大页 (4096 * 2MB = 8192MB)
-              echo 4096 > /proc/sys/vm/nr_hugepages
-                 
-              # 这里的检查是可选的，2MB 几乎稳过
-              allocated=$(cat /proc/sys/vm/nr_hugepages)
-              if [ "$allocated" -lt 4096 ]; then
-                echo "Error: Failed to allocate 8GB of 2MB hugepages."
-                exit 1
-              fi
-              ;;
-            release)
-              # 虚拟机关闭后释放内存
-              echo 0 > /proc/sys/vm/nr_hugepages
-              ;;
-          esac
-        fi
-      '';
     };
   };
 
@@ -61,7 +23,6 @@
   # 将与 Windows 强相关的软件放到用户层
   home-manager.users.maorila = {
     home.packages = with pkgs; [
-      looking-glass-client
       libnotify # 用于接收 Windows 的系统通知
       freerdp
       # 1. 恢复最纯净的官方 winapps（删掉之前的 overrideAttrs）
