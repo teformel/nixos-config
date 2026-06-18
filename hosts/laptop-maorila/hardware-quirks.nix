@@ -48,9 +48,9 @@
       turbo = "never";          
     };
     
-    # 🔌 插电状态（性能模式）
+    # 🔌 插电状态（日常平衡模式）
     charger = {
-      governor = "performance"; 
+      governor = "powersave"; 
       turbo = "auto";           
     };
   };
