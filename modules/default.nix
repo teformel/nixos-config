@@ -13,8 +13,8 @@
     ./apps/virt.nix
     ./apps/downloader.nix
     ./apps/media.nix
-    # ./apps/clash-verge.nix # 暂时封存 Clash Verge
-    ./apps/clash-party.nix   # 启用 Clash Party
+    ./apps/clash-verge.nix # 暂时封存 Clash Verge
+    # ./apps/clash-party.nix   # 启用 Clash Party
     ./apps/ww-manager.nix
   ];
 }
