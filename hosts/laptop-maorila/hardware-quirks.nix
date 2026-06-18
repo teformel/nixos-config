@@ -33,27 +33,16 @@
 
   # 启用 UPower (电量状态读取)
   services.upower.enable = true;
-  # 禁用默认的 PPD，给 auto-cpufreq 让路
-  services.power-profiles-daemon.enable = false;
+  
+  # 恢复使用默认的 PPD (Power Profiles Daemon)
+  # 它能与桌面的快捷设置联动（性能/平衡/省电），就是你以前用的那个
+  services.power-profiles-daemon.enable = true;
 
   # 🌟 开启 Intel 专属温控守护进程（防过热降频）
   services.thermald.enable = true;
 
-  # 🌟 开启自动频率调度神器
-  services.auto-cpufreq.enable = true;
-  services.auto-cpufreq.settings = {
-    # 🔋 拔电状态（电池模式）
-    battery = {
-      governor = "powersave";   
-      turbo = "never";          
-    };
-    
-    # 🔌 插电状态（日常平衡模式）
-    charger = {
-      governor = "powersave"; 
-      turbo = "auto";           
-    };
-  };
+  # 🌟 关闭 auto-cpufreq，将控制权交还给 PPD
+  services.auto-cpufreq.enable = false;
 
   # === 4. 蓝牙服务 ===
   hardware.bluetooth.enable = true;
