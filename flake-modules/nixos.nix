@@ -37,7 +37,7 @@
             home-manager.users.maorila = {
               home.username = "maorila";
               home.homeDirectory = "/home/maorila";
-              home.stateVersion = "25.11";
+              home.stateVersion = "26.05";
               programs.home-manager.enable = true;
             };
           }

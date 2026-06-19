@@ -50,7 +50,7 @@
 
     NIXOS_OZONE_WL = "1";
     # 🚀 [新增] 强制全局写入 Qt 主题变量，专治 Wayland 下的环境变量丢失
-    QT_QPA_PLATFORMTHEME = "qt5ct";
+    # QT_QPA_PLATFORMTHEME = "qt5ct";
     # 强制 Wayland/图形界面继承中文环境
     LANG = "zh_CN.UTF-8";
     LC_ALL = "zh_CN.UTF-8";

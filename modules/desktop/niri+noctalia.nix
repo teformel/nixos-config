@@ -118,7 +118,7 @@
       google-chrome
       mission-center
       localsend
-      mark-shot     # 强力的 Wayland 原生截图与长截图工具
+      # mark-shot     # 强力的 Wayland 原生截图与长截图工具
     ];
 
     services.udiskie = {

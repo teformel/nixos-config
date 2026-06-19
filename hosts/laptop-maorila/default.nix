@@ -8,7 +8,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ./hardware-quirks.nix
+      #./hardware-quirks.nix
       ../../modules
     ];
 
@@ -17,11 +17,11 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   # Use latest kernel.
-  #boot.kernelPackages = pkgs.linuxPackages_latest;
+  # boot.kernelPackages = pkgs.linuxPackages_latest;
   # 使用 Zen 内核以获得更低的桌面延迟和更好的游戏响应
-  #boot.kernelPackages = pkgs.linuxPackages_zen;
+  boot.kernelPackages = pkgs.linuxPackages_zen;
   # 使用 linuxPackagesFor 函数，将 CachyOS 最新的 v3 优化版内核包装成系统可用的完整套件
-  boot.kernelPackages = pkgs.linuxPackagesFor inputs."nix-cachyos-kernel".packages.${pkgs.system}.linux-cachyos-latest-lto-x86_64-v3;
+  #boot.kernelPackages = pkgs.linuxPackagesFor inputs."nix-cachyos-kernel".packages.${pkgs.system}.linux-cachyos-latest-lto-x86_64-v3;
 
   # 确保 TUN 内核模块已加载
   boot.kernelModules = [ "tun" ];
@@ -109,10 +109,12 @@
   users.users.maorila = {
     isNormalUser = true;
     description = "maorila";
+    initialPassword = "maorila";
     shell = pkgs.fish;
     # 🚨 [修改这里] 加入 libvirtd 和 kvm
     extraGroups = [ "networkmanager" "wheel" "libvirtd" "kvm" ];
   };
+  users.mutableUsers = true;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -176,7 +178,7 @@
   # and migrated your data accordingly.
   #
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
-  system.stateVersion = "25.11"; # Did you read the comment?
+  system.stateVersion = "26.05"; # Did you read the comment?
 
 }
 
