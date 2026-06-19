@@ -5,13 +5,16 @@
   # === 1. 内核与固件 ===
   boot.kernelParams = [ 
     "snd_intel_dspcfg.dsp_driver=3" # 1 = HDA, 3 = SOF，显式强制使用 SOF 驱动链路
-    "snd_soc_sof_8336.quirk=0x02"   # 华为板子优先尝试 0x02 (Headphone GPIO)，若无效则换为 0x04
+    "snd_soc_sof_8336.quirk=0x22"   # 华为板子优先尝试 0x02 (Headphone GPIO)，若无效则换为 0x04
     # --- 根治核心：禁用音频节能防止“睡死” ---
     "snd_hda_intel.power_save=0"
     "snd_hda_intel.power_save_controller=N"
   ];
 
-  hardware.enableAllFirmware = true;
+  # 🌟 优化：关闭盲目允许所有固件，改为只允许再分配的固件（规避无法下载的微软固件）
+  hardware.enableRedistributableFirmware = true; 
+  
+  # 显式引入你笔记本音频需要的 SOF 固件
   hardware.firmware = [ pkgs.sof-firmware ];
 
   # === 2. 硬件视频加速 (省电核心) ===
@@ -40,9 +43,6 @@
 
   # 🌟 开启 Intel 专属温控守护进程（防过热降频）
   services.thermald.enable = true;
-
-  # 🌟 关闭 auto-cpufreq，将控制权交还给 PPD
-  services.auto-cpufreq.enable = false;
 
   # === 4. 蓝牙服务 ===
   hardware.bluetooth.enable = true;

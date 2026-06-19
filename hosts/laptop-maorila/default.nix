@@ -8,7 +8,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      #./hardware-quirks.nix
+      ./hardware-quirks.nix
       ../../modules
     ];
 
@@ -122,8 +122,16 @@
   # 🌟 启用 nh 工具 (Nix Helper)，提供更快的构建体验和自动清理
   programs.nh = {
     enable = true;
-    clean.enable = true;
-    clean.extraArgs = "--keep-since 4d --keep 3";
+    # 🌟 开启 nh 自动清理定时任务
+    clean = {
+      enable = true;
+      # 定时任务触发时间，采用 systemd.time 格式（这里代表每周日凌晨 5:00 自动清理）
+      dates = "weekly"; 
+      # 传递给 nh clean 的垃圾回收参数
+      # --keep 7d 代表保留最近 7 天内的系统世代
+      # --keep-since 3d 代表保留最近 3 天内构建的所有临时缓存/派生文件
+      extraArgs = "--keep 7d --keep-since 3d";
+    };
     # 指定系统的 Flake 源路径，这样你可以在任何地方运行 nh os switch
     flake = "/home/maorila/nixos-config"; 
   };

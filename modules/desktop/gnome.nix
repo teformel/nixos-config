@@ -69,7 +69,7 @@
   home-manager.users.maorila = {
     home.packages = with pkgs; [
       ghostty
-      file-roller   
+      file-roller
       vscode
       google-chrome
       mission-center

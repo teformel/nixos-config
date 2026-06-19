@@ -13,8 +13,8 @@
       micro
       eza
       git
-      htop
-      btop
+      # htop
+      # btop
       yazi
       p7zip
       android-tools

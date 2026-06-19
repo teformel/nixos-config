@@ -31,11 +31,30 @@
       lutris
       protonplus     # 现代化的 Proton 版本管理工具
       mangohud       # 游戏性能监控浮窗 (类似 MSI Afterburner)
-      protonup-qt    # 图形化工具，用于方便地下载并安装非官方的 Proton-GE 兼容层
+      # protonup-qt    # 图形化工具，用于方便地下载并安装非官方的 Proton-GE 兼容层
       gamescope-wsi
     ];
   };
 
   # 可选：如果你使用特定的手柄，建议开启系统级 udev 规则
   # hardware.xpadneo.enable = true; # Xbox One 蓝牙手柄
+
+  # 🌟 启用 nix-ld 动态链接库兼容层
+  programs.nix-ld = {
+    enable = true;
+    
+    libraries = (with pkgs; [
+      stdenv.cc.cc
+      openssl
+      
+      # 🌟 修复：直接使用最新的顶级全小写包名，踢掉 legacy 的 xorg 前缀
+      libx11
+      libxext
+      libxcursor
+      libxrandr
+      libxi
+    ]) 
+    ++ (pkgs.steam.run.args.nativeBuildInputs or [])
+    ++ (pkgs.steam.run.args.buildInputs or []);
+  };
 }
