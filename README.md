@@ -1,17 +1,18 @@
-# NixOS Configuration (大一统架构)
+# NixOS Configuration (Lingmo 专属大一统分支)
 
-这是我的个人 NixOS 系统配置仓库，采用了极简、对新手极其友好的 **大一统 (Monolithic / Hybrid) 架构**。摒弃了过度碎片化的文件树，让你所见即所得。
+这是我的个人 NixOS 系统配置仓库的 **`lingmo` 分支**。在这个平行宇宙中，它提供了一个极具实验性、华丽优美的 **Lingmo OS (基于 Qt/KWin 的新锐桌面)** 体验，且该桌面由 NixOS 现场编译源码构建！
 
 ## 🌟 系统组件 (System Components)
 
 | 🧩 组件类别 | 🛠️ 当前选择 |
 | :--- | :--- |
-| **窗口管理器** | Niri |
-| **桌面交互环境** | Noctalia Shell (实验性) / GNOME |
-| **终端环境** | Alacritty + Fish |
+| **显示管理器** | SDDM |
+| **窗口管理器** | KWin (Wayland) |
+| **桌面交互环境** | Lingmo OS (自编译源码版) |
+| **设置与控制中心**| Lingmo Settings |
+| **终端环境** | Alacritty / Ghostty + Fish |
 | **文本编辑器** | Neovim & VSCode & Antigravity IDE |
-| **色彩主题** | Catppuccin Mocha Mauve |
-| **系统字体** | Noto-fonts & FiraCode Nerd Font |
+| **底层渲染框架** | QtWayland / Plasma Protocol |
 | **本地媒体播放** | mpv & musicfox |
 | **文件管理器** | Yazi (终端) & Thunar (图形) |
 | **截屏与录屏** | Mark-shot & OBS Studio |
@@ -38,10 +39,8 @@ nixos-config/
 └── 📂 modules                 # 模块库
     ├── 📄 default.nix         # 🔌 全局唯一开关控制面板
     ├── 📄 apps.nix            # 📦 所有日常应用软件的清单列表
-    └── 📂 desktop             # 🎨 桌面环境专属文件夹 (按需在 default.nix 开启)
-        ├── 📄 gnome.nix
-        ├── 📄 niri+noctalia.nix
-        └── 📄 lingmo.nix
+    ├── 📂 lingmo-pkgs         # 🛠️ 极其硬核的 Lingmo C++ 源码编译规则集
+    └── 📄 desktop.nix         # 🎨 Lingmo 专属桌面环境与会话配置
 ```
 
 ## 部署与安装指南 (网络无感部署)
