@@ -151,6 +151,7 @@
 
       // 自启动项
       spawn-at-startup "fcitx5" "-d"
+      spawn-at-startup "noctalia" // 🌟 启动 Noctalia Shell (状态栏/通知中心/OS 交互界面)
 
       // 核心快捷键
       binds {
