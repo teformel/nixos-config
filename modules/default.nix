@@ -6,6 +6,6 @@
     # 2. 桌面环境 (按需开启其中一个)
     ./desktop/niri+noctalia.nix
     # ./desktop/lingmo.nix
-    # ./desktop/kde.nix
+    # ./desktop/gnome.nix
   ];
 }
