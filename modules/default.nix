@@ -1,6 +1,11 @@
 {
   imports = [
-    # Core 核心区域与输入法
+    # Core 核心区域基础系统配置
+    ./core/boot.nix
+    ./core/nix.nix
+    ./core/network.nix
+    ./core/user.nix
+    ./core/zram.nix
     ./core/locale.nix
     ./core/fcitx5.nix
 
