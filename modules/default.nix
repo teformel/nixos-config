@@ -67,6 +67,7 @@
     ./apps/chrome.nix
     ./apps/localsend.nix
     ./apps/file-roller.nix
+    # ./apps/mark-shot.nix
     # ./apps/ww-manager.nix
     # ./apps/antigravity.nix
   ];
