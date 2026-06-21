@@ -45,7 +45,7 @@
   };
 
   # 🌟 这一行不要改，它与系统版本的含义类似，用于兼容性控制
-  home.stateVersion = "25.11"; 
+  home.stateVersion = "26.05"; 
 
   # 让 Home Manager 能够管理自己
   programs.home-manager.enable = true;
