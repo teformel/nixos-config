@@ -44,6 +44,28 @@
 
         ];
       };
+
+      # 🚨 虚拟机配置入口 (Multi-Host)
+      "virtual-maorila" = inputs.nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = { inherit inputs; };
+        modules = [
+          # 🌟 虚拟机系统与硬件配置
+          ../hosts/virtual-maorila/default.nix
+          
+          # 🌟 虚拟机硬盘配置
+          inputs.disko.nixosModules.disko
+          ../hosts/virtual-maorila/disko-config.nix
+
+          # 🌟 Home Manager 集成 (引入原本的 home.nix)
+          inputs.home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.maorila = import ../hosts/virtual-maorila/home.nix;
+          }
+        ];
+      };
     };
   };
 }
