@@ -72,3 +72,15 @@ nix run github:nix-community/nixos-anywhere -- --flake github:teformel/nixos-con
 ```bash
 nh os switch
 ```
+
+### 场景 4：使用 Disko 手动分区与装机 (备用装机方案)
+如果在裸机上遇到网络环境复杂导致 `nixos-anywhere` 报错，或者你希望亲自观察分区与装机的每一步，你可以直接使用 Disko 脚本进行传统的两步走安装：
+
+```bash
+# 1. 自动执行硬盘打火与分区挂载 (以真机 Laptop-maorila 为例)
+# 它会读取 disko-config.nix 自动执行 fdisk/mkfs/mount 等操作到 /mnt
+sudo nix run github:nix-community/disko -- --mode disko --flake github:teformel/nixos-config#Laptop-maorila
+
+# 2. 将系统正式灌入硬盘 (不需要加 --no-root-passwd)
+sudo nixos-install --flake github:teformel/nixos-config#Laptop-maorila
+```
