@@ -84,7 +84,7 @@
 
   # 🌟 新增：声明全局默认终端
   environment.variables = {
-    TERMINAL = "ghostty";
+    TERMINAL = "alacritty";
     # 顺手加上这个，能让很多终端应用（比如 bottom）的色彩显示更正常
     COLORTERM = "truecolor"; 
   };
@@ -115,7 +115,7 @@
     # 你可以直接将 ~/.config/niri/config.kdl 的内容原封不动地粘贴到下面这对单引号中。
     # 每次 rebuild，它都会自动帮你覆盖生成标准的配置文件，彻底实现全系统配置一体化。
     xdg.configFile."niri/config.kdl".text = ''
-      // 这是一份极简的 Niri KDL 配置示例，请用你自己的配置替换这里的内容：
+      // 这是一份基于 Niri 官方默认配置精简的 KDL 文件
       
       input {
           keyboard {
@@ -141,13 +141,41 @@
               proportion 0.66667
           }
           default-column-width { proportion 0.5; }
+          
+          focus-ring {
+              width 4
+              active-color "#7fc8ff"
+              inactive-color "#505050"
+          }
       }
 
       // 自启动项
       spawn-at-startup "fcitx5" "-d"
+
+      // 核心快捷键
+      binds {
+          // 显示所有快捷键提示面板
+          Mod+Shift+Slash { show-hotkey-overlay; }
+          
+          // 启动默认终端和应用启动器
+          Mod+Return { spawn "alacritty"; }
+          Mod+D { spawn "fuzzel"; }
+          
+          // 窗口管理
+          Mod+Q { close-window; }
+          Mod+Shift+E { quit; }
+          
+          // 焦点切换
+          Mod+Left  { focus-column-left; }
+          Mod+Down  { focus-window-down; }
+          Mod+Up    { focus-window-up; }
+          Mod+Right { focus-column-right; }
+      }
     '';
 
     home.packages = with pkgs; [
+      alacritty # Niri 官方默认终端
+      fuzzel    # Niri 官方默认的应用程序启动器 (Mod+D)
     ];
 
     services.udiskie = {
