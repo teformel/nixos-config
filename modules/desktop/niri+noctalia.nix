@@ -111,6 +111,42 @@
 
   # 【用户层配置】
   home-manager.users.maorila = {
+    # 🌟 Niri 极简配置内联管理
+    # 你可以直接将 ~/.config/niri/config.kdl 的内容原封不动地粘贴到下面这对单引号中。
+    # 每次 rebuild，它都会自动帮你覆盖生成标准的配置文件，彻底实现全系统配置一体化。
+    xdg.configFile."niri/config.kdl".text = ''
+      // 这是一份极简的 Niri KDL 配置示例，请用你自己的配置替换这里的内容：
+      
+      input {
+          keyboard {
+              xkb { }
+          }
+          touchpad {
+              tap
+              natural-scroll
+          }
+      }
+
+      output "eDP-1" {
+          // 笔记本屏幕缩放比例
+          scale 1.25
+      }
+
+      layout {
+          gaps 16
+          center-focused-column "never"
+          preset-column-widths {
+              proportion 0.33333
+              proportion 0.5
+              proportion 0.66667
+          }
+          default-column-width { proportion 0.5; }
+      }
+
+      // 自启动项
+      spawn-at-startup "fcitx5" "-d"
+    '';
+
     home.packages = with pkgs; [
       # mark-shot     # 强力的 Wayland 原生截图与长截图工具
     ];
