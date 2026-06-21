@@ -79,7 +79,7 @@
       google-chrome vscode ghostty obs-studio mark-shot
 
       # 代理软件 (Clash Party)
-      (inputs.my-nur.packages.${pkgs.system}.clash-party or inputs.my-nur.packages.${pkgs.system}.mihomo-party)
+      # (inputs.my-nur.packages.${pkgs.system}.clash-party or inputs.my-nur.packages.${pkgs.system}.mihomo-party)
       
       # 自定义 NUR 软件
       inputs.my-nur.packages.${pkgs.system}.ww-manager
