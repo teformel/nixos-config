@@ -112,12 +112,6 @@
   # 【用户层配置】
   home-manager.users.maorila = {
     home.packages = with pkgs; [
-      ghostty
-      file-roller   
-      vscode
-      google-chrome
-      mission-center
-      localsend
       # mark-shot     # 强力的 Wayland 原生截图与长截图工具
     ];
 

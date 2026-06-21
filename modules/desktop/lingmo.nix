@@ -1,21 +1,40 @@
 { config, pkgs, inputs, ... }:
 
 {
-  # 🌟 声明 LingmoOS 桌面环境的实验性模块
-  # 因为 lingmo-nix 项目仍在重构，这里假设他们提供了相关的 UI 包和混成器模块
-  # 实际的可用选项可能需要参考他们的最新提交
+  # === Lingmo OS 桌面环境 ===
+  # 根据 Arch Linux AUR 和官方构建逻辑复刻的 NixOS 原生配置
 
+  # 1. 启用显示服务
+  services.xserver.enable = true;
+  
+  # 2. Lingmo 官方标配 SDDM 作为显示管理器
+  services.displayManager.sddm = {
+    enable = true;
+    wayland.enable = true;
+  };
+
+  # 3. 注入 Lingmo 专属全局环境变量
+  environment.variables = {
+    QT_QPA_PLATFORMTHEME = "lingmo"; 
+    XDG_CURRENT_DESKTOP = "lingmo";
+  };
+
+  # 4. 系统核心依赖与包
   environment.systemPackages = with pkgs; [
-    # 假设这里是 lingmo-nix 提供的一组包
-    # 根据他们的 README 和开发进度，你可能需要手动指定包名
-    # 例如：
-    # inputs.lingmo-nix.packages.${pkgs.system}.lingmo-ui
-    # inputs.lingmo-nix.packages.${pkgs.system}.core
+    # 核心组件库 (从您引入的 lingmo-nix flake 中获取)
+    # inputs.lingmo-nix.packages.${pkgs.system}.lingmo-core
+    # inputs.lingmo-nix.packages.${pkgs.system}.lingmoui
+    # inputs.lingmo-nix.packages.${pkgs.system}.lingmo-settings
+    # inputs.lingmo-nix.packages.${pkgs.system}.lingmo-terminal
+    
+    # 🚨 关键依赖：Lingmo 是基于 KWin 的，必须安装 KDE 窗口管理器及其 Wayland 支持
+    kdePackages.kwin
+    kdePackages.qtwayland
+    kdePackages.qtsvg
   ];
 
-  # 如果 lingmo-nix 提供了具体的 NixOS 模块 (例如 services.xserver.desktopManager.lingmo.enable = true;)
-  # 那么可以在这里启用。目前官方文档在重写中，因此预留此骨架。
-
-  # 备忘：
-  # 一旦 LingmoNix 稳定并发布官方模块，只需在这个文件中将其开启即可。
+  # 5. 基础文件管理器服务
+  services.gvfs.enable = true;
+  services.udisks2.enable = true;
+  programs.dconf.enable = true;
 }

@@ -68,12 +68,6 @@
   # 【用户层配置】
   home-manager.users.maorila = {
     home.packages = with pkgs; [
-      ghostty
-      file-roller
-      vscode
-      google-chrome
-      mission-center
-      localsend
       # GNOME 带有强大的原生截图工具 (直接按 Print Screen 即可唤出交互式选框)，不再需要额外的 Wayland 截图包
     ];
 
