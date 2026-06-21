@@ -1,13 +1,14 @@
-# NixOS Configuration (大一统架构)
+# NixOS Configuration (Niri + Noctalia 专属大一统分支)
 
-这是我的个人 NixOS 系统配置仓库，采用了极简、对新手极其友好的 **大一统 (Monolithic / Hybrid) 架构**。摒弃了过度碎片化的文件树，让你所见即所得。
+这是我的个人 NixOS 系统配置仓库的 **`niri+noctalia` 分支**。在这个平行宇宙中，它提供了极其硬核、极具现代感的 **Niri (Wayland 滚动窗口管理器) + Noctalia Shell** 桌面生态体验。
 
 ## 🌟 系统组件 (System Components)
 
 | 🧩 组件类别 | 🛠️ 当前选择 |
 | :--- | :--- |
 | **窗口管理器** | Niri |
-| **桌面交互环境** | Noctalia Shell (实验性) / GNOME |
+| **桌面交互环境** | Noctalia Shell (状态栏/通知中心) |
+| **应用启动器** | Fuzzel |
 | **终端环境** | Alacritty + Fish |
 | **文本编辑器** | Neovim & VSCode & Antigravity IDE |
 | **色彩主题** | Catppuccin Mocha Mauve |
@@ -38,10 +39,7 @@ nixos-config/
 └── 📂 modules                 # 模块库
     ├── 📄 default.nix         # 🔌 全局唯一开关控制面板
     ├── 📄 apps.nix            # 📦 所有日常应用软件的清单列表
-    └── 📂 desktop             # 🎨 桌面环境专属文件夹 (按需在 default.nix 开启)
-        ├── 📄 gnome.nix
-        ├── 📄 niri+noctalia.nix
-        └── 📄 lingmo.nix
+    └── 📄 desktop.nix         # 🎨 Niri+Noctalia 专属桌面环境配置
 ```
 
 ## 部署与安装指南 (网络无感部署)
