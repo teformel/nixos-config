@@ -1,47 +1,47 @@
-# NixOS Configuration (极致 Dendritic 树突架构)
+# NixOS Configuration (大一统架构)
 
-这是我的个人 NixOS 系统配置仓库，全面拥抱了最先进且最纯粹的 **Dendritic (树突) 模块化模式**。
+这是我的个人 NixOS 系统配置仓库，采用了极简、对新手极其友好的 **大一统 (Monolithic / Hybrid) 架构**。摒弃了过度碎片化的文件树，让你所见即所得。
 
-## 核心设计理念
+## 🌟 系统组件 (System Components)
 
-在这个配置中，**没有复杂的选项注册**，也没有难以理解的 `lib.mkEnableOption`。
-所有的系统级配置 (`environment.systemPackages`, `services`) 和用户级配置 (`home-manager.users.maorila`) 都被**高度解耦并下放到极致**，遵循“一个软件，一个文件”的最高内聚原则。
+| 🧩 组件类别 | 🛠️ 当前选择 |
+| :--- | :--- |
+| **窗口管理器** | Niri |
+| **桌面交互环境** | Noctalia Shell (实验性) / GNOME |
+| **终端环境** | Alacritty + Fish |
+| **文本编辑器** | Neovim & VSCode & Antigravity IDE |
+| **色彩主题** | Catppuccin Mocha Mauve |
+| **系统字体** | Noto-fonts & FiraCode Nerd Font |
+| **本地媒体播放** | mpv & musicfox |
+| **文件管理器** | Yazi (终端) & Thunar (图形) |
+| **截屏与录屏** | Mark-shot & OBS Studio |
+| **中文输入法** | Fcitx5 + Rime (雾凇拼音) |
+| **底层网络管理** | NetworkManager |
+| **系统引导与管家**| systemd-boot & systemd |
+| **包管理器** | Nix (Flakes + nh) |
 
-如果你想要开启或关闭某个功能（例如 Steam 或 VSCode），只需要打开 `modules/default.nix`，通过添加或删除 `#` 注释符即可完成。当你注释掉一个模块时，与之相关的系统端口开放、后台守护进程、以及用户的专属配置都会被**连根拔起，绝无残留**。
+## 📁 目录结构解析
 
-## 目录结构解析
+在这个架构下，系统变得极其直观，你不需要再迷失在几十个文件夹里：
 
 ```text
-📦 nixos-config
-├── 📄 flake.nix                  # Flake 极简入口点
-├── 📄 flake.lock
-├── 📄 README.md                  # 本说明文档
-├── 📂 flake-modules              # Flake 级别的高阶模块化构件
-│   ├── 📄 nixos.nix              # 组装 nixosConfigurations
-│   ├── 📄 formatter.nix          # 定义代码格式化工具 (nix fmt)
-│   └── 📄 devshells.nix          # 定义开发环境 (nix develop)
-├── 📂 hosts                      # 主机配置入口
-│   └── 📂 laptop-maorila         # 机器名：Laptop-maorila
-│       ├── 📄 default.nix        # 主配置文件
-│       ├── 📄 hardware-configuration.nix 
-│       ├── 📄 hardware-quirks.nix# 特定机器的硬件调优
-│       └── 📄 disko-config.nix   # 硬盘分区规划
-└── 📂 modules                    # 极致纯血 Dendritic 特征模块库
-    ├── 📄 default.nix            # 🌟 全局唯一开关控制面板
-    ├── 📂 core                   # 系统核心功能
-    │   ├── 📄 locale.nix         # 语言与区域
-    │   └── 📄 fcitx5.nix         # 中文输入法
-    ├── 📂 desktop                # 图形桌面 (高度内聚，自带必备组件)
-    │   ├── 📄 gnome.nix          # GNOME 桌面环境
-    │   ├── 📄 niri+noctalia.nix  # Niri 混成器环境
-    │   └── 📄 lingmo.nix         # 实验性的 LingmoOS 骨架
-    └── 📂 apps                   # 独立功能软件 (按软件名极致拆分)
-        ├── 📄 aria2.nix
-        ├── 📄 steam.nix
-        ├── 📄 vscode.nix
-        ├── 📄 chrome.nix
-        ├── 📄 mission-center.nix
-        └── ...几十个独立文件
+nixos-config/
+├── flake.nix                  # Flake 极简入口点
+├── flake.lock
+├── README.md                  # 本说明文档
+├── 📂 flake-modules           # Flake 级别的高阶模块化构件
+├── 📂 hosts                   # 主机配置入口
+│   └── 📂 laptop-maorila      # 机器名：Laptop-maorila
+│       ├── 📄 default.nix     # 🖥️ 核心系统配置（内核、网络、Nix源、用户权限）
+│       ├── 📄 hardware-*      # 硬件与驱动相关
+│       └── 📄 disko-config.nix# 硬盘分区规划
+└── 📂 modules                 # 模块库
+    ├── 📄 default.nix         # 🔌 全局唯一开关控制面板
+    ├── 📄 apps.nix            # 📦 所有日常应用软件的清单列表
+    └── 📂 desktop             # 🎨 桌面环境专属文件夹 (按需在 default.nix 开启)
+        ├── 📄 gnome.nix
+        ├── 📄 niri+noctalia.nix
+        └── 📄 lingmo.nix
 ```
 
 ## 部署与安装指南 (网络无感部署)
@@ -67,18 +67,8 @@ nh os switch github:teformel/nixos-config
 nix run github:nix-community/nixos-anywhere -- --flake github:teformel/nixos-config#Laptop-maorila root@localhost
 ```
 
-> **🔧 备用连招（官方工具分步安装）**：如果你觉得 `nixos-anywhere` 是个黑盒，或者想在 Live U 盘下更可控地进行，也可以使用官方自带的工具连招（假设你事先拉取了配置文件）：
-> ```bash
-> # 1. 自动根据代码配置格式化硬盘并挂载
-> sudo nix run github:nix-community/disko -- --mode disko /tmp/disko-config.nix
-> # 2. 将系统安装进刚刚挂载好的硬盘中
-> sudo nixos-install --flake github:teformel/nixos-config#Laptop-maorila
-> ```
-> 效果是完全一样的！
-> **⚠️ 危险预警**：只有在使用 `nixos-anywhere`（或专门执行 disko 脚本）时，硬盘才会被真正格式化！如果你是在空机器上执行这个命令，请确保硬盘里的数据已经备份。
-
 ### 场景 3：传统的本地修改模式
-如果你在本地（如 `/home/maorila/nixos-config`）修改了代码，只需要在任意位置执行：
+如果你在本地修改了代码（比如直接编辑了 `modules/apps.nix` 加入了新软件），只需要在任意位置执行：
 ```bash
 nh os switch
 ```
