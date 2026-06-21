@@ -1,13 +1,19 @@
-{ config, pkgs, inputs, ... }:
+{ config, pkgs, lib, ... }:
 
+let
+  # 挂载我们自己从源码编译打包的 Lingmo 专属 Derivations！
+  lingmoui = pkgs.callPackage ./lingmo-pkgs/lingmoui.nix {};
+  lingmo-core = pkgs.callPackage ./lingmo-pkgs/lingmo-core.nix { inherit lingmoui; };
+  lingmo-settings = pkgs.callPackage ./lingmo-pkgs/lingmo-settings.nix { inherit lingmoui lingmo-core; };
+in
 {
   # === Lingmo OS 桌面环境 ===
-  # 根据 Arch Linux AUR 和官方构建逻辑复刻的 NixOS 原生配置
+  # 极致硬核：当官方没有二进制包时，我们在 NixOS 本地现场为您从 C++ 源码编译！
 
   # 1. 启用显示服务
   services.xserver.enable = true;
   
-  # 2. Lingmo 官方标配 SDDM 作为显示管理器
+  # 2. 标配 SDDM 显示管理器
   services.displayManager.sddm = {
     enable = true;
     wayland.enable = true;
@@ -19,21 +25,27 @@
     XDG_CURRENT_DESKTOP = "lingmo";
   };
 
-  # 4. 系统核心依赖与包
+  # 4. 注册所有组件到系统
   environment.systemPackages = with pkgs; [
-    # 核心组件库 (从您引入的 lingmo-nix flake 中获取)
-    # inputs.lingmo-nix.packages.${pkgs.system}.lingmo-core
-    # inputs.lingmo-nix.packages.${pkgs.system}.lingmoui
-    # inputs.lingmo-nix.packages.${pkgs.system}.lingmo-settings
-    # inputs.lingmo-nix.packages.${pkgs.system}.lingmo-terminal
+    # ---- 我们的自编译成果 ----
+    lingmoui
+    lingmo-core
+    lingmo-settings
     
-    # 🚨 关键依赖：Lingmo 是基于 KWin 的，必须安装 KDE 窗口管理器及其 Wayland 支持
+    # ---- Lingmo 的生态底座 (KDE/Qt) ----
     kdePackages.kwin
     kdePackages.qtwayland
     kdePackages.qtsvg
+    kdePackages.plasma-wayland-protocols
+    kdePackages.layer-shell-qt
   ];
 
-  # 5. 基础文件管理器服务
+  # 5. 会话注册：让 SDDM 能识别并启动 Lingmo
+  # lingmo-core 编译后通常会抛出 /share/wayland-sessions/lingmo.desktop
+  # NixOS 的 sessionPackages 选项会自动抓取它并送到登录界面
+  services.displayManager.sessionPackages = [ lingmo-core ];
+
+  # 6. 基础系统服务补充
   services.gvfs.enable = true;
   services.udisks2.enable = true;
   programs.dconf.enable = true;
