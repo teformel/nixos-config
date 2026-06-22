@@ -175,8 +175,7 @@
     eza
     git
     pkgs.ungoogled-chromium
-    htop
-    btop
+    bottom
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

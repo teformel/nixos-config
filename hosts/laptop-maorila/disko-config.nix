@@ -3,7 +3,7 @@
     disk = {
       main = {
         # 1. 替换为你的 NVMe 硬盘路径
-        device = "/dev/nvme0n1"; 
+        device = "/dev/sda"; 
         type = "disk";
         content = {
           type = "gpt";

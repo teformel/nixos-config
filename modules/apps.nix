@@ -9,30 +9,46 @@
   # --- 1. 系统级软件包 (所有用户可用，开机即存在) ---
   environment.systemPackages = with pkgs; [
     # 基础命令行工具
-    wget curl git micro vim neovim p7zip eza bottom fastfetch yazi bash
+    wget
+    curl
+    git
+    micro
+    vim
+    neovim
+    p7zip
+    eza
+    bottom
+    fastfetch
+    yazi
+    bash
     
     # 系统与硬件工具
-    android-tools resources mission-center
+    android-tools
+    resources
+    mission-center
     
     # 网络与媒体
-    aria2 cava musicfox
+    aria2
+    cava
+    musicfox
     
     # 其他通用软件
-    file-roller localsend
+    file-roller
+    localsend
     
     # 🌟 特殊软件：Antigravity IDE (带代理注入)
-    (pkgs.symlinkJoin {
-      name = "antigravity-ide";
-      paths = [ inputs.antigravity-nix.packages.${pkgs.system}.google-antigravity-ide ];
-      buildInputs = [ pkgs.makeWrapper ];
-      postBuild = ''
-        wrapProgram $out/bin/antigravity-ide \
-          --set HTTP_PROXY "http://127.0.0.1:7890" \
-          --set HTTPS_PROXY "http://127.0.0.1:7890" \
-          --set ALL_PROXY "socks5://127.0.0.1:7890" \
-          --set NO_PROXY "localhost,127.0.0.1,::1"
-      '';
-    })
+    # (pkgs.symlinkJoin {
+    #   name = "antigravity-ide";
+    #   paths = [ inputs.antigravity-nix.packages.${pkgs.system}.google-antigravity-ide ];
+    #   buildInputs = [ pkgs.makeWrapper ];
+    #   postBuild = ''
+    #     wrapProgram $out/bin/antigravity-ide \
+    #       --set HTTP_PROXY "http://127.0.0.1:7890" \
+    #       --set HTTPS_PROXY "http://127.0.0.1:7890" \
+    #       --set ALL_PROXY "socks5://127.0.0.1:7890" \
+    #       --set NO_PROXY "localhost,127.0.0.1,::1"
+    #   '';
+    # })
   ];
 
   # --- 2. 需要特殊系统级权限开启的程序 ---
@@ -76,7 +92,11 @@
   home-manager.users.maorila = {
     home.packages = with pkgs; [
       # 办公、开发与日常
-      google-chrome vscode ghostty obs-studio mark-shot
+      google-chrome
+      vscode
+      ghostty
+      obs-studio
+      mark-shot
 
       # 代理软件 (Clash Party)
       (inputs.my-nur.packages.${pkgs.system}.clash-party or inputs.my-nur.packages.${pkgs.system}.mihomo-party)
@@ -85,21 +105,22 @@
       inputs.my-nur.packages.${pkgs.system}.ww-manager
 
       # WinApps 及其依赖
-      libnotify freerdp
-      inputs.winapps.packages.${pkgs.system}.winapps
-      inputs.winapps.packages.${pkgs.system}.winapps-launcher
+      # libnotify
+      # freerdp
+      # inputs.winapps.packages.${pkgs.system}.winapps
+      # inputs.winapps.packages.${pkgs.system}.winapps-launcher
   
       # WinApps 专属 RDP 启动脚本
-      (pkgs.writeShellScriptBin "win11-full" ''
-        export LIBVIRT_DEFAULT_URI="qemu:///system"
-        unset GDK_BACKEND
-        unset WLD_CHECK
-        ${pkgs.freerdp}/bin/xfreerdp \
-          /v:192.168.122.180 /u:maorila /p:maorila /cert:ignore /f \
-          /bpp:32 /gfx /kbd:layout:0x00000804 /network:lan \
-          /scale-desktop:125 /scale-device:140 /clipboard \
-          /audio-mode:0 /sound:sys:pulse /microphone:sys:pulse
-      '')
+      # (pkgs.writeShellScriptBin "win11-full" ''
+      #   export LIBVIRT_DEFAULT_URI="qemu:///system"
+      #   unset GDK_BACKEND
+      #   unset WLD_CHECK
+      #   ${pkgs.freerdp}/bin/xfreerdp \
+      #     /v:192.168.122.180 /u:maorila /p:maorila /cert:ignore /f \
+      #     /bpp:32 /gfx /kbd:layout:0x00000804 /network:lan \
+      #     /scale-desktop:125 /scale-device:140 /clipboard \
+      #     /audio-mode:0 /sound:sys:pulse /microphone:sys:pulse
+      # '')
     ];
 
     # Git 的基础配置
