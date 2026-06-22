@@ -36,7 +36,10 @@
     nur.url = "github:nix-community/NUR";
 
     # 私人 NUR 包 (Lingmo OS 等)
-    my-nur.url = "github:teformel/nur-packages";
+    my-nur = {
+      url = "github:teformel/nur-packages";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # CachyOS 优化内核
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel";
