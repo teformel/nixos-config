@@ -88,3 +88,21 @@ sudo nix run github:nix-community/disko -- --mode disko --flake github:teformel/
 # 2. 将系统正式灌入硬盘 (不需要加 --no-root-passwd)
 sudo nixos-install --flake github:teformel/nixos-config#Laptop-maorila
 ```
+
+### ⚠️ 常见排错：本地运行 Disko 提示找不到 flake.nix
+
+如果你在测试本地 Disko 配置时输入了类似以下的命令：
+`sudo nix run github:nix-community/disko -- --mode disko --flake ./hosts/virtual-maorila/disko-config.nix#virtual-maorila`
+并且收到了报错：`error: path '/nix/store/.../flake.nix' does not exist`。
+
+**原因**：`--flake` 参数接收的是 Flake 所在目录（包含 `flake.nix`）而不是具体的配置文件路径。
+
+**正确做法**有以下两种：
+1. **Flake 模式（推荐）**：指向当前项目根目录（即 `.`），Disko 会自动从指定的 `nixosConfigurations` 属性中提取磁盘配置。
+   ```bash
+   sudo nix run github:nix-community/disko -- --mode disko --flake .#virtual-maorila
+   ```
+2. **独立文件模式**：不使用 `--flake` 参数，直接把 `.nix` 文件作为参数传给它。
+   ```bash
+   sudo nix run github:nix-community/disko -- --mode disko ./hosts/virtual-maorila/disko-config.nix
+   ```
