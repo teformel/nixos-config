@@ -2,13 +2,13 @@
 
 {
   imports = [
-    ./apps/steam.nix
-    ./apps/libvirt.nix
+    # ./apps/steam.nix
+    # ./apps/libvirt.nix
     ./apps/clash.nix
     ./apps/git.nix
     ./apps/direnv.nix
-    ./apps/antigravity-ide.nix
-    ./apps/winapps.nix
+    # ./apps/antigravity-ide.nix
+    # ./apps/winapps.nix
   ];
 
   # ====================================================
