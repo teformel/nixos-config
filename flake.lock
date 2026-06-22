@@ -239,11 +239,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1782135156,
-        "narHash": "sha256-H5OkwWTKmfR1JUH2+ewswWYuksMT2PPqQUhIszcN6YY=",
+        "lastModified": 1782135251,
+        "narHash": "sha256-xblyxtUgUl68DgFCwC/XiimhO+B+t6xD3PQbV1yvpTY=",
         "owner": "teformel",
         "repo": "nur-packages",
-        "rev": "0905cf9df9e0dc7a5f992168466c657b7c9dad35",
+        "rev": "ecae9f9487c14596d71e92d87e2ad713c45e2169",
         "type": "github"
       },
       "original": {
