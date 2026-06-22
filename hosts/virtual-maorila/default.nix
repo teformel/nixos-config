@@ -88,16 +88,16 @@
     desktopManager.lxqt.enable = true;
 
     # 2. 开启 i3wm (平铺式窗口管理器 - 极客首选)
-    windowManager.i3 = {
-      enable = true;
-      extraPackages = with pkgs; [
-        dmenu 
-        i3status
-      ];
-    };
+    #windowManager.i3 = {
+    #  enable = true;
+    #  extraPackages = with pkgs; [
+    #    dmenu 
+    #    i3status
+    #  ];
+    #};
 
     # 3. 开启 IceWM (复古极轻量窗口管理器)
-    windowManager.icewm.enable = true;
+    #windowManager.icewm.enable = true;
 
     # 建议使用 LightDM 作为登录界面，它对多环境切换支持很好
     displayManager.lightdm.enable = true;
@@ -155,9 +155,11 @@
   users.users.maorila = {
     isNormalUser = true;
     description = "maorila";
+    initialPassword = "maorila";
     extraGroups = [ "networkmanager" "wheel" ];
     #hashedPassword = "$6$hnQqq.qZqnTZvLyx$3I.tDiuePXkQWDFaHfisK8ZSvwiX6jHckJM35xUcNaq7FtPhsNB5wbMcvOVxS9.Sh9/CLOddtGudDmBDrRJOY/";
   };
+  users.mutableUsers = true;
 
   # Install firefox.
   programs.firefox.enable = true;
@@ -174,7 +176,7 @@
     micro
     eza
     git
-    pkgs.ungoogled-chromium
+    #pkgs.ungoogled-chromium
     bottom
   ];
 
