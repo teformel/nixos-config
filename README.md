@@ -1,44 +1,48 @@
-# NixOS Configuration (大一统架构)
+# NixOS Configuration (大一统多主机架构)
 
-这是我的个人 NixOS 系统配置仓库，采用了极简、对新手极其友好的 **大一统 (Monolithic / Hybrid) 架构**。摒弃了过度碎片化的文件树，让你所见即所得。
+这是我的个人 NixOS 系统配置仓库，采用了极简、强大的 **多主机 (Multi-Host) 架构** 与 **多桌面平行宇宙**。
 
-## 🌟 系统组件 (System Components)
+## 🌟 系统组件全矩阵 (System Components Matrix)
 
-| 🧩 组件类别 | 🛠️ 当前选择 |
-| :--- | :--- |
-| **窗口管理器** | Niri |
-| **桌面交互环境** | Noctalia Shell (实验性) / GNOME |
-| **终端环境** | Alacritty + Fish |
-| **文本编辑器** | Neovim & VSCode & Antigravity IDE |
-| **色彩主题** | Catppuccin Mocha Mauve |
-| **系统字体** | Noto-fonts & FiraCode Nerd Font |
-| **本地媒体播放** | mpv & musicfox |
-| **文件管理器** | Yazi (终端) & Thunar (图形) |
-| **截屏与录屏** | Mark-shot & OBS Studio |
-| **中文输入法** | Fcitx5 + Rime (雾凇拼音) |
-| **底层网络管理** | NetworkManager |
-| **系统引导与管家**| systemd-boot & systemd |
-| **包管理器** | Nix (Flakes + nh) |
+由于 `master` 主干分支包含了本仓库所有的桌面配置，你可以利用它直接切换和部署出不同形态的桌面宇宙！以下是当前支持的核心桌面维度展示：
 
-## 📁 目录结构解析
+| 🧩 组件类别 | 🖥️ GNOME (生产力) | ⌨️ Niri (极客平铺) | ✨ Lingmo (源码实验) |
+| :--- | :--- | :--- | :--- |
+| **窗口显示器** | Mutter / GDM | Niri (滚动平铺) | KWin (Wayland) |
+| **交互环境** | GNOME Shell | Noctalia Shell | Lingmo OS UI |
+| **终端** | Ptyxis / Ghostty | Alacritty + Fish | Alacritty / Ghostty |
+| **编辑器** | VSCode & Neovim | Neovim & VSCode | Neovim & VSCode |
+| **应用启动** | GNOME 搜索 | Fuzzel | Lingmo 启动器 |
+| **中文输入** | Fcitx5 + 雾凇拼音 | Fcitx5 + 雾凇拼音 | Fcitx5 + 雾凇拼音 |
+| **文件管理** | Nautilus | Yazi & Thunar | Yazi & Thunar |
+| **色彩主题** | Adwaita | Catppuccin Mocha | - |
 
-在这个架构下，系统变得极其直观，你不需要再迷失在几十个文件夹里：
+> **提示**：除了上述三大主力桌面，`virtual-maorila` 虚拟机还搭载了极致轻量的 **LXQt / i3wm / IceWM**！
+
+## 📁 多主机目录结构解析 (Multi-Host Architecture)
+
+在现在的架构下，系统既能管理多台实体机器（真机与虚拟机），又能统筹切换多个桌面环境：
 
 ```text
 nixos-config/
-├── flake.nix                  # Flake 极简入口点
+├── flake.nix                  # Flake 极简入口点 (统筹全部机器)
 ├── flake.lock
 ├── README.md                  # 本说明文档
 ├── 📂 flake-modules           # Flake 级别的高阶模块化构件
-├── 📂 hosts                   # 主机配置入口
-│   └── 📂 laptop-maorila      # 机器名：Laptop-maorila
-│       ├── 📄 default.nix     # 🖥️ 核心系统配置（内核、网络、Nix源、用户权限）
-│       ├── 📄 hardware-*      # 硬件与驱动相关
-│       └── 📄 disko-config.nix# 硬盘分区规划
-└── 📂 modules                 # 模块库
-    ├── 📄 default.nix         # 🔌 全局唯一开关控制面板
+├── 📂 hosts                   # 多主机配置入口
+│   ├── 📂 laptop-maorila      # 💻 你的物理真机
+│   │   ├── 📄 default.nix     # 🖥️ 真机系统配置
+│   │   └── 📄 disko-config.nix# 硬盘分区规划
+│   │
+│   └── 📂 virtual-maorila     # 🖥️ 你的轻量级虚拟机 (LXQt/i3wm)
+│       ├── 📄 default.nix     # 虚拟机系统配置
+│       ├── 📄 home.nix        # 虚拟机专属用户配置
+│       └── 📄 disko-config.nix
+│
+└── 📂 modules                 # 公共模块库 (可供所有机器复用)
+    ├── 📄 default.nix         # 🔌 桌面/功能总开关
     ├── 📄 apps.nix            # 📦 所有日常应用软件的清单列表
-    └── 📂 desktop             # 🎨 桌面环境专属文件夹 (按需在 default.nix 开启)
+    └── 📂 desktop             # 🎨 桌面环境方案池
         ├── 📄 gnome.nix
         ├── 📄 niri+noctalia.nix
         └── 📄 lingmo.nix
