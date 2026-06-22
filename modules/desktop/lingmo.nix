@@ -16,6 +16,7 @@ in
     enable = true;
     wayland.enable = true;
     theme = "lingmo";
+    package = pkgs.kdePackages.sddm;
     extraPackages = [ nurPkgs.lingmoui ];
   };
 
