@@ -158,6 +158,9 @@
     description = "maorila";
     initialPassword = "maorila";
     extraGroups = [ "networkmanager" "wheel" ];
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDtiujEFiq92tw/i73EO0ntvZfyhTkG19hwTpaQ7RMP5 maorila@Laptop-maorila"
+    ];
     #hashedPassword = "$6$hnQqq.qZqnTZvLyx$3I.tDiuePXkQWDFaHfisK8ZSvwiX6jHckJM35xUcNaq7FtPhsNB5wbMcvOVxS9.Sh9/CLOddtGudDmBDrRJOY/";
   };
   users.mutableUsers = true;
