@@ -32,11 +32,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # 🌟 个人的 NUR 仓库
-    my-nur = {
-      url = "github:teformel/nur-packages"; 
-      inputs.nixpkgs.follows = "nixpkgs"; 
-    };
+    # 🌟 官方 NUR (Nix User Repository) 收录源
+    nur.url = "github:nix-community/NUR";
 
     # CachyOS 优化内核
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel";

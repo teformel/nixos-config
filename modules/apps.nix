@@ -63,7 +63,7 @@
       mark-shot
 
       # 自定义 NUR 软件
-      inputs.my-nur.packages.${pkgs.system}.ww-manager
+      (import inputs.nur { inherit pkgs; }).repos.teformel.ww-manager
     ];
   };
 }
