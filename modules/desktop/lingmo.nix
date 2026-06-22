@@ -2,7 +2,7 @@
 
 let
   # 从我们在 NUR 中托管的专属包中，拉取 Lingmo 桌面套件
-  nurPkgs = (import inputs.nur { inherit pkgs; }).repos.teformel;
+  nurPkgs = inputs.my-nur.packages.${pkgs.system};
 in
 {
   # === Lingmo OS 桌面环境 ===
@@ -15,6 +15,7 @@ in
   services.displayManager.sddm = {
     enable = true;
     wayland.enable = true;
+    theme = "lingmo";
   };
 
   # 3. 注入 Lingmo 专属全局环境变量
@@ -25,10 +26,23 @@ in
 
   # 4. 注册所有组件到系统
   environment.systemPackages = with pkgs; [
-    # ---- 我们的自编译成果 (来自 NUR) ----
+    # ---- 我们的自编译成果 (来自 my-nur) ----
     nurPkgs.lingmoui
     nurPkgs.lingmo-core
     nurPkgs.lingmo-settings
+    nurPkgs.lingmo-desktop
+    nurPkgs.lingmo-dock
+    nurPkgs.lingmo-launcher
+    nurPkgs.lingmo-filemanager
+    nurPkgs.lingmo-screenlocker
+    nurPkgs.lingmo-sddm-theme
+    nurPkgs.lingmo-daemon
+    
+    # KWin 插件 (因为作为插件可能需要被 KDE 感知，放在这没问题)
+    nurPkgs.lingmo-kwin-plugins
+
+    # 权限提权弹窗 (替代无法编译的 lingmo-polkit-agent)
+    kdePackages.polkit-kde-agent-1
     
     # ---- Lingmo 的生态底座 (KDE/Qt) ----
     kdePackages.kwin

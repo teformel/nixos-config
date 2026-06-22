@@ -6,14 +6,14 @@
     flake-parts.url = "github:hercules-ci/flake-parts";
 
     # 🌟 主力：切换回当前的 26.05 稳定版（修改这里）
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     
     # 🌟 替补：让原先的 unstable 降级为备用
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     # Home Manager：显式让其对齐 26.05 分支
     home-manager = {
-      url = "github:nix-community/home-manager/release-26.05"; 
+      url = "github:nix-community/home-manager/master"; 
       inputs.nixpkgs.follows = "nixpkgs";
     };
     
@@ -34,6 +34,9 @@
 
     # 🌟 官方 NUR (Nix User Repository) 收录源
     nur.url = "github:nix-community/NUR";
+
+    # 私人 NUR 包 (Lingmo OS 等)
+    my-nur.url = "github:teformel/nur-packages";
 
     # CachyOS 优化内核
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel";
