@@ -100,8 +100,8 @@
     # 3. 开启 IceWM (复古极轻量窗口管理器)
     #windowManager.icewm.enable = true;
 
-    # 建议使用 LightDM 作为登录界面，它对多环境切换支持很好
-    displayManager.lightdm.enable = true;
+    # 建议使用 LightDM 作为登录界面，它对多环境切换支持很好 (已替换为 Lingmo 自带的 SDDM)
+    # displayManager.lightdm.enable = true;
   };
 
   # Configure keymap in X11
