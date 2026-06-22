@@ -8,6 +8,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ../../modules/desktop/lingmo.nix  # 挂载 Lingmo 桌面环境
     ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
@@ -84,8 +85,8 @@
   services.xserver = {
     enable = true;
 
-    # 1. 开启 LXQt (轻量级桌面环境)
-    desktopManager.lxqt.enable = true;
+    # 1. 开启 LXQt (轻量级桌面环境) - 暂时关闭以体验 Lingmo
+    desktopManager.lxqt.enable = false;
 
     # 2. 开启 i3wm (平铺式窗口管理器 - 极客首选)
     #windowManager.i3 = {
