@@ -237,11 +237,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1782133664,
-        "narHash": "sha256-YVnvOj1Ys4onVK31eBKKKwyf9JGSGnlzVM757Vxq5iw=",
+        "lastModified": 1782134718,
+        "narHash": "sha256-PNKiBKf3tgUV0u/P8z7unYZxG2/aXIUAzQqOhQXDg68=",
         "owner": "teformel",
         "repo": "nur-packages",
-        "rev": "a2ae870ee96208836a79afd96240ebf640cb99ea",
+        "rev": "bf3838ea1a15de74d840f81a02243c6b1cbf88a0",
         "type": "github"
       },
       "original": {
