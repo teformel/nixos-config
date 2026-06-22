@@ -16,6 +16,7 @@ in
     enable = true;
     wayland.enable = true;
     theme = "lingmo";
+    extraPackages = [ nurPkgs.lingmoui ];
   };
 
   # 3. 注入 Lingmo 专属全局环境变量
@@ -37,12 +38,16 @@ in
     nurPkgs.lingmo-screenlocker
     nurPkgs.lingmo-sddm-theme
     nurPkgs.lingmo-daemon
+    nurPkgs.lingmo-statusbar
     
     # KWin 插件 (因为作为插件可能需要被 KDE 感知，放在这没问题)
     nurPkgs.lingmo-kwin-plugins
 
     # 权限提权弹窗 (替代无法编译的 lingmo-polkit-agent)
     kdePackages.polkit-kde-agent-1
+    
+    # Python3 required by lingmo-wallpaper-color-pick script
+    python3
     
     # ---- Lingmo 的生态底座 (KDE/Qt) ----
     kdePackages.kwin
