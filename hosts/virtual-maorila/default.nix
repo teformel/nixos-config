@@ -8,7 +8,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ../../modules/desktop/lingmo.nix  # 挂载 Lingmo 桌面环境
+      # ../../modules/desktop/lingmo.nix  # 挂载 Lingmo 桌面环境
     ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
@@ -86,7 +86,7 @@
     enable = true;
 
     # 1. 开启 LXQt (轻量级桌面环境) - 暂时关闭以体验 Lingmo
-    # desktopManager.lxqt.enable = true;
+    desktopManager.lxqt.enable = true;
 
     # 2. 开启 i3wm (平铺式窗口管理器 - 极客首选)
     #windowManager.i3 = {
@@ -100,8 +100,8 @@
     # 3. 开启 IceWM (复古极轻量窗口管理器)
     #windowManager.icewm.enable = true;
 
-    # 建议使用 LightDM 作为登录界面，它对多环境切换支持很好 (已替换为 Lingmo 自带的 SDDM)
-    # displayManager.lightdm.enable = true;
+    # 建议使用 LightDM 作为登录界面，它对多环境切换支持很好
+    displayManager.lightdm.enable = true;
   };
 
   # Configure keymap in X11
